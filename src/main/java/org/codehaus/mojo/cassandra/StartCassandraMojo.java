@@ -73,6 +73,7 @@ public class StartCassandraMojo extends AbstractCassandraMojo
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
+        long timeStamp = System.currentTimeMillis();
         boolean isClean = !cassandraDir.isDirectory();
         getLog().debug( (isClean ? "First start of Cassandra instance in " : "Re-using existing Cassandra instance in ")
             + cassandraDir.getAbsolutePath());
@@ -109,7 +110,7 @@ public class StartCassandraMojo extends AbstractCassandraMojo
                     getLog().info("Finished " + script + ".");
                 }
             }
-
+            getLog().info("Cassandra started in " + ((System.currentTimeMillis() - timeStamp) / 100L) / 10.0 + "s");
         } catch (IOException e)
         {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
