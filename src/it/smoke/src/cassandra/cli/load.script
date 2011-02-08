@@ -1,0 +1,3 @@
+create keyspace TestKeyspace with replication_factor=1;
+use TestKeyspace;
+create column family Test with column_type='Standard' and comparator='UTF8Type';
