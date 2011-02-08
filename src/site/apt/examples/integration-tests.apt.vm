@@ -59,7 +59,6 @@ Integration tests
           <execution>
             <goals>
               <goal>start</goal>
-              <goal>load</goal>
               <goal>stop</goal>
             </goals>
           </execution>
@@ -78,7 +77,7 @@ Integration tests
 *-----------------------+---------------------------------+
 | <<Phase>>             | <<Goal(s)>>                     |
 *-----------------------+---------------------------------+
-| pre-integration-test  | cassandra:start, cassandra:load |
+| pre-integration-test  | cassandra:start                 |
 *-----------------------+---------------------------------+
 | integration-test      | failsafe:integration-test       |
 *-----------------------+---------------------------------+
@@ -141,7 +140,6 @@ Integration tests
           <execution>
             <goals>
               <goal>start</goal>
-              <goal>load</goal>
               <goal>stop</goal>
             </goals>
           </execution>

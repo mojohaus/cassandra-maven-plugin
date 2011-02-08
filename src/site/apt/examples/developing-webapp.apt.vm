@@ -70,15 +70,24 @@ mvn cassandra:start jetty:run -Djetty.port=8000
 ---
 
   If the web application is expecting keyspaces to be defined, we can use a <<<cassandra-cli>>> script to create the
-  keyspaces for us. We create a file called <<<src/cassandra/cli/load.script>>>
+  keyspaces for us. We create a file called <<<src/cassandra/cli/load.script>>>. By default <<<cassandra:start>>>
+  will run this script if the cassandra instance has not been created yet. If the automatic detection does not
+  work for you, you can invoke <<<cassandra:load>>> manually.
 
 ---
 mvn cassandra:start cassandra:load jetty:run -Djetty.port=8000
 ---
 
-  Thereafter we can skip the <<<cassandra:load>>> unless we run <<<mvn clean>>>
+  Thereafter we can skip the <<<cassandra:load>>> unless we run <<<mvn clean>>> and the automatic detection does not
+  work again.
 
   If we actually want to wipe all the data between Maven runs, we would use:
+
+---
+mvn cassandra:delete cassandra:start jetty:run -Djetty.port=8000
+---
+
+  if relying on the auto-detection, otherwise we would use
 
 ---
 mvn cassandra:delete cassandra:start cassandra:load jetty:run -Djetty.port=8000
