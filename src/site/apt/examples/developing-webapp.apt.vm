@@ -86,5 +86,5 @@ mvn cassandra:delete cassandra:start cassandra:load jetty:run -Djetty.port=8000
 
 * Trademarks
 
-Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.
+  Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.
 

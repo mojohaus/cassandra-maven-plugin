@@ -212,5 +212,5 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
 
 * Trademarks
 
-Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.
+  Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.
 
