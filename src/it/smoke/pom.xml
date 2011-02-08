@@ -116,6 +116,9 @@ under the License.
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <loadAfterFirstStart>false</loadAfterFirstStart>
+        </configuration>
       </plugin>
     </plugins>
   </build>

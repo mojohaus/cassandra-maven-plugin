@@ -18,32 +18,12 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.thrift.Cassandra;
-
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
-import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.Executor;
-import org.apache.commons.exec.LogOutputStream;
-import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.exec.ShutdownHookProcessDestroyer;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Loads a {@code cassandra-cli} bscript into a Cassandra instance.
@@ -63,6 +43,13 @@ public class LoadCassandraMojo extends AbstractCassandraMojo
     protected File script;
 
     /**
+     * Whether to ignore errors when loading the script.
+     *
+     * @parameter expression="${cassandra.load.failure.ignore}"
+     */
+    private boolean loadFailureIgnore;
+
+    /**
      * {@inheritDoc}
      */
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -76,35 +63,35 @@ public class LoadCassandraMojo extends AbstractCassandraMojo
         {
             if (!script.isFile())
             {
-                throw new MojoFailureException("Specified script " + script + " does not exist.");
+                if (loadFailureIgnore)
+                {
+                    getLog().error("Specified script " + script + " does not exist."
+                            + ". Ignoring as loadFailureIgnore is true");
+                    return;
+                }
+                else
+                {
+                    throw new MojoFailureException("Specified script " + script + " does not exist.");
+                }
             }
-            Map environment = createEnvironmentVars();
-            CommandLine commandLine = newCliCommandLine("--file", script.getAbsolutePath());
 
-            Executor exec = new DefaultExecutor();
-            exec.setWorkingDirectory(cassandraDir);
-            exec.setProcessDestroyer(new ShutdownHookProcessDestroyer());
-
-            LogOutputStream stdout = new MavenLogOutputStream(getLog());
-            LogOutputStream stderr = new MavenLogOutputStream(getLog());
-
-            try
+            int rv = Utils.runLoadScript(cassandraDir, newCliCommandLine("--file", script.getAbsolutePath()),
+                    createEnvironmentVars(), getLog());
+            if (rv != 0)
             {
-                getLog().debug("Executing command line: " + commandLine);
-
-                exec.setStreamHandler(new PumpStreamHandler(stdout, stderr));
-
-                exec.execute(commandLine, environment);
-            } catch (ExecuteException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
-            } catch (IOException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
+                if (loadFailureIgnore)
+                {
+                    getLog().error("Command exited with error code " + rv + ". Ignoring as loadFailureIgnore is true");
+                }
+                else
+                {
+                    throw new MojoExecutionException("Command exited with error code " + rv);
+                }
             }
         } catch (IOException e)
         {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }
+
 }
