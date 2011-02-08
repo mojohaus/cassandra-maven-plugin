@@ -25,7 +25,7 @@ under the License.
 
   <parent>
     <groupId>org.codehaus.mojo</groupId>
-    <artifactId>mojo-sandbox</artifactId>
+    <artifactId>mojo-sandbox-parent</artifactId>
     <version>9-SNAPSHOT</version>
     <relativePath></relativePath>
   </parent>
