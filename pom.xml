@@ -19,19 +19,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
     <version>23</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>0.7.0-1-SNAPSHOT</version>
+  <version>0.7.0-1</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -62,9 +61,9 @@ under the License.
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/cassandra-maven-plugin</url>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/tags/cassandra-maven-plugin-0.7.0-1</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/cassandra-maven-plugin-0.7.0-1</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/mojo/tags/cassandra-maven-plugin-0.7.0-1</url>
   </scm>
 
   <dependencies>
