@@ -41,7 +41,7 @@ Usage
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
       </plugin>
       ...
     </plugins>
@@ -79,7 +79,7 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         <configuration>
           <rpcPort>19160</rpcPort>
           <jmxPort>18080</jmxPort>
@@ -112,7 +112,7 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         ...
         <dependencies>
           <dependency>
@@ -161,7 +161,7 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         <configuration>
           <addMainClasspath>true</addMainClasspath>
         </configuration>
@@ -197,7 +197,7 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         <configuration>
           <addTestClasspath>true</addTestClasspath>
         </configuration>

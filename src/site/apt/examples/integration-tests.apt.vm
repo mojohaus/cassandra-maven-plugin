@@ -54,7 +54,7 @@ Integration tests
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         <executions>
           <execution>
             <goals>
@@ -135,7 +135,7 @@ Integration tests
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
         <executions>
           <execution>
             <goals>

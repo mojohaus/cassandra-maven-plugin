@@ -42,7 +42,7 @@ Developing a web application
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cassandra-maven-plugin</artifactId>
-        <version>${pluginVersion}</version>
+        <version>${project.version}</version>
       </plugin>
       ...
     </plugins>
@@ -52,9 +52,10 @@ Developing a web application
 </project>
 ---
 
-  If you cannot modify the <<<pom.xml>>> then you will have to specify the full coordinates for the goals, i.e.
+  If you cannot modify the <<<pom.xml>>> then you may have to specify the full coordinates for the goals, i.e.
   in stead of calling <<<cassandra:start>>> you would have to call
-  <<<org.apache.cassandra:cassandra-maven-plugin:${pluginVersion}:start>>>.
+  <<<org.codehaus.mojo:cassandra-maven-plugin:${project.version}:start>>> unless you are happy using
+  the latest version of the plugin.
 
   The only issue out of the starting blocks is that both <<<jetty>>> and <<<cassandra>>> want to use port 8080.
   From the command line, we can get almost all that we want from a simple
