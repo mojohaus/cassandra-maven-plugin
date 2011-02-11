@@ -25,12 +25,12 @@ under the License.
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>23</version>
+    <version>27</version>
     <relativePath />
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>0.7.0-2-SNAPSHOT</version>
+  <version>0.7.0-1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
