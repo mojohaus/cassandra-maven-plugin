@@ -102,7 +102,7 @@ public class RunCassandraMojo extends AbstractCassandraMojo
                 getLog().info("Cassandra started in " + ((System.currentTimeMillis() - timeStamp) / 100L) / 10.0 + "s");
                 ConsoleScanner consoleScanner = new ConsoleScanner();
                 consoleScanner.start();
-                getLog().info("Hit ENTER on the console to stop Cassandra.");
+                getLog().info("Hit ENTER on the console to stop Cassandra and continue the build.");
                 try
                 {
                     consoleScanner.waitForFinished();
