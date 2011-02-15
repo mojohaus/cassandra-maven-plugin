@@ -1,6 +1,7 @@
 package org.codehaus.mojo.cassandra;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.cassandra.service.StorageProxy;
@@ -20,13 +21,13 @@ public class TruncateCassandraMojo extends AbstractCassandraMojo
 {
 
     /**
-     * @parameter
+     * @parameter expression="${cassandra.keyspace}"
      * @required 
      */
     protected String keyspace;
     
     /**
-     * @parameter
+     * @parameter expression="${cassandra.columnFamily}"
      * @required 
      */
     protected String columnFamily;
@@ -35,7 +36,8 @@ public class TruncateCassandraMojo extends AbstractCassandraMojo
     public void execute() throws MojoExecutionException, MojoFailureException 
     {
         try 
-        {            
+        {      
+            createCassandraHome();
             StorageProxy.truncateBlocking(keyspace, columnFamily);
         } catch (UnavailableException ue) 
         {

@@ -23,7 +23,7 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
     
     /**
      * The keyspace against which the system_* operation will be executed
-     * @parameter 
+     * @parameter expression="${cassandra.keyspace}"
      * @required
      */
     protected String keyspace;    
