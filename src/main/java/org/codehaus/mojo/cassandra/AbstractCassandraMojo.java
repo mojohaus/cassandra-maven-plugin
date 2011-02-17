@@ -313,11 +313,17 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
             getLog().debug((cassandraYaml.isFile() ? "Updating " : "Creating ") + cassandraYaml);
             createCassandraYaml(cassandraYaml, data, commitlog, savedCaches);
         }
-        File log4jProperties = new File(conf, "log4j.properties");
-        if (Utils.shouldGenerateResource(project, log4jProperties))
+        File log4jServerProperties = new File(conf, "log4j-server.properties");
+        if (Utils.shouldGenerateResource(project, log4jServerProperties))
         {
-            getLog().debug((log4jProperties.isFile() ? "Updating " : "Creating ") + log4jProperties);
-            FileUtils.copyURLToFile(getClass().getResource("/log4j.properties"), log4jProperties);
+            getLog().debug((log4jServerProperties.isFile() ? "Updating " : "Creating ") + log4jServerProperties);
+            FileUtils.copyURLToFile(getClass().getResource("/log4j.properties"), log4jServerProperties);
+        }
+        File log4jClientProperties = new File(conf, "log4j-client.properties");
+        if (Utils.shouldGenerateResource(project, log4jClientProperties))
+        {
+            getLog().debug((log4jClientProperties.isFile() ? "Updating " : "Creating ") + log4jClientProperties);
+            FileUtils.copyURLToFile(getClass().getResource("/log4j.properties"), log4jClientProperties);
         }
         File cassandraJar = new File(bin, "cassandra.jar");
         if (Utils.shouldGenerateResource(project, cassandraJar))
