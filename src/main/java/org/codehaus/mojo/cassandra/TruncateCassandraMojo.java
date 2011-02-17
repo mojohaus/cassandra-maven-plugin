@@ -14,7 +14,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * Currently doing so via StorageProxy as a discussion point. 
  *
  * @author zznate
- * @non-goal truncate
+ * @goal truncate
  * @threadSafe
  */
 public class TruncateCassandraMojo extends AbstractCassandraMojo 

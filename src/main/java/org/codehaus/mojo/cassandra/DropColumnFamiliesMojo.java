@@ -11,7 +11,7 @@ import org.apache.thrift.TException;
  * 
  * @author zznate
  * @threadSafe
- * @non-goal drop
+ * @goal drop
  */
 public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
 
