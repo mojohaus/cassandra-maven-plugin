@@ -21,13 +21,17 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
      * @parameter expression="${cassandra.columnFamilies}"
      */
     protected String columnFamilies;
+
     private String[] columnFamilyList;
-    
 
     protected void parseArguments() throws IllegalArgumentException
     {
         if (StringUtils.isNotBlank(keyspace)) 
-            throw new IllegalArgumentException("You must provide a value for Keyspace");
+        {
+            // keyspace is a required parameter but somebody could provide -Dkeyspace=
+            // which would cause issues
+            throw new IllegalArgumentException("The keyspace to drop column families from cannot be empty");
+        }
     
         columnFamilyList = StringUtils.split(columnFamilies, ',');
     }
@@ -40,15 +44,15 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
             for (int i = 0; i < columnFamilyList.length; i++) 
             {
                 client.system_drop_column_family(columnFamilyList[i]);
+                getLog().info("Dropped column family \"" + columnFamilyList[i] + "\".");
             }
         } 
         else 
         {
             client.system_drop_keyspace(keyspace);
+            getLog().info("Dropped keyspace \"" + keyspace + "\".");
         }
         
     }
     
-    
-
 }

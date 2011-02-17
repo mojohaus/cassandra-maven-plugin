@@ -38,7 +38,9 @@ public class TruncateCassandraMojo extends AbstractCassandraMojo
         try 
         {      
             createCassandraHome();
+            getLog().debug("Truncating Column Family \"" + columnFamily + "\" in Keyspace \"" + keyspace + "\"...");
             StorageProxy.truncateBlocking(keyspace, columnFamily);
+            getLog().info("Truncated Column Family \"" + columnFamily + "\" in Keyspace \"" + keyspace + "\"...");
         } catch (UnavailableException ue) 
         {
             throw new MojoExecutionException("Host(s) must be up in order for a truncate operation to be successful.", ue);
