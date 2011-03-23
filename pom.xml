@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>0.7.2-2-SNAPSHOT</version>
+  <version>0.7.4-1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -80,7 +80,7 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>0.7.2</cassandraVersion>
+    <cassandraVersion>0.7.4</cassandraVersion>
   </properties>
 
   <dependencies>
@@ -185,6 +185,18 @@ under the License.
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>2.5</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
