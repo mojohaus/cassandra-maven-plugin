@@ -61,7 +61,7 @@ under the License.
 
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MVERSIONS</url>
+    <url>http://jira.codehaus.org/browse/MCASSANDRA</url>
   </issueManagement>
 
   <licenses>
