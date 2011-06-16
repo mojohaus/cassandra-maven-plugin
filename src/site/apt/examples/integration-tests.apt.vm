@@ -153,6 +153,30 @@ Integration tests
 </project>
 ---
 
+* Local clusters
+
+  To use a local cluster, you just change the <<<start>>> and <<<stop>>> goals to <<<start-cluster>>> and
+  <<<stop-cluster>>> respectively.
+
+  Note: On OS-X you will need to enable the local loop back aliases before you can run a cluster. One way to do this
+  is to use the command
+
+---
+ifconfig lo0 alias 127.0.0.2
+---
+
+  These aliases are not persisted across reboots.
+
+* Port usage
+
+  As well as the standard Cassandra ports, the Maven plugin also opens a stop port (defaults to 8081) in order to allow
+  the Cassandra service(s) to be shut down cleanly.  If the default stop port is used by your tests, or is already in
+  use on your system then you might need to change that default.
+
+  The best designed builds will use something like
+  {{{http://mojo.codehaus.org/build-helper-maven-plugin/reserve-network-port-mojo.html}build-helper:reserve-network-port}}
+  to allocate ports.
+
 * Trademarks
 
   Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.

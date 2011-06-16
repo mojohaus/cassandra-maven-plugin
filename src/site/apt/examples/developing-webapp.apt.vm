@@ -57,17 +57,10 @@ Developing a web application
   <<<org.codehaus.mojo:cassandra-maven-plugin:${project.version}:start>>> unless you are happy using
   the latest version of the plugin.
 
-  The only issue out of the starting blocks is that both <<<jetty>>> and <<<cassandra>>> want to use port 8080.
   From the command line, we can get almost all that we want from a simple
 
 ---
-mvn cassandra:start jetty:run -Dcassandra.jmxPort=18080
----
-
-  Or
-
----
-mvn cassandra:start jetty:run -Djetty.port=8000
+mvn cassandra:start jetty:run
 ---
 
   If the web application is expecting keyspaces to be defined, we can use a <<<cassandra-cli>>> script to create the
@@ -76,7 +69,7 @@ mvn cassandra:start jetty:run -Djetty.port=8000
   work for you, you can invoke <<<cassandra:load>>> manually.
 
 ---
-mvn cassandra:start cassandra:load jetty:run -Djetty.port=8000
+mvn cassandra:start cassandra:load jetty:run
 ---
 
   Thereafter we can skip the <<<cassandra:load>>> unless we run <<<mvn clean>>> and the automatic detection does not
@@ -85,13 +78,13 @@ mvn cassandra:start cassandra:load jetty:run -Djetty.port=8000
   If we actually want to wipe all the data between Maven runs, we would use:
 
 ---
-mvn cassandra:delete cassandra:start jetty:run -Djetty.port=8000
+mvn cassandra:delete cassandra:start jetty:run
 ---
 
   if relying on the auto-detection, otherwise we would use
 
 ---
-mvn cassandra:delete cassandra:start cassandra:load jetty:run -Djetty.port=8000
+mvn cassandra:delete cassandra:start cassandra:load jetty:run
 ---
 
 * Trademarks

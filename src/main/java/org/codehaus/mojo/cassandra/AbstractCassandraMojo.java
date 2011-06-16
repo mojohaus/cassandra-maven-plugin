@@ -163,7 +163,7 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     /**
      * Port to listen to for the JMX interface.
      *
-     * @parameter expression="${cassandra.jmxPort}" default-value="8080"
+     * @parameter expression="${cassandra.jmxPort}" default-value="7199"
      */
     protected int jmxPort;
 

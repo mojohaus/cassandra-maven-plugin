@@ -59,11 +59,11 @@ Usage
 mvn cassandra:run
 ---
 
-  You can change the ports that Cassandra binds to either using the <<<cassandra.rpcPort>>>, <<<cassandra.jmxPort>>>
-  and <<<cassandra.storagePort>>> properties from the command line, e.g.
+  You can change the ports that Cassandra binds to either using the <<<cassandra.rpcPort>>>, <<<cassandra.jmxPort>>>,
+  <<<cassandra.storagePort>>> and <<<cassandra.stopPort>>> properties from the command line, e.g.
 
 ---
-mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandra.storagePort=17000
+mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=17199 -Dcassandra.storagePort=17000 -Dcassandra.stopPort=18081
 ---
 
   Or in the <<<configuration>>> block in the plugin definition (which has the advantage that all invokations will use
@@ -82,8 +82,9 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=18080 -Dcassandr
         <version>${project.version}</version>
         <configuration>
           <rpcPort>19160</rpcPort>
-          <jmxPort>18080</jmxPort>
+          <jmxPort>17199</jmxPort>
           <storagePort>17000</storagePort>
+          <stopPort>18081</stopPort>
         </configuration>
       </plugin>
       ...

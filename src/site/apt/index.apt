@@ -32,45 +32,45 @@ Mojo's Cassandra Maven Plugin
 
   The Cassandra Plugin has the following goals.
 
-  * {{{start-mojo.html}cassandra:start}} Starts up a test instance of Cassandra in the background.
+  * {{{./start-mojo.html}cassandra:start}} Starts up a test instance of Cassandra in the background.
 
-  * {{{stop-mojo.html}cassandra:stop}} Stops the test instance of Cassandra that was started using {{{start-mojo.html}cassandra:start}}.
+  * {{{./stop-mojo.html}cassandra:stop}} Stops the test instance of Cassandra that was started using {{{./start-mojo.html}cassandra:start}}.
 
-  * {{{start-cluster-mojo.html}cassandra:start-cluster}} Starts up a test cluster of Cassandra in the background bound to the local loopback IP addresses 127.0.0.1, 127.0.0.2, etc.
+  * {{{./start-cluster-mojo.html}cassandra:start-cluster}} Starts up a test cluster of Cassandra in the background bound to the local loopback IP addresses 127.0.0.1, 127.0.0.2, etc.
 
-  * {{{stop-clustermojo.html}cassandra:stop}} Stops the test cluster of Cassandra that was started using {{{start-cluster-mojo.html}cassandra:start}}.
+  * {{{./stop-clustermojo.html}cassandra:stop}} Stops the test cluster of Cassandra that was started using {{{./start-cluster-mojo.html}cassandra:start}}.
 
-  * {{{run-mojo.html}cassandra:run}} Starts up a test instance of Cassandra in the foreground.
+  * {{{./run-mojo.html}cassandra:run}} Starts up a test instance of Cassandra in the foreground.
 
-  * {{{load-mojo.html}cassandra:load}} Runs a <<<cassandra-cli>>> script against the test instance of Cassandra.
+  * {{{./load-mojo.html}cassandra:load}} Runs a <<<cassandra-cli>>> script against the test instance of Cassandra.
 
-  * {{{repair-mojo.html}cassandra:repair}} Runs <<<nodetool repair>>> against the test instance of Cassandra.
+  * {{{./repair-mojo.html}cassandra:repair}} Runs <<<nodetool repair>>> against the test instance of Cassandra.
 
-  * {{{flush-mojo.html}cassandra:flush}} Runs <<<nodetool flush>>> against the test instance of Cassandra.
+  * {{{./flush-mojo.html}cassandra:flush}} Runs <<<nodetool flush>>> against the test instance of Cassandra.
 
-  * {{{comapct-mojo.html}cassandra:compact}} Runs <<<nodetool compact>>> against the test instance of Cassandra.
+  * {{{./comapct-mojo.html}cassandra:compact}} Runs <<<nodetool compact>>> against the test instance of Cassandra.
 
-  * {{{cleanup-mojo.html}cassandra:cleanup}} Runs <<<nodetool cleanup>>> against the test instance of Cassandra.
+  * {{{./cleanup-mojo.html}cassandra:cleanup}} Runs <<<nodetool cleanup>>> against the test instance of Cassandra.
 
-  * {{{delete-mojo.html}cassandra:delete}} Deletes the the test instance of Cassandra.
+  * {{{./delete-mojo.html}cassandra:delete}} Deletes the the test instance of Cassandra.
 
 * Usage
 
-  General instructions on how to use the Cassandra Plugin can be found on the {{{usage.html}usage page}}. Some more
+  General instructions on how to use the Cassandra Plugin can be found on the {{{./usage.html}usage page}}. Some more
   specific use cases are described in the examples given below. Last but not least, users occasionally contribute
   additional examples, tips or errata to the {{{http://wiki.apache.org/cassandra/MavenPlugin}plugin's wiki page}}.
 
   In case you still have questions regarding the plugin's usage, please feel free to contact the
-  {{{mail-lists.html}user mailing list}}. The posts to the mailing list are archived and could
+  {{{./mail-lists.html}user mailing list}}. The posts to the mailing list are archived and could
   already contain the answer to your question as part of an older thread. Hence, it is also worth browsing/searching
-  the {{{mail-lists.html}mail archive}}.
+  the {{{./mail-lists.html}mail archive}}.
 
   If you feel like the plugin is missing a feature or has a defect, you can fill a feature request or bug report in our
-  {{{issue-tracking.html}issue tracker}}. When creating a new issue, please provide a comprehensive description of your
+  {{{./issue-tracking.html}issue tracker}}. When creating a new issue, please provide a comprehensive description of your
   concern. Especially for fixing bugs it is crucial that the developers can reproduce your problem. For this reason,
   entire debug logs, POMs or most preferably little demo projects attached to the issue are very much appreciated.
   Of course, patches are welcome, too. Contributors can check out the project from our
-  {{{source-repository.html}source repository}} and will find supplementary information in the
+  {{{./source-repository.html}source repository}} and will find supplementary information in the
   {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Cassandra}}.
 
 * Examples
@@ -78,9 +78,9 @@ Mojo's Cassandra Maven Plugin
   To provide you with better understanding of some usages of the Plugin Name,
   you can take a look into the following examples:
 
-  * {{{examples/developing-webapp.html}Developing a web application}}
+  * {{{./examples/developing-webapp.html}Developing a web application}}
 
-  * {{{examples/integration-tests.html}Integration tests}}
+  * {{{./examples/integration-tests.html}Integration tests}}
 
 * Trademarks
 
