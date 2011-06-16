@@ -2,6 +2,7 @@ package org.codehaus.mojo.cassandra;
 
 import org.apache.cassandra.thrift.Cassandra;
 import org.apache.cassandra.thrift.InvalidRequestException;
+import org.apache.cassandra.thrift.SchemaDisagreementException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.thrift.TException;
@@ -28,7 +29,7 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
      */
     protected String keyspace;    
     
-    protected abstract void executeOperation(Cassandra.Client client) throws InvalidRequestException, TException;
+    protected abstract void executeOperation(Cassandra.Client client) throws InvalidRequestException, SchemaDisagreementException, TException;
     
     protected abstract void parseArguments() throws IllegalArgumentException;
     

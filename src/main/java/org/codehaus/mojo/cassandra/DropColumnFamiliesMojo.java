@@ -1,5 +1,6 @@
 package org.codehaus.mojo.cassandra;
 
+import org.apache.cassandra.thrift.SchemaDisagreementException;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.Cassandra.Client;
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +38,7 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     }
 
     @Override
-    protected void executeOperation(Client client) throws InvalidRequestException, TException 
+    protected void executeOperation(Client client) throws InvalidRequestException, SchemaDisagreementException, TException 
     {
         if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
         {
