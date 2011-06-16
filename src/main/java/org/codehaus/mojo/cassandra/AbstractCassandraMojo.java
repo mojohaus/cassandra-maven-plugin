@@ -432,9 +432,16 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
         config.append("rpc_address: ").append(rpcAddress).append("\n");
         config.append("rpc_port: ").append(rpcPort).append("\n");
         if (seeds != null) {
-            config.append("seeds: ").append("\n");
+            config.append("seed_provider: ").append("\n");
+            config.append("    - class_name: org.apache.cassandra.locator.SimpleSeedProvider").append("\n");
+            config.append("      parameters:").append("\n");
+            String sep = "          - seeds: \"";
             for (int i = 0; i < seeds.length; i++) {
-                config.append("    - ").append(seeds[i]).append("\n");
+                config.append(sep).append(seeds[i]);
+                sep =  ", ";
+            }
+            if (sep.length() == 2) {
+                config.append("\"").append("\n");
             }
         }
         FileUtils.fileWrite(cassandraYaml.getAbsolutePath(),
