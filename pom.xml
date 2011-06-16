@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>0.7.4-2-SNAPSHOT</version>
+  <version>0.7.5-1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -80,7 +80,7 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>0.7.4</cassandraVersion>
+    <cassandraVersion>0.7.5</cassandraVersion>
   </properties>
 
   <dependencies>
@@ -123,6 +123,28 @@ under the License.
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
       <version>${mavenVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-jdk14</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-nop</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

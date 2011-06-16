@@ -34,6 +34,8 @@ import java.net.Socket;
  */
 public class CassandraMonitor extends Thread
 {
+    public static final String HOST_PROPERTY_NAME = "STOP.HOST";
+
     public static final String PORT_PROPERTY_NAME = "STOP.PORT";
 
     public static final String KEY_PROPERTY_NAME = "STOP.KEY";
@@ -49,10 +51,10 @@ public class CassandraMonitor extends Thread
      * @param key  the key to require.
      * @throws IOException if something goes wrong.
      */
-    public CassandraMonitor(int port, String key) throws IOException
+    public CassandraMonitor(String address, int port, String key) throws IOException
     {
         this.key = key;
-        serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));
+        serverSocket = new ServerSocket(port, 1, InetAddress.getByName(address));
         serverSocket.setReuseAddress(true);
     }
 
@@ -132,12 +134,13 @@ public class CassandraMonitor extends Thread
      */
     public static void main(String[] args) throws IOException
     {
+        String host = System.getProperty(HOST_PROPERTY_NAME, "127.0.0.1");
         String property = System.getProperty(PORT_PROPERTY_NAME);
         String key = System.getProperty(KEY_PROPERTY_NAME);
         if (property != null && key != null)
         {
             int port = Integer.parseInt(property);
-            CassandraMonitor monitor = new CassandraMonitor(port, key);
+            CassandraMonitor monitor = new CassandraMonitor(host, port, key);
             monitor.setDaemon(true);
             monitor.start();
         }

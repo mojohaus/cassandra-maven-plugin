@@ -22,15 +22,18 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+import java.io.File;
+import java.math.BigInteger;
+
 /**
  * Stops a background Cassandra instance.
  *
  * @author stephenc
- * @goal stop
+ * @goal stop-cluster
  * @threadSafe
  * @phase post-integration-test
  */
-public class StopCassandraMojo extends AbstractMojo
+public class StopCassandraClusterMojo extends AbstractMojo
 {
     /**
      * Skip the execution.
@@ -70,21 +73,11 @@ public class StopCassandraMojo extends AbstractMojo
     protected int rpcPort;
 
     /**
-     * Address to bind to and tell other Cassandra nodes to connect to. You
-     * <strong>must</strong> change this if you want multiple nodes to be able to
-     * communicate!
+     * The number of nodes in the cluster.
      *
-     * Leaving it blank leaves it up to InetAddress.getLocalHost(). This
-     * will always do the Right Thing <em>if</em> the node is properly configured
-     * (hostname, name resolution, etc), and the Right Thing is to use the
-     * address associated with the hostname (it might not be).
-     *
-     * Setting this to 0.0.0.0 is always wrong.
-     * Do not change this unless you really know what you are doing.
-     *
-     * @parameter default-value="127.0.0.1"
+     * @parameter expression="${cassandra.cluster.size}" default-value="4"
      */
-    protected String listenAddress;
+    private int clusterSize;
 
     /**
      * {@inheritDoc}
@@ -104,7 +97,15 @@ public class StopCassandraMojo extends AbstractMojo
         {
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
+        if (clusterSize < 1) {
+            throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be at least 1");
+        }
+        if (clusterSize > 254) {
+            throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be less than 254");
+        }
+        for (int node = 0; node < clusterSize; node++) {
+            Utils.stopCassandraServer("127.0.0." + (node + 1), rpcPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
+        }
 
-        Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
     }
 }

@@ -68,11 +68,11 @@ public final class Utils
      * @param stopKey    The key to stop with,
      * @param log        The log to write to.
      */
-    static void stopCassandraServer(String rpcAddress, int rpcPort, int stopPort, String stopKey, Log log)
+    static void stopCassandraServer(String rpcAddress, int rpcPort, String stopAddress, int stopPort, String stopKey, Log log)
     {
         try
         {
-            Socket s = new Socket(InetAddress.getByName("127.0.0.1"), stopPort);
+            Socket s = new Socket(InetAddress.getByName(stopAddress), stopPort);
             s.setSoLinger(false, 0);
 
             OutputStream out = s.getOutputStream();
@@ -130,7 +130,7 @@ public final class Utils
             log.info("Cassandra has stopped.");
         } else
         {
-            log.warn("Gave up wating for Cassandra to stop.");
+            log.warn("Gave up waiting for Cassandra to stop.");
         }
     }
 

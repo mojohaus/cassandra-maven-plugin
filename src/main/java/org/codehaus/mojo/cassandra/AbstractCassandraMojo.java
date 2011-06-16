@@ -42,6 +42,7 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -167,6 +168,23 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     protected int jmxPort;
 
     /**
+     * Address to bind to and tell other Cassandra nodes to connect to. You
+     * <strong>must</strong> change this if you want multiple nodes to be able to
+     * communicate!
+     *
+     * Leaving it blank leaves it up to InetAddress.getLocalHost(). This
+     * will always do the Right Thing <em>if</em> the node is properly configured
+     * (hostname, name resolution, etc), and the Right Thing is to use the
+     * address associated with the hostname (it might not be).
+     *
+     * Setting this to 0.0.0.0 is always wrong.
+     * Do not change this unless you really know what you are doing.
+     *
+     * @parameter default-value="127.0.0.1"
+     */
+    protected String listenAddress;
+
+    /**
      * Port to listen to for the Storage interface.
      *
      * @parameter expression="${cassandra.storagePort}" default-value="7000"
@@ -203,6 +221,18 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
      * @throws java.io.IOException if something went wrong.
      */
     protected void createCassandraJar(File jarFile, String mainClass) throws IOException
+    {
+        createCassandraJar(jarFile, mainClass, cassandraDir);
+    }
+    /**
+     * Create a jar with just a manifest containing a Main-Class entry for SurefireBooter and a Class-Path entry for
+     * all classpath elements. Copied from surefire (ForkConfiguration#createJar())
+     *
+     * @param jarFile   The jar file to create/update
+     * @param mainClass The main class to run.
+     * @throws java.io.IOException if something went wrong.
+     */
+    protected void createCassandraJar(File jarFile, String mainClass, File cassandraDir) throws IOException
     {
         File conf = new File(cassandraDir, "conf");
         FileOutputStream fos = null;
@@ -283,6 +313,19 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
      */
     protected void createCassandraHome() throws IOException
     {
+        createCassandraHome(cassandraDir, listenAddress, rpcAddress, null, new String[]{listenAddress});
+    }
+
+    /**
+     * Creates the cassandra home directory.
+     *
+     * @param cassandraDir the cassandra home directory.
+     *
+     * @throws IOException if something goes wrong.
+     */
+    protected void createCassandraHome(File cassandraDir, String listenAddress, String rpcAddress,
+                                     BigInteger initialToken, String[] seeds) throws IOException
+    {
         File bin = new File(cassandraDir, "bin");
         File conf = new File(cassandraDir, "conf");
         File data = new File(cassandraDir, "data");
@@ -311,7 +354,7 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
         if (Utils.shouldGenerateResource(project, cassandraYaml))
         {
             getLog().debug((cassandraYaml.isFile() ? "Updating " : "Creating ") + cassandraYaml);
-            createCassandraYaml(cassandraYaml, data, commitlog, savedCaches);
+            createCassandraYaml(cassandraYaml, data, commitlog, savedCaches, listenAddress, rpcAddress, initialToken, seeds);
         }
         File log4jServerProperties = new File(conf, "log4j-server.properties");
         if (Utils.shouldGenerateResource(project, log4jServerProperties))
@@ -329,19 +372,19 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
         if (Utils.shouldGenerateResource(project, cassandraJar))
         {
             getLog().debug((cassandraJar.isFile() ? "Updating " : "Creating ") + cassandraJar);
-            createCassandraJar(cassandraJar, CassandraMonitor.class.getName());
+            createCassandraJar(cassandraJar, CassandraMonitor.class.getName(), cassandraDir);
         }
         File cassandraCliJar = new File(bin, "cassandra-cli.jar");
         if (Utils.shouldGenerateResource(project, cassandraCliJar))
         {
             getLog().debug((cassandraCliJar.isFile() ? "Updating " : "Creating ") + cassandraCliJar);
-            createCassandraJar(cassandraCliJar, CliMain.class.getName());
+            createCassandraJar(cassandraCliJar, CliMain.class.getName(), cassandraDir);
         }
         File nodetoolJar = new File(bin, "nodetool.jar");
         if (Utils.shouldGenerateResource(project, nodetoolJar))
         {
             getLog().debug((nodetoolJar.isFile() ? "Updating " : "Creating ") + nodetoolJar);
-            createCassandraJar(nodetoolJar, NodeCmd.class.getName());
+            createCassandraJar(nodetoolJar, NodeCmd.class.getName(), cassandraDir);
         }
     }
 
@@ -357,17 +400,45 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     private void createCassandraYaml(File cassandraYaml, File data, File commitlog, File savedCaches)
             throws IOException
     {
-        String defaults = IOUtil.toString(getClass().getResourceAsStream("/cassandra.yaml"));
-        String config = "data_file_directories:\n" +
-                "    - " + data.getAbsolutePath() + "\n" +
-                "commitlog_directory: " + commitlog + "\n" +
-                "saved_caches_directory: " + savedCaches + "\n" +
-                "storage_port: " + storagePort + "\n" +
-                "rpc_address: " + rpcAddress + "\n" +
-                "rpc_port: " + rpcPort + "\n";
+        createCassandraYaml(cassandraYaml, data, commitlog, savedCaches, listenAddress, rpcAddress, null, new String[]{listenAddress});
+    }
 
+    /**
+     * Generates the {@code cassandra.yaml} file.
+     *
+     * @param cassandraYaml the {@code cassandra.yaml} file.
+     * @param data          The data directory.
+     * @param commitlog     The commitlog directory.
+     * @param savedCaches   The saved caches directory.
+     * @param listenAddress The address to listen on for storage and other cassandra servers.
+     * @param rpcAddress    The address to listen on for clients.
+     * @param seeds         The seeds.
+     * @throws IOException If something went wrong.
+     */
+    private void createCassandraYaml(File cassandraYaml, File data, File commitlog, File savedCaches,
+                                     String listenAddress, String rpcAddress,
+                                     BigInteger initialToken, String[] seeds)
+    throws IOException
+    {
+        String defaults = IOUtil.toString(getClass().getResourceAsStream("/cassandra.yaml"));
+        StringBuilder config = new StringBuilder();
+        config.append("data_file_directories:\n")
+                .append("    - ").append(data.getAbsolutePath()).append("\n");
+        config.append("commitlog_directory: ").append(commitlog).append("\n");
+        config.append("saved_caches_directory: ").append(savedCaches).append("\n");
+        config.append("initial_token: ").append(initialToken == null ? "" : initialToken.toString()).append("\n");
+        config.append("listen_address: ").append(listenAddress).append("\n");
+        config.append("storage_port: ").append(storagePort).append("\n");
+        config.append("rpc_address: ").append(rpcAddress).append("\n");
+        config.append("rpc_port: ").append(rpcPort).append("\n");
+        if (seeds != null) {
+            config.append("seeds: ").append("\n");
+            for (int i = 0; i < seeds.length; i++) {
+                config.append("    - ").append(seeds[i]).append("\n");
+            }
+        }
         FileUtils.fileWrite(cassandraYaml.getAbsolutePath(),
-                Utils.merge(Utils.merge(defaults, yaml), config));
+                Utils.merge(Utils.merge(defaults, yaml), config.toString()));
     }
 
     /**
@@ -477,7 +548,19 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
      */
     protected CommandLine newServiceCommandLine() throws IOException
     {
-        createCassandraHome();
+        return newServiceCommandLine(cassandraDir, listenAddress, rpcAddress, null, new String[]{listenAddress}, true, jmxPort  );
+    }
+
+    /**
+     * Creates the command line to launch the cassandra server.
+     *
+     * @return the command line to launch the cassandra server.
+     * @throws IOException if there are issues creating the cassandra home directory.
+     */
+    protected CommandLine newServiceCommandLine(File cassandraDir, String listenAddress, String rpcAddress, BigInteger initialToken,
+                                                String[] seeds, boolean jmxRemoteEnabled, int jmxPort) throws IOException
+    {
+        createCassandraHome(cassandraDir, listenAddress, rpcAddress, initialToken, seeds);
         CommandLine commandLine = newJavaCommandLine();
         List<String> args = new ArrayList<String>();
         args.add("-Xmx" + maxMemory + "m");
@@ -485,10 +568,15 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
         {
             args.add("-D" + CassandraMonitor.KEY_PROPERTY_NAME + "=" + stopKey);
             args.add("-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort);
+            args.add("-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress);
         }
+        args.add("-Dlog4j.configuration=file://" + new File(new File(cassandraDir, "conf"), "log4j-server.properties").getAbsolutePath());
+        args.add("-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled);
+        if (jmxRemoteEnabled) {
         args.add("-Dcom.sun.management.jmxremote.port=" + jmxPort);
         args.add("-Dcom.sun.management.jmxremote.ssl=false");
         args.add("-Dcom.sun.management.jmxremote.authenticate=false");
+        }
         args.add("-jar");
         args.add(new File(new File(cassandraDir, "bin"), "cassandra.jar").toString());
         commandLine.addArguments(args.toArray(new String[args.size()]), true);
