@@ -37,9 +37,13 @@ under the License.
   <description>The Mojo Projects plugin for Apache Maven to allow launching a local Apache Cassandra instance from a Maven build</description>
   <url>http://mojo.codehaus.org/cassandra-maven-plugin</url>
   <inceptionYear>2011</inceptionYear>
-  <prerequisites>
-    <maven>${mavenVersion}</maven>
-  </prerequisites>
+  <licenses>
+    <license>
+      <name>Apache License 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
@@ -59,24 +63,19 @@ under the License.
     </developer>
   </developers>
 
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MCASSANDRA</url>
-  </issueManagement>
-
-  <licenses>
-    <license>
-      <name>Apache License 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+  <prerequisites>
+    <maven>${mavenVersion}</maven>
+  </prerequisites>
 
   <scm>
     <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</connection>
     <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</developerConnection>
     <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/cassandra-maven-plugin</url>
   </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MCASSANDRA</url>
+  </issueManagement>
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
@@ -269,5 +268,6 @@ under the License.
       </plugin>
     </plugins>
   </build>
+
 
 </project>
