@@ -112,7 +112,7 @@ public class RunCassandraMojo extends AbstractCassandraMojo
                 }
             } finally
             {
-                Utils.stopCassandraServer(rpcAddress, rpcPort, stopPort, stopKey, getLog());
+                Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
                 try
                 {
                     execHandler.waitFor();

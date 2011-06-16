@@ -87,7 +87,7 @@ public class StartCassandraMojo extends AbstractCassandraMojo
                 boolean started = Utils.waitUntilStarted(rpcAddress, rpcPort, startWaitSeconds, getLog());
                 if (!started)
                 {
-                    Utils.stopCassandraServer(rpcAddress, rpcPort, stopPort, stopKey, getLog());
+                    Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
                     throw new MojoFailureException("Cassandra failed to start within " + startWaitSeconds + "s");
                 }
             }

@@ -114,16 +114,15 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
                                 initialToken[node], listenAddress, node==0, node==0 ? jmxPort : 0), createEnvironmentVars(), getLog());
             }
 
-            if (startWaitSeconds >= 0)
-            {
+            if (startWaitSeconds >= 0) {
                 for (int node = 0; node < clusterSize; node++) {
                     getLog().info("Waiting for Cassandra Node " + (node + 1) + " to start...");
-                boolean started = Utils.waitUntilStarted(listenAddress[node], rpcPort, startWaitSeconds, getLog());
-                if (!started)
-                {
-                    Utils.stopCassandraServer(listenAddress[node], rpcPort, stopPort, stopKey, getLog());
-                    throw new MojoFailureException("Cassandra failed to start within " + startWaitSeconds + "s");
-                }
+                    boolean started = Utils.waitUntilStarted(listenAddress[node], rpcPort, startWaitSeconds, getLog());
+                    if (!started) {
+                        Utils.stopCassandraServer(listenAddress[node], rpcPort, listenAddress[node], stopPort, stopKey,
+                                getLog());
+                        throw new MojoFailureException("Cassandra failed to start within " + startWaitSeconds + "s");
+                    }
                 }
             }
             if (isClean && loadAfterFirstStart && script != null && script.isFile()) {
