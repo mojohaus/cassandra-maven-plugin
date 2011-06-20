@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -577,12 +578,22 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
             args.add("-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort);
             args.add("-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress);
         }
-        args.add("-Dlog4j.configuration=file://" + new File(new File(cassandraDir, "conf"), "log4j-server.properties").getAbsolutePath());
+        try
+        {
+            args.add("-Dlog4j.configuration=" 
+                    + new File(new File(cassandraDir, "conf"), "log4j-server.properties").toURL().toURI().toString());
+        }
+        catch ( URISyntaxException e )
+        {
+            IOException ioe = new IOException( e.getMessage() );
+            ioe.initCause( e );
+            throw ioe;
+        }
         args.add("-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled);
         if (jmxRemoteEnabled) {
-        args.add("-Dcom.sun.management.jmxremote.port=" + jmxPort);
-        args.add("-Dcom.sun.management.jmxremote.ssl=false");
-        args.add("-Dcom.sun.management.jmxremote.authenticate=false");
+            args.add("-Dcom.sun.management.jmxremote.port=" + jmxPort);
+            args.add("-Dcom.sun.management.jmxremote.ssl=false");
+            args.add("-Dcom.sun.management.jmxremote.authenticate=false");
         }
         args.add("-jar");
         args.add(new File(new File(cassandraDir, "bin"), "cassandra.jar").toString());
