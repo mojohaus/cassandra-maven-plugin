@@ -21,17 +21,11 @@ import org.apache.thrift.transport.TTransportException;
  * @author zznate
  */
 public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo {
-    
-    /**
-     * The keyspace against which the system_* operation will be executed
-     * @parameter expression="${cassandra.keyspace}"
-     * @required
-     */
-    protected String keyspace;    
-    
-    protected abstract void executeOperation(Cassandra.Client client) throws InvalidRequestException, SchemaDisagreementException, TException;
+               
     
     protected abstract void parseArguments() throws IllegalArgumentException;
+    
+    protected abstract ThriftApiOperation buildOperation(); 
     
     /**
      * Parses the arguments then calls 
@@ -46,51 +40,9 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
         {
             throw new MojoExecutionException(iae.getMessage());
         }
-        executeThrift();
+        Utils.executeThrift(buildOperation());
     }
     
-    /**
-     * Call {@link #executeOperation(Cassandra.Client)} on the implementing class
-     * @throws MojoExecutionException
-     * @throws MojoFailureException
-     */
-    protected void executeThrift() throws MojoExecutionException, MojoFailureException 
-    {
-        TSocket socket = new TSocket(rpcAddress, rpcPort);
-        TTransport transport = new TFramedTransport(socket);
-        
-        TBinaryProtocol binaryProtocol = new TBinaryProtocol(transport, true, true);
-        Cassandra.Client cassandraClient = new Cassandra.Client(binaryProtocol);
-        
-        try 
-        {
-            transport.open();
-            cassandraClient.set_keyspace(keyspace);
-            executeOperation(cassandraClient);            
-        } catch (TTransportException tte) 
-        {
-            throw new MojoExecutionException("There was a problemn opening the connection to Apache Cassandra", tte);
-        } catch (InvalidRequestException ire) 
-        {
-            throw new MojoExecutionException("Invalid request returned. Does the Keyspace '" + keyspace + "' exist?", ire);
-        } catch (Exception e) 
-        {
-            // anything paste IRE will not be terribly meaningful for truncate
-            throw new MojoExecutionException("General exception executing truncate", e);
-        } finally 
-        {
-            if ( transport != null && transport.isOpen() )
-            {
-                try 
-                {
-                    transport.flush();
-                    transport.close();
-                } catch (Exception e) 
-                { 
-                    throw new MojoExecutionException("Something went wrong cleaning up", e);
-                }
-            }
-        }
-    }
+
 
 }

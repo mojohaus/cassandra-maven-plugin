@@ -19,10 +19,12 @@
 package org.codehaus.mojo.cassandra;
 
 import org.apache.cassandra.thrift.Cassandra;
+import org.apache.cassandra.thrift.InvalidRequestException;
 
 import org.apache.commons.exec.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.apache.thrift.TException;
@@ -316,5 +318,52 @@ public final class Utils
         {
             throw new MojoExecutionException("Command execution failed.", e);
         }
+    }
+    
+    /**
+     * Call {@link #executeOperation(Cassandra.Client)} on the provided operation
+     * @throws MojoExecutionException
+     * @throws MojoFailureException
+     */    
+    public static void executeThrift(ThriftApiOperation thriftApiOperation) throws MojoExecutionException
+    {
+        TSocket socket = new TSocket(thriftApiOperation.getRpcAddress(), thriftApiOperation.getRpcPort());
+        TTransport transport = new TFramedTransport(socket);
+
+        TBinaryProtocol binaryProtocol = new TBinaryProtocol(transport, true, true);
+        Cassandra.Client cassandraClient = new Cassandra.Client(binaryProtocol);
+
+        try 
+        {
+            transport.open();
+            if ( StringUtils.isNotBlank(thriftApiOperation.getKeyspace()) ) 
+            {
+                System.out.print("using keyspace: " + thriftApiOperation.getKeyspace());
+                cassandraClient.set_keyspace(thriftApiOperation.getKeyspace());
+            }
+            thriftApiOperation.executeOperation(cassandraClient);            
+        } catch (ThriftApiExecutionException taee) 
+        {
+            throw new MojoExecutionException("API Exception calling Apache Cassandra", taee);
+        } catch (Exception ex) 
+        {
+            throw new MojoExecutionException("General exception from Thrift", ex);
+        }
+        
+        finally 
+        {
+            if ( transport != null && transport.isOpen() )
+            {
+                try 
+                {
+                    transport.flush();
+                    transport.close();
+                } catch (Exception e) 
+                { 
+                    throw new MojoExecutionException("Something went wrong cleaning up", e);
+                }
+            }
+        }
+
     }
 }

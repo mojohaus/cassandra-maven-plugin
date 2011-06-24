@@ -23,6 +23,15 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
      */
     protected String columnFamilies;
 
+
+    @Override
+    protected ThriftApiOperation buildOperation() 
+    {
+        DropCfOperation dropCfOp = new DropCfOperation(rpcAddress, rpcPort);
+        dropCfOp.setKeyspace(keyspace);        
+        return dropCfOp;
+    }
+
     private String[] columnFamilyList;
 
     protected void parseArguments() throws IllegalArgumentException
@@ -36,24 +45,38 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     
         columnFamilyList = StringUtils.split(columnFamilies, ',');
     }
-
-    @Override
-    protected void executeOperation(Client client) throws InvalidRequestException, SchemaDisagreementException, TException 
-    {
-        if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
-        {
-            for (int i = 0; i < columnFamilyList.length; i++) 
-            {
-                client.system_drop_column_family(columnFamilyList[i]);
-                getLog().info("Dropped column family \"" + columnFamilyList[i] + "\".");
-            }
-        } 
-        else 
-        {
-            client.system_drop_keyspace(keyspace);
-            getLog().info("Dropped keyspace \"" + keyspace + "\".");
-        }
         
+
+    class DropCfOperation extends ThriftApiOperation 
+    {
+
+        public DropCfOperation(String rpcAddress, int rpcPort)
+        {
+            super(rpcAddress, rpcPort);
+        }
+
+        @Override
+        public void executeOperation(Client client) throws ThriftApiExecutionException
+        {
+            try {
+                if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
+                {
+                    for (int i = 0; i < columnFamilyList.length; i++) 
+                    {
+                        client.system_drop_column_family(columnFamilyList[i]);
+                        getLog().info("Dropped column family \"" + columnFamilyList[i] + "\".");
+                    }
+                } 
+                else 
+                {
+                    client.system_drop_keyspace(keyspace);
+                    getLog().info("Dropped keyspace \"" + keyspace + "\".");
+                }
+            } catch (Exception e) 
+            {
+                throw new ThriftApiExecutionException(e);
+            }
+        }
     }
-    
+
 }
