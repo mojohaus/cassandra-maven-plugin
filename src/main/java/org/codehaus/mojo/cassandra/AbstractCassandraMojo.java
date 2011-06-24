@@ -214,6 +214,13 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     protected int maxMemory;
 
     /**
+     * The keyspace against which individual operations will be executed
+     * @parameter expression="${cassandra.keyspace}"
+     * 
+     */
+    protected String keyspace; 
+    
+    /**
      * Create a jar with just a manifest containing a Main-Class entry for SurefireBooter and a Class-Path entry for
      * all classpath elements. Copied from surefire (ForkConfiguration#createJar())
      *
