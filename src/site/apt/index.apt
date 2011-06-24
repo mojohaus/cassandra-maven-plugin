@@ -53,6 +53,8 @@ Mojo's Cassandra Maven Plugin
   * {{{./cleanup-mojo.html}cassandra:cleanup}} Runs <<<nodetool cleanup>>> against the test instance of Cassandra.
 
   * {{{./delete-mojo.html}cassandra:delete}} Deletes the the test instance of Cassandra.
+  
+  * {{{./cql-mojo.html}cassandra:cql-exec}} Execute a CQL statement (directly or from a file) against the test instance of Cassandra.  
 
 * Usage
 
