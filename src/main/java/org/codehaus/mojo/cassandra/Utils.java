@@ -338,7 +338,6 @@ public final class Utils
             transport.open();
             if ( StringUtils.isNotBlank(thriftApiOperation.getKeyspace()) ) 
             {
-                System.out.print("using keyspace: " + thriftApiOperation.getKeyspace());
                 cassandraClient.set_keyspace(thriftApiOperation.getKeyspace());
             }
             thriftApiOperation.executeOperation(cassandraClient);            
