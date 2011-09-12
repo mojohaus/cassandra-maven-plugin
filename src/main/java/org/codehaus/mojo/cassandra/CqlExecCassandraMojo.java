@@ -64,9 +64,9 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
    */
   protected String comparator = "BytesType";
   
-  private AbstractType<?> comparatorVal;
-  private AbstractType<?> keyValidatorVal;
-  private AbstractType<?> defaultValidatorVal;
+//  private AbstractType<?> comparatorVal;
+//  private AbstractType<?> keyValidatorVal;
+//  private AbstractType<?> defaultValidatorVal;
   
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -75,15 +75,15 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
         getLog().info("Skipping cassandra: cassandra.skip==true");
         return;
     }
-    try 
-    {
-        comparatorVal = DatabaseDescriptor.getComparator(comparator);
-        keyValidatorVal = DatabaseDescriptor.getComparator(keyValidator);
-        defaultValidatorVal = DatabaseDescriptor.getComparator(defaultValidator);
-        
-    } catch (ConfigurationException e) {
-        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
-    }
+//    try
+//    {
+//        comparatorVal = DatabaseDescriptor.getComparator(comparator);
+//        keyValidatorVal = DatabaseDescriptor.getComparator(keyValidator);
+//        defaultValidatorVal = DatabaseDescriptor.getComparator(defaultValidator);
+//
+//    } catch (ConfigurationException e) {
+//        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
+//    }
     List<CqlExecOperation> cqlOps = new ArrayList<CqlExecOperation>();
     //  file vs. statement switch
     if ( cqlScript != null && cqlScript.isFile() ) 
@@ -102,7 +102,7 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
         }
     } else 
     {            
-        // TODO aiccept keyFormat, columnFormat, valueFormat
+        // TODO accept keyFormat, columnFormat, valueFormat
         // ^ are these relevant on file load?
         if ( cqlStatement.contains(";") ) 
         {
@@ -132,14 +132,14 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           while ( cqlExecOperation.hasNext() )
           {
               CqlRow cqlRow = cqlExecOperation.next();
-              getLog().info("Row key: "+keyValidatorVal.getString(cqlRow.key));
-              getLog().info("-----------------------------------------------");
-              for (Column column : cqlRow.getColumns() )
-              {
-                  getLog().info(" name: "+comparatorVal.getString(column.name));
-                  getLog().info(" value: "+defaultValidatorVal.getString(column.value));
-                  getLog().info("-----------------------------------------------");                  
-              }
+//              getLog().info("Row key: "+keyValidatorVal.getString(cqlRow.key));
+//              getLog().info("-----------------------------------------------");
+//              for (Column column : cqlRow.getColumns() )
+//              {
+//                  getLog().info(" name: "+comparatorVal.getString(column.name));
+//                  getLog().info(" value: "+defaultValidatorVal.getString(column.value));
+//                  getLog().info("-----------------------------------------------");
+//              }
 
           }
             
