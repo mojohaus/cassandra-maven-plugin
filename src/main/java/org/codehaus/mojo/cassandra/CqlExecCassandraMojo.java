@@ -24,7 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Loads a {@code cassandra-cli} bscript into a Cassandra instance.
+ * Executes cql statements from maven.
  *
  * @author zznate
  * @goal cql-exec
