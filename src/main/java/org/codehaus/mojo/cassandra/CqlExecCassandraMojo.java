@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.cassandra.config.ConfigurationException;
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.db.marshal.AbstractType;
+import org.apache.cassandra.db.marshal.TypeParser;
 import org.apache.cassandra.thrift.Column;
 import org.apache.cassandra.thrift.Compression;
 import org.apache.cassandra.thrift.CqlResult;
@@ -64,9 +65,9 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
    */
   protected String comparator = "BytesType";
   
-//  private AbstractType<?> comparatorVal;
-//  private AbstractType<?> keyValidatorVal;
-//  private AbstractType<?> defaultValidatorVal;
+  private AbstractType<?> comparatorVal;
+  private AbstractType<?> keyValidatorVal;
+  private AbstractType<?> defaultValidatorVal;
   
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -75,15 +76,15 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
         getLog().info("Skipping cassandra: cassandra.skip==true");
         return;
     }
-//    try
-//    {
-//        comparatorVal = DatabaseDescriptor.getComparator(comparator);
-//        keyValidatorVal = DatabaseDescriptor.getComparator(keyValidator);
-//        defaultValidatorVal = DatabaseDescriptor.getComparator(defaultValidator);
-//
-//    } catch (ConfigurationException e) {
-//        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
-//    }
+    try
+    {
+        comparatorVal = TypeParser.parse(comparator);
+        keyValidatorVal = TypeParser.parse(keyValidator);
+        defaultValidatorVal = TypeParser.parse(defaultValidator);
+
+    } catch (ConfigurationException e) {
+        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
+    }
     List<CqlExecOperation> cqlOps = new ArrayList<CqlExecOperation>();
     //  file vs. statement switch
     if ( cqlScript != null && cqlScript.isFile() ) 
@@ -132,17 +133,16 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           while ( cqlExecOperation.hasNext() )
           {
               CqlRow cqlRow = cqlExecOperation.next();
-//              getLog().info("Row key: "+keyValidatorVal.getString(cqlRow.key));
-//              getLog().info("-----------------------------------------------");
-//              for (Column column : cqlRow.getColumns() )
-//              {
-//                  getLog().info(" name: "+comparatorVal.getString(column.name));
-//                  getLog().info(" value: "+defaultValidatorVal.getString(column.value));
-//                  getLog().info("-----------------------------------------------");
-//              }
+              getLog().info("Row key: "+keyValidatorVal.getString(cqlRow.key));
+              getLog().info("-----------------------------------------------");
+              for (Column column : cqlRow.getColumns() )
+              {
+                  getLog().info(" name: "+comparatorVal.getString(column.name));
+                  getLog().info(" value: "+defaultValidatorVal.getString(column.value));
+                  getLog().info("-----------------------------------------------");
+              }
 
-          }
-            
+          }            
       }          
   }
   
@@ -154,7 +154,7 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       CqlExecOperation cqlOp = new CqlExecOperation(rpcAddress, rpcPort, cqlStatement);
       if ( StringUtils.isNotBlank(keyspace)) 
       {
-          getLog().error("setting keyspace: " + keyspace);
+          getLog().info("setting keyspace: " + keyspace);
           cqlOp.setKeyspace(keyspace);
       }
       try 
@@ -196,7 +196,7 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       @Override
       public boolean hasNext()
       {
-          return rowIter.hasNext();
+          return rowIter != null && rowIter.hasNext();
       }
 
       @Override
