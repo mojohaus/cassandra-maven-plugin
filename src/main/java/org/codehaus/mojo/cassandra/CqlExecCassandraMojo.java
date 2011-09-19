@@ -2,6 +2,7 @@ package org.codehaus.mojo.cassandra;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,6 +23,8 @@ import org.apache.cassandra.utils.ByteBufferUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * Executes cql statements from maven.
@@ -71,54 +74,60 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
   
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    if (skip)
-    {
-        getLog().info("Skipping cassandra: cassandra.skip==true");
-        return;
-    }
-    try
-    {
-        comparatorVal = TypeParser.parse(comparator);
-        keyValidatorVal = TypeParser.parse(keyValidator);
-        defaultValidatorVal = TypeParser.parse(defaultValidator);
+      if (skip)
+      {
+          getLog().info("Skipping cassandra: cassandra.skip==true");
+          return;
+      }
+      try
+      {
+          comparatorVal = TypeParser.parse(comparator);
+          keyValidatorVal = TypeParser.parse(keyValidator);
+          defaultValidatorVal = TypeParser.parse(defaultValidator);
 
-    } catch (ConfigurationException e) {
-        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
-    }
-    List<CqlExecOperation> cqlOps = new ArrayList<CqlExecOperation>();
-    //  file vs. statement switch
-    if ( cqlScript != null && cqlScript.isFile() ) 
-    {
-        BufferedReader br;
-     
-        try {
-            br = new BufferedReader(new FileReader(cqlScript));
-            String curLine = br.readLine();
-            while (curLine != null) 
-            {
-                cqlOps.add(doExec(curLine));
-            }
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not parse or load cql file", e);
-        }
-    } else 
-    {            
-        // TODO accept keyFormat, columnFormat, valueFormat
-        // ^ are these relevant on file load?
-        if ( cqlStatement.contains(";") ) 
-        {
-            String[] ops = StringUtils.split(cqlStatement, ";");
-            for (int i = 0; i < ops.length; i++)
-            {
-                cqlOps.add(doExec(ops[i]));
+      } catch (ConfigurationException e)
+      {
+          throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
+      }
+      List<CqlExecOperation> cqlOps = new ArrayList<CqlExecOperation>();
+      if (cqlScript != null && cqlScript.isFile())
+      {
+          FileReader fr = null;
+          try
+          {
+              fr = new FileReader(cqlScript);
+              cqlStatement = IOUtil.toString(fr);
+          } catch (FileNotFoundException e)
+          {
+              throw new MojoExecutionException("Cql file '" + cqlScript + "' was deleted before I could read it", e);
+          } catch (IOException e)
+          {
+              throw new MojoExecutionException("Could not parse or load cql file", e);
+          } finally
+          {
+              IOUtil.close(fr);
+          }
+      }
 
-            }
-        } else
-        {
-            cqlOps.add(doExec(cqlStatement));
-        }
-    }   
-    printResults(cqlOps);
+      if (StringUtils.isBlank(cqlStatement))
+      {
+          getLog().warn("No CQL provided. Nothing to do.");
+      } else
+      {
+          // TODO accept keyFormat, columnFormat, valueFormat
+          // ^ are these relevant on file load?
+          if (cqlStatement.contains(";"))
+          {
+              for (String op : StringUtils.split(cqlStatement, ";"))
+              {
+                  cqlOps.add(doExec(op));
+              }
+          } else
+          {
+              cqlOps.add(doExec(cqlStatement));
+          }
+          printResults(cqlOps);
+      }
   }
   
   /*
