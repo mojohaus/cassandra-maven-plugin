@@ -232,7 +232,6 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           return current.bufferForKey();
       }
 
-
   }
 
 }
