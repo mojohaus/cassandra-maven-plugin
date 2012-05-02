@@ -22,14 +22,12 @@ import org.apache.cassandra.cli.CliMain;
 import org.apache.cassandra.tools.NodeCmd;
 
 import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.OS;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.toolchain.Toolchain;
 import org.apache.maven.toolchain.ToolchainManager;
@@ -43,7 +41,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -577,34 +574,24 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     {
         createCassandraHome(cassandraDir, listenAddress, rpcAddress, initialToken, seeds);
         CommandLine commandLine = newJavaCommandLine();
-        List<String> args = new ArrayList<String>();
-        args.add("-Xmx" + maxMemory + "m");
+        commandLine.addArgument("-Xmx" + maxMemory + "m");
         if (stopKey != null && stopPort > 0 && stopPort < 65536)
         {
-            args.add("-D" + CassandraMonitor.KEY_PROPERTY_NAME + "=" + stopKey);
-            args.add("-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort);
-            args.add("-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress);
+            commandLine.addArgument("-D" + CassandraMonitor.KEY_PROPERTY_NAME + "=" + stopKey);
+            commandLine.addArgument("-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort);
+            commandLine.addArgument("-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress);
         }
-        try
-        {
-            args.add("-Dlog4j.configuration=" 
-                    + new File(new File(cassandraDir, "conf"), "log4j-server.properties").toURL().toURI().toString());
-        }
-        catch ( URISyntaxException e )
-        {
-            IOException ioe = new IOException( e.getMessage() );
-            ioe.initCause( e );
-            throw ioe;
-        }
-        args.add("-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled);
+        commandLine.addArgument("-Dlog4j.configuration="
+                + new File(new File(cassandraDir, "conf"), "log4j-server.properties").toURI().toURL().toString());
+        commandLine.addArgument("-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled);
         if (jmxRemoteEnabled) {
-            args.add("-Dcom.sun.management.jmxremote.port=" + jmxPort);
-            args.add("-Dcom.sun.management.jmxremote.ssl=false");
-            args.add("-Dcom.sun.management.jmxremote.authenticate=false");
+            commandLine.addArgument("-Dcom.sun.management.jmxremote.port=" + jmxPort);
+            commandLine.addArgument("-Dcom.sun.management.jmxremote.ssl=false");
+            commandLine.addArgument("-Dcom.sun.management.jmxremote.authenticate=false");
         }
-        args.add("-jar");
-        args.add(new File(new File(cassandraDir, "bin"), "cassandra.jar").toString());
-        commandLine.addArguments(args.toArray(new String[args.size()]), true);
+        commandLine.addArgument("-jar");
+        // It seems that java cannot handle quoted jar file names...
+        commandLine.addArgument(new File(new File(cassandraDir, "bin"), "cassandra.jar").getAbsolutePath(), false);
         return commandLine;
     }
 
@@ -619,17 +606,16 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     {
         createCassandraHome();
         CommandLine commandLine = newJavaCommandLine();
-        List<String> args1 = new ArrayList<String>();
-        args1.add("-jar");
-        args1.add(new File(new File(cassandraDir, "bin"), "cassandra-cli.jar").toString());
-        args1.add("--host");
-        args1.add(rpcAddress);
-        args1.add("--port");
-        args1.add(Integer.toString(rpcPort));
-        args1.add("--jmxport");
-        args1.add(Integer.toString(jmxPort));
-        args1.addAll(Arrays.asList(args));
-        commandLine.addArguments(args1.toArray(new String[args1.size()]), true);
+        commandLine.addArgument("-jar");
+        // It seems that java cannot handle quoted jar file names...
+        commandLine.addArgument(new File(new File(cassandraDir, "bin"), "cassandra-cli.jar").getAbsolutePath(), false);
+        commandLine.addArgument("--host");
+        commandLine.addArgument(rpcAddress);
+        commandLine.addArgument("--port");
+        commandLine.addArgument(Integer.toString(rpcPort));
+        commandLine.addArgument("--jmxport");
+        commandLine.addArgument(Integer.toString(jmxPort));
+        commandLine.addArguments(args);
         return commandLine;
     }
 
@@ -644,15 +630,40 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
     {
         createCassandraHome();
         CommandLine commandLine = newJavaCommandLine();
-        List<String> args1 = new ArrayList<String>();
-        args1.add("-jar");
-        args1.add(new File(new File(cassandraDir, "bin"), "nodetool.jar").toString());
-        args1.add("--host");
-        args1.add("127.0.0.1");
-        args1.add("--port");
-        args1.add(Integer.toString(jmxPort));
-        args1.addAll(Arrays.asList(args));
-        commandLine.addArguments(args1.toArray(new String[args1.size()]), true);
+        commandLine.addArgument("-jar");
+        // It seems that java cannot handle quoted jar file names...
+        commandLine.addArgument(new File(new File(cassandraDir, "bin"), "nodetool.jar").getAbsolutePath(), false);
+        commandLine.addArgument("--host");
+        commandLine.addArgument("127.0.0.1");
+        commandLine.addArgument("--port");
+        commandLine.addArgument(Integer.toString(jmxPort));
+        commandLine.addArguments(args);
         return commandLine;
     }
+
+    /**
+     * Turns a file into a path string that is quoted (and escaped) if necessary
+     * @param file the file to convert to a path string.
+     * @return the path string.
+     */
+    private static String toPathString(File file)
+    {
+        String path = file.getAbsolutePath();
+        boolean hasSpaces = path.indexOf(' ') != -1;
+        boolean hasDoubleQuotes = path.indexOf('\"') != -1;
+        boolean hasSingleQuotes = path.indexOf('\'') != -1;
+        if (!(hasSpaces || hasDoubleQuotes || hasSingleQuotes))
+        {
+            return path;
+        }
+        if (!hasDoubleQuotes)
+        {
+            return '\"' + path + '\"';
+        }
+        if (!hasSingleQuotes) {
+            return '\'' + path + '\'';
+        }
+        return '\"' + StringUtils.escape(path, new char[]{'\"'}, '\'') + '\"';
+    }
+
 }
