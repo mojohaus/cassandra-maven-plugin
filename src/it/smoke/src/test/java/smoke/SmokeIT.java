@@ -19,19 +19,18 @@
 package smoke;
 
 import org.apache.cassandra.thrift.Cassandra;
-import org.apache.cassandra.thrift.ColumnPath;
-import org.apache.cassandra.thrift.ConsistencyLevel;
-import org.apache.cassandra.thrift.SlicePredicate;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import java.util.AbstractMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.*;
 
 public class SmokeIT
 {
@@ -44,7 +43,8 @@ public class SmokeIT
         tr.open();
         try
         {
-            assertThat(client.describe_keyspace("TestKeyspace").getReplication_factor(), is(1));
+            assertThat(client.describe_keyspace("TestKeyspace").getStrategy_options().entrySet(),
+                    hasItem((Map.Entry<String, String>)new AbstractMap.SimpleEntry<String,String>("replication_factor","1")));
         } finally
         {
             tr.close();
