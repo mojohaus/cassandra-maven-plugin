@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.cassandra.exceptions.UnavailableException;
 import org.apache.cassandra.service.StorageProxy;
-import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -41,7 +41,7 @@ public class TruncateCassandraMojo extends AbstractCassandraMojo
             getLog().debug("Truncating Column Family \"" + columnFamily + "\" in Keyspace \"" + keyspace + "\"...");
             StorageProxy.truncateBlocking(keyspace, columnFamily);
             getLog().info("Truncated Column Family \"" + columnFamily + "\" in Keyspace \"" + keyspace + "\"...");
-        } catch (UnavailableException ue) 
+        } catch (UnavailableException ue)
         {
             throw new MojoExecutionException("Host(s) must be up in order for a truncate operation to be successful.", ue);
         } catch (TimeoutException te) 

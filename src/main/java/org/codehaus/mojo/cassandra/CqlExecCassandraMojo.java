@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cassandra.config.ConfigurationException;
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.db.marshal.AbstractType;
 import org.apache.cassandra.db.marshal.TypeParser;
+import org.apache.cassandra.exceptions.ConfigurationException;
+import org.apache.cassandra.exceptions.SyntaxException;
 import org.apache.cassandra.thrift.Column;
 import org.apache.cassandra.thrift.Compression;
 import org.apache.cassandra.thrift.CqlResult;
@@ -42,36 +43,36 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
    * @parameter expression="${cassandra.cql.script}" default-value="${basedir}/src/cassandra/cql/exec.cql"
    */
   protected File cqlScript;
-  
+
   /**
    * The CQL statement to execute singularly
-   * 
+   *
    * @parameter expression="${cql.statement}"
    */
   protected String cqlStatement;
-  
+
   /**
    * Expected type of the column value
    * @parameter expression="${cql.defaultValidator}"
    */
   protected String defaultValidator = "BytesType";
-  
+
   /**
-   * Expected type of the key 
+   * Expected type of the key
    * @parameter expression="${cql.keyValidator}"
    */
   protected String keyValidator = "BytesType";
-  
+
   /**
    * Expected type of the column name
    * @parameter expression="${cql.comparator}"
    */
   protected String comparator = "BytesType";
-  
+
   private AbstractType<?> comparatorVal;
   private AbstractType<?> keyValidatorVal;
   private AbstractType<?> defaultValidatorVal;
-  
+
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
       if (skip)
@@ -88,6 +89,9 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       } catch (ConfigurationException e)
       {
           throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
+      } catch (SyntaxException e)
+      {
+        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
       }
       List<CqlExecOperation> cqlOps = new ArrayList<CqlExecOperation>();
       if (cqlScript != null && cqlScript.isFile())
@@ -129,7 +133,7 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           printResults(cqlOps);
       }
   }
-  
+
   /*
    * Encapsulate print of CqlResult. Uses specified configuration options to format results
    */
@@ -138,7 +142,7 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       // TODO fix ghetto formatting
       getLog().info("-----------------------------------------------");
       for (CqlExecOperation cqlExecOperation : cqlOps)
-      {          
+      {
           while ( cqlExecOperation.hasNext() )
           {
               CqlRow cqlRow = cqlExecOperation.next();
@@ -151,31 +155,31 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
                   getLog().info("-----------------------------------------------");
               }
 
-          }            
-      }          
+          }
+      }
   }
-  
+
   /*
    * Encapsulate op execution for file vs. statement
    */
-  private CqlExecOperation doExec(String cqlStatement) throws MojoExecutionException 
+  private CqlExecOperation doExec(String cqlStatement) throws MojoExecutionException
   {
       CqlExecOperation cqlOp = new CqlExecOperation(rpcAddress, rpcPort, cqlStatement);
-      if ( StringUtils.isNotBlank(keyspace)) 
+      if ( StringUtils.isNotBlank(keyspace))
       {
           getLog().info("setting keyspace: " + keyspace);
           cqlOp.setKeyspace(keyspace);
       }
-      try 
+      try
       {
           Utils.executeThrift(cqlOp);
-      } catch (ThriftApiExecutionException taee) 
+      } catch (ThriftApiExecutionException taee)
       {
           throw new MojoExecutionException(taee.getMessage(), taee);
-      }   
+      }
       return cqlOp;
   }
-  
+
   class CqlExecOperation extends ThriftApiOperation implements Iterator<CqlRow> {
 
       CqlResult result;
@@ -192,11 +196,11 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       @Override
       void executeOperation(Client client) throws ThriftApiExecutionException
       {
-          try 
+          try
           {
               result = client.execute_cql_query(statementBuf, Compression.NONE);
               rowIter = result.getRowsIterator();
-          } catch (Exception e) 
+          } catch (Exception e)
           {
               throw new ThriftApiExecutionException(e);
           }
@@ -221,13 +225,13 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       {
           rowIter.remove();
       }
-      
+
       List<Column> getColumns()
       {
           return current.getColumns();
       }
-      
-      ByteBuffer getKey() 
+
+      ByteBuffer getKey()
       {
           return current.bufferForKey();
       }
