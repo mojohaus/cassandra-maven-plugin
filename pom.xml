@@ -79,7 +79,7 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>1.2.0</cassandraVersion>
+    <cassandraVersion>1.2.1</cassandraVersion>
   </properties>
 
   <dependencies>
