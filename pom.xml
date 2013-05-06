@@ -25,7 +25,7 @@ under the License.
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>31</version>
+    <version>32</version>
     <relativePath />
   </parent>
 
