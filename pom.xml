@@ -80,6 +80,7 @@ under the License.
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
     <cassandraVersion>1.2.4</cassandraVersion>
+    <slf4jVersion>1.7.5</slf4jVersion>
   </properties>
 
   <dependencies>
@@ -87,6 +88,20 @@ under the License.
       <groupId>org.apache.cassandra</groupId>
       <artifactId>cassandra-all</artifactId>
       <version>${cassandraVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Cassandra have not been tracking their transitive dependencies correctly -->
     <dependency>
@@ -95,10 +110,12 @@ under the License.
       <version>3.2.9.Final</version> <!-- 3.5.9.Final is not available in central -->
     </dependency>
     <!-- end of transitive dependency fix-up -->
+    <!-- this is instead of commons-logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${slf4jVersion}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -132,10 +149,6 @@ under the License.
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
           <artifactId>slf4j-jdk14</artifactId>
         </exclusion>
         <exclusion>
@@ -145,10 +158,6 @@ under the License.
         <exclusion>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>jcl-over-slf4j</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -272,5 +281,15 @@ under the License.
       </plugin>
     </plugins>
   </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+    </dependencies> 
+  </dependencyManagement>
 
 </project>
