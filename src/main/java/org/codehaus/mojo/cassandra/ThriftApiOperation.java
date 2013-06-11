@@ -10,6 +10,7 @@ public abstract class ThriftApiOperation {
   private String keyspace;
   private final String rpcAddress;
   private final int rpcPort;
+  private String cqlVersion = "2.0.0";
 
   public ThriftApiOperation(String rpcAddress, int rpcPort)
   {
@@ -40,6 +41,14 @@ public abstract class ThriftApiOperation {
       return rpcPort;
   }
 
+    public String getCqlVersion()
+    {
+        return cqlVersion;
+    }
 
+    public void setCqlVersion( String cqlVersion )
+    {
+        this.cqlVersion = cqlVersion;
+    }
 
 }

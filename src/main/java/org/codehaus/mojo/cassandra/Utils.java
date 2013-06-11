@@ -340,6 +340,10 @@ public final class Utils
             {
                 cassandraClient.set_keyspace(thriftApiOperation.getKeyspace());
             }
+            if ( "3.0.0".equals(thriftApiOperation.getCqlVersion())) 
+            {
+                cassandraClient.set_cql_version("3.0.0");
+            }
             thriftApiOperation.executeOperation(cassandraClient);            
         } catch (ThriftApiExecutionException taee) 
         {

@@ -20,6 +20,7 @@ import org.apache.cassandra.thrift.Compression;
 import org.apache.cassandra.thrift.CqlResult;
 import org.apache.cassandra.thrift.CqlRow;
 import org.apache.cassandra.thrift.Cassandra.Client;
+import org.apache.cassandra.thrift.ConsistencyLevel;
 import org.apache.cassandra.utils.ByteBufferUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -68,6 +69,13 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
    * @parameter expression="${cql.comparator}"
    */
   protected String comparator = "BytesType";
+
+  /**
+   * Version of CQL to use
+   * @parameter expression="${cql.version}"
+   * @since 1.2.1-2
+   */
+  protected String cqlVersion = "2.0.0";
 
   private AbstractType<?> comparatorVal;
   private AbstractType<?> keyValidatorVal;
@@ -170,6 +178,8 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           getLog().info("setting keyspace: " + keyspace);
           cqlOp.setKeyspace(keyspace);
       }
+      getLog().info("setting cqlversion: " + cqlVersion);
+      cqlOp.setCqlVersion( cqlVersion );
       try
       {
           Utils.executeThrift(cqlOp);
@@ -198,7 +208,14 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
       {
           try
           {
-              result = client.execute_cql_query(statementBuf, Compression.NONE);
+              if ("3.0.0".equals(getCqlVersion()))
+              {
+                result = client.execute_cql3_query(statementBuf, Compression.NONE, ConsistencyLevel.ONE );
+              }
+              else
+              {
+                result = client.execute_cql_query(statementBuf, Compression.NONE);
+              }
               rowIter = result.getRowsIterator();
           } catch (Exception e)
           {
