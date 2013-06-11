@@ -39,7 +39,7 @@ public class StartCassandraMojo
     extends AbstractCassandraMojo
 {
     /**
-     * How long to wait for Cassandra to be started before finishing the goal. A value of 0 will wait indefinately. A
+     * How long to wait for Cassandra to be started before finishing the goal. A value of 0 will wait indefinitely. A
      * value of -1 will not wait at all.
      *
      * @parameter default-value="180"
