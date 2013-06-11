@@ -72,6 +72,8 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
      * The CassandraUnit dataSet to load.
      *
      * @parameter default-value="${basedir}/src/test/resources/dataSet.xml"
+     *
+     * @since 1.2.1-2
      */
     protected File cuDataSet;
 
@@ -79,6 +81,8 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
      * Whether to ignore errors when loading the script.
      *
      * @parameter expression="${cassandra.cu.load.failure.ignore}"
+     *
+     * @since 1.2.1-2
      */
     private boolean cuLoadFailureIgnore;
 
@@ -86,6 +90,8 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
      * When {@code true}, if this is a clean start then the CassandraUnit dataSet will be applied automatically.
      *
      * @parameter expression="${cassandra.cu.load.after.first.start}" default-value="true"
+     *
+     * @since 1.2.1-2
      */
     private boolean cuLoadAfterFirstStart;
     
