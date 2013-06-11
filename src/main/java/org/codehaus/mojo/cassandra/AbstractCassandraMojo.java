@@ -215,8 +215,15 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
      * @parameter expression="${cassandra.keyspace}"
      * 
      */
-    protected String keyspace; 
-    
+    protected String keyspace;
+
+    /**
+     * List of System properties to pass to the JUnit tests.
+     * @parameter
+     * @since 1.2.1-2
+     */
+    protected Map<String, String> systemPropertyVariables;
+
     /**
      * Create a jar with just a manifest containing a Main-Class entry for SurefireBooter and a Class-Path entry for
      * all classpath elements. Copied from surefire (ForkConfiguration#createJar())
@@ -591,9 +598,19 @@ public abstract class AbstractCassandraMojo extends AbstractMojo
             commandLine.addArgument("-Dcom.sun.management.jmxremote.ssl=false");
             commandLine.addArgument("-Dcom.sun.management.jmxremote.authenticate=false");
         }
+
+        if (systemPropertyVariables != null && !systemPropertyVariables.isEmpty())
+        {
+            for (Map.Entry<String,String> entry : systemPropertyVariables.entrySet())
+            {
+                commandLine.addArgument( "-D" + entry.getKey() + "=" + entry.getValue() );
+            }
+        }
+
         commandLine.addArgument("-jar");
         // It seems that java cannot handle quoted jar file names...
         commandLine.addArgument(new File(new File(cassandraDir, "bin"), "cassandra.jar").getAbsolutePath(), false);
+
         return commandLine;
     }
 
