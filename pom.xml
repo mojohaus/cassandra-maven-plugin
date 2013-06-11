@@ -62,6 +62,11 @@ under the License.
       </roles>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Mikhail Mazursky</name>
+    </contributor>
+  </contributors>
 
   <prerequisites>
     <maven>${mavenVersion}</maven>
