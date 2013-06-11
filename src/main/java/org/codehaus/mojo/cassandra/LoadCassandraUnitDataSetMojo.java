@@ -33,6 +33,7 @@ import org.cassandraunit.dataset.ParseException;
  * @goal cu-load
  * @threadSafe
  * @phase pre-integration-test
+ * @since 1.2.1-2
  */
 public class LoadCassandraUnitDataSetMojo extends AbstractCassandraMojo {
     /**
