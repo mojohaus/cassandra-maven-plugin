@@ -112,6 +112,7 @@ under the License.
             <goals>
               <goal>start</goal>
               <goal>load</goal>
+              <goal>cu-load</goal>
               <goal>stop</goal>
             </goals>
           </execution>
@@ -130,6 +131,7 @@ under the License.
         </dependencies>
         <configuration>
           <loadAfterFirstStart>false</loadAfterFirstStart>
+          <cuLoadAfterFirstStart>false</cuLoadAfterFirstStart>
         </configuration>
       </plugin>
     </plugins>

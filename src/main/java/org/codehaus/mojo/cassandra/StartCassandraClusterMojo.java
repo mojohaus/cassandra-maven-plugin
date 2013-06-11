@@ -20,6 +20,9 @@ package org.codehaus.mojo.cassandra;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.cassandraunit.DataLoader;
+import org.cassandraunit.dataset.FileDataSet;
+import org.cassandraunit.dataset.ParseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +68,27 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
      */
     private boolean loadAfterFirstStart;
 
+    /**
+     * The CassandraUnit dataSet to load.
+     *
+     * @parameter default-value="${basedir}/src/test/resources/dataSet.xml"
+     */
+    protected File cuDataSet;
+
+    /**
+     * Whether to ignore errors when loading the script.
+     *
+     * @parameter expression="${cassandra.cu.load.failure.ignore}"
+     */
+    private boolean cuLoadFailureIgnore;
+
+    /**
+     * When {@code true}, if this is a clean start then the CassandraUnit dataSet will be applied automatically.
+     *
+     * @parameter expression="${cassandra.cu.load.after.first.start}" default-value="true"
+     */
+    private boolean cuLoadAfterFirstStart;
+    
     /**
      * The number of nodes in the cluster.
      *
@@ -144,6 +168,27 @@ public class StartCassandraClusterMojo extends AbstractCassandraMojo
                     getLog().info("Finished " + script + ".");
                 }
             }
+
+            if (isClean && cuLoadAfterFirstStart && cuDataSet != null && cuDataSet.isFile())
+            {
+                getLog().info("Loading CassandraUnit dataSet " + cuDataSet + "...");
+                try
+                {
+                    DataLoader dataLoader = new DataLoader("cassandraUnitCluster", rpcAddress + ":" + rpcPort);
+                    dataLoader.load(new FileDataSet(cuDataSet.getAbsolutePath()));
+                } catch (ParseException e)
+                {
+                    if (cuLoadFailureIgnore)
+                    {
+                        getLog().error(e.getMessage() + ". Ignoring as cuLoadFailureIgnore is true");
+                    } else
+                    {
+                        throw new MojoExecutionException("Error while loading CassandraUnit dataSet", e);
+                    }
+                }
+                getLog().info("Finished " + cuDataSet + ".");
+            }
+
             getLog().info("Cassandra started in " + ((System.currentTimeMillis() - timeStamp) / 100L) / 10.0 + "s");
         } catch (IOException e)
         {
