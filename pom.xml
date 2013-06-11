@@ -114,6 +114,11 @@ under the License.
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.xerial.snappy</groupId>
+      <artifactId>snappy-java</artifactId>
+      <version>1.0.5</version>
+    </dependency>
     <!-- Cassandra have not been tracking their transitive dependencies correctly -->
     <dependency>
       <artifactId>netty</artifactId>
