@@ -90,7 +90,7 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>1.2.4</cassandraVersion>
+    <cassandraVersion>1.2.5</cassandraVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
   </properties>
 
