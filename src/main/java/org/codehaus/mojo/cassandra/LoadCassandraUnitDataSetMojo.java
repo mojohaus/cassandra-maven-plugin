@@ -28,24 +28,26 @@ import org.cassandraunit.dataset.ParseException;
 
 /**
  * Loads a CassandraUnit DataSet into a Cassandra instance.
- * 
+ *
  * @author jsevellec
  * @goal cu-load
  * @threadSafe
  * @phase pre-integration-test
  * @since 1.2.1-2
  */
-public class LoadCassandraUnitDataSetMojo extends AbstractCassandraMojo {
+public class LoadCassandraUnitDataSetMojo
+    extends AbstractCassandraMojo
+{
     /**
      * The CassandraUnit dataSet to load.
-     * 
+     *
      * @parameter default-value="${basedir}/src/test/resources/dataSet.xml"
      */
     protected File cuDataSet;
 
     /**
      * Whether to ignore errors when loading the dataSet.
-     * 
+     *
      * @parameter expression="${cassandra.cuload.failure.ignore}"
      */
     private boolean cuLoadFailureIgnore;
@@ -53,39 +55,43 @@ public class LoadCassandraUnitDataSetMojo extends AbstractCassandraMojo {
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        if (skip)
+    public void execute()
+        throws MojoExecutionException, MojoFailureException
+    {
+        if ( skip )
         {
-            getLog().info("Skipping cassandra: cassandra.skip==true");
+            getLog().info( "Skipping cassandra: cassandra.skip==true" );
             return;
         }
 
-        if (!cuDataSet.isFile())
+        if ( !cuDataSet.isFile() )
         {
-            if (cuLoadFailureIgnore)
+            if ( cuLoadFailureIgnore )
             {
-                getLog().error(
-                        "CassandraUnit dataSet " + cuDataSet + " does not exist."
-                                + ". Ignoring as cuLoadFailureIgnore is true");
+                getLog().error( "CassandraUnit dataSet " + cuDataSet + " does not exist."
+                                    + ". Ignoring as cuLoadFailureIgnore is true" );
                 return;
-            } else
+            }
+            else
             {
-                throw new MojoFailureException("CassandraUnit dataSet " + cuDataSet + " does not exist.");
+                throw new MojoFailureException( "CassandraUnit dataSet " + cuDataSet + " does not exist." );
             }
         }
 
         try
         {
-            DataLoader dataLoader = new DataLoader("cassandraUnitCluster", rpcAddress + ":" + rpcPort);
-            dataLoader.load(new FileDataSet(cuDataSet.getAbsolutePath()));
-        } catch (ParseException e)
+            DataLoader dataLoader = new DataLoader( "cassandraUnitCluster", rpcAddress + ":" + rpcPort );
+            dataLoader.load( new FileDataSet( cuDataSet.getAbsolutePath() ) );
+        }
+        catch ( ParseException e )
         {
-            if (cuLoadFailureIgnore)
+            if ( cuLoadFailureIgnore )
             {
-                getLog().error(e.getMessage() + ". Ignoring as cuLoadFailureIgnore is true");
-            } else
+                getLog().error( e.getMessage() + ". Ignoring as cuLoadFailureIgnore is true" );
+            }
+            else
             {
-                throw new MojoExecutionException("Error while loading CassandraUnit dataSet", e);
+                throw new MojoExecutionException( "Error while loading CassandraUnit dataSet", e );
             }
         }
     }
