@@ -37,13 +37,13 @@ public class SmokeIT
     @Test
     public void connectToKeyspace() throws Exception
     {
-        TTransport tr = new TFramedTransport(new TSocket("localhost", 9160));
+        TTransport tr = new TFramedTransport(new TSocket("localhost", Integer.getInteger( "rpcPort", 9160 )));
         TProtocol proto = new TBinaryProtocol(tr);
         Cassandra.Client client = new Cassandra.Client(proto);
         tr.open();
         try
         {
-            assertThat(client.describe_keyspace("TestKeyspace").getStrategy_options().entrySet(),
+            assertThat(client.describe_keyspace("TestKeyspaceWithSpace").getStrategy_options().entrySet(),
                     hasItem((Map.Entry<String, String>)new AbstractMap.SimpleEntry<String,String>("replication_factor","1")));
         } finally
         {

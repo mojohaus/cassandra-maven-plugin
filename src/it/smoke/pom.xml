@@ -94,6 +94,13 @@ under the License.
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <systemPropertyVariables>
+            <rpcPort>${cassandraPort}</rpcPort>
+            <storagePort>${cassandra.storagePort}</storagePort>
+            <stopPort>${cassandra.stopPort}</stopPort>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>@project.groupId@</groupId>
@@ -132,7 +139,31 @@ under the License.
         <configuration>
           <loadAfterFirstStart>false</loadAfterFirstStart>
           <cuLoadAfterFirstStart>false</cuLoadAfterFirstStart>
+          <rpcPort>${cassandraPort}</rpcPort>
+          <storagePort>${cassandra.storagePort}</storagePort>
+          <stopPort>${cassandra.stopPort}</stopPort>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>reserve-ports</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>reserve-network-port</goal>
+            </goals>
+            <configuration>
+              <portNames>
+                <portName>cassandraPort</portName>
+                <portName>cassandra.storagePort</portName>
+                <portName>cassandra.stopPort</portName>
+              </portNames>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
