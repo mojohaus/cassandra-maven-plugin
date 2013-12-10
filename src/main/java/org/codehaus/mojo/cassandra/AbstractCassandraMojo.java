@@ -167,6 +167,21 @@ public abstract class AbstractCassandraMojo
     protected int jmxPort;
 
     /**
+     * Port on which the CQL native transport listens for clients.
+     *
+     * @parameter expression="${cassandra.nativeTransportPort}" default-value="9042"
+     */
+    protected int nativeTransportPort;
+
+    /**
+     * Enable or disable the native transport server. Currently, only the Thrift 
+     * server is started by default because the native transport is considered beta.
+     *
+     * @parameter expression="${cassandra.startNativeTransport}" default-value="false"
+     */
+    protected boolean startNativeTransport;
+
+    /**
      * Address to bind to and tell other Cassandra nodes to connect to. You
      * <strong>must</strong> change this if you want multiple nodes to be able to
      * communicate!
@@ -450,6 +465,8 @@ public abstract class AbstractCassandraMojo
         config.append( "storage_port: " ).append( storagePort ).append( "\n" );
         config.append( "rpc_address: " ).append( rpcAddress ).append( "\n" );
         config.append( "rpc_port: " ).append( rpcPort ).append( "\n" );
+        config.append( "native_transport_port: " ).append( nativeTransportPort ).append( "\n" );
+        config.append( "start_native_transport: " ).append( startNativeTransport ).append( "\n" );
         if ( seeds != null )
         {
             config.append( "seed_provider: " ).append( "\n" );
