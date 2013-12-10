@@ -21,15 +21,10 @@ package org.codehaus.mojo.cassandra;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.Socket;
 
 /**
  * Deletes the Cassandra home directory that we create for running Cassandra.
@@ -56,6 +51,14 @@ public class DeleteCassandraMojo extends AbstractMojo
     private boolean skip;
 
     /**
+     * Fail execution in case of error.
+     *
+     * @parameter expression="${cassandra.failOnError}" default-value="true"
+     * @since 2.0.0-1
+     */
+    protected boolean failOnError;
+
+    /**
      * {@inheritDoc}
      */
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -71,7 +74,11 @@ public class DeleteCassandraMojo extends AbstractMojo
             FileUtils.deleteDirectory(cassandraDir);
         } catch (IOException e)
         {
-            throw new MojoFailureException(e.getLocalizedMessage(), e);
+            if (failOnError)
+            {
+                throw new MojoFailureException(e.getLocalizedMessage(), e);
+            }
+            getLog().warn("Failed to delete " + cassandraDir.getAbsolutePath(), e);
         }
     }
 }
