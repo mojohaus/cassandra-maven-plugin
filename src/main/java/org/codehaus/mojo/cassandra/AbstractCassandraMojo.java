@@ -170,6 +170,8 @@ public abstract class AbstractCassandraMojo
      * Port on which the CQL native transport listens for clients.
      *
      * @parameter expression="${cassandra.nativeTransportPort}" default-value="9042"
+     * 
+     * @since 2.0.0-1
      */
     protected int nativeTransportPort;
 
@@ -178,6 +180,8 @@ public abstract class AbstractCassandraMojo
      * server is started by default because the native transport is considered beta.
      *
      * @parameter expression="${cassandra.startNativeTransport}" default-value="false"
+     * 
+     * @since 2.0.0-1
      */
     protected boolean startNativeTransport;
 
