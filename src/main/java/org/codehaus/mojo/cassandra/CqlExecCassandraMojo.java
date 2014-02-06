@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -132,11 +133,15 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
           {
               for (String op : StringUtils.split(cqlStatement, ";"))
               {
-                  cqlOps.add(doExec(op));
+                  if ( StringUtils.isNotBlank(op) ) {
+                      cqlOps.add(doExec(op));
+                  }
               }
           } else
           {
-              cqlOps.add(doExec(cqlStatement));
+              if ( StringUtils.isNotBlank(cqlStatement) ) {
+                  cqlOps.add(doExec(cqlStatement));
+              }
           }
           printResults(cqlOps);
       }
@@ -219,6 +224,11 @@ public class CqlExecCassandraMojo extends AbstractCassandraMojo {
               rowIter = result.getRowsIterator();
           } catch (Exception e)
           {
+              try {
+                  getLog().debug(ByteBufferUtil.string(statementBuf));
+              } catch(CharacterCodingException cce) {
+                  getLog().debug(cce);
+              }
               throw new ThriftApiExecutionException(e);
           }
       }
