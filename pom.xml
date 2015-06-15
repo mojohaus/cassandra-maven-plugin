@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>2.1.1-1-SNAPSHOT</version>
+  <version>2.1.6-1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -90,7 +90,7 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>2.1.1</cassandraVersion>
+    <cassandraVersion>2.1.6</cassandraVersion>
     <slf4jVersion>1.7.7</slf4jVersion>
   </properties>
 
