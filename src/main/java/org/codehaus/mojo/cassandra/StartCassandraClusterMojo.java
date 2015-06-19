@@ -38,7 +38,7 @@ import java.util.Arrays;
  * @phase pre-integration-test
  */
 public class StartCassandraClusterMojo
-    extends AbstractCassandraMojo
+    extends AbstractCqlLoadMojo
 {
     /**
      * How long to wait for Cassandra to be started before finishing the goal. A value of 0 will wait indefinately. A
@@ -47,20 +47,6 @@ public class StartCassandraClusterMojo
      * @parameter default-value="180"
      */
     protected int startWaitSeconds;
-
-    /**
-     * The script to load.
-     *
-     * @parameter default-value="${basedir}/src/cassandra/cli/load.script"
-     */
-    protected File script;
-
-    /**
-     * Whether to ignore errors when loading the script.
-     *
-     * @parameter expression="${cassandra.load.failure.ignore}"
-     */
-    private boolean loadFailureIgnore;
 
     /**
      * When {@code true}, if this is a clean start then the load script will be applied automatically.
@@ -170,27 +156,9 @@ public class StartCassandraClusterMojo
                     }
                 }
             }
-            if ( isClean && loadAfterFirstStart && script != null && script.isFile() )
+            if ( isClean && loadAfterFirstStart)
             {
-                getLog().info( "Running " + script + "..." );
-                int rv = Utils.runLoadScript( cassandraDir[0], newCliCommandLine( "--file", script.getAbsolutePath() ),
-                                              createEnvironmentVars(), getLog() );
-                if ( rv != 0 )
-                {
-                    if ( loadFailureIgnore )
-                    {
-                        getLog().error(
-                            "Command exited with error code " + rv + ". Ignoring as loadFailureIgnore is true" );
-                    }
-                    else
-                    {
-                        throw new MojoExecutionException( "Command exited with error code " + rv );
-                    }
-                }
-                else
-                {
-                    getLog().info( "Finished " + script + "." );
-                }
+                execCqlFile();
             }
 
             if ( isClean && cuLoadAfterFirstStart && cuDataSet != null && cuDataSet.isFile() )

@@ -18,37 +18,19 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.commons.exec.ExecuteException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
- * Loads a {@code cassandra-cli} bscript into a Cassandra instance.
+ * Loads a Cassandra CQL script into a Cassandra instance.
  *
  * @author stephenc
  * @goal load
  * @threadSafe
  * @phase pre-integration-test
  */
-public class LoadCassandraMojo extends AbstractCassandraMojo
+public class LoadCassandraMojo extends AbstractCqlLoadMojo
 {
-    /**
-     * The script to load.
-     *
-     * @parameter default-value="${basedir}/src/cassandra/cli/load.script"
-     */
-    protected File script;
-
-    /**
-     * Whether to ignore errors when loading the script.
-     *
-     * @parameter expression="${cassandra.load.failure.ignore}"
-     */
-    private boolean loadFailureIgnore;
-
     /**
      * {@inheritDoc}
      */
@@ -59,39 +41,7 @@ public class LoadCassandraMojo extends AbstractCassandraMojo
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        try
-        {
-            if (!script.isFile())
-            {
-                if (loadFailureIgnore)
-                {
-                    getLog().error("Specified script " + script + " does not exist."
-                            + ". Ignoring as loadFailureIgnore is true");
-                    return;
-                }
-                else
-                {
-                    throw new MojoFailureException("Specified script " + script + " does not exist.");
-                }
-            }
 
-            int rv = Utils.runLoadScript(cassandraDir, newCliCommandLine("--file", script.getAbsolutePath()),
-                    createEnvironmentVars(), getLog());
-            if (rv != 0)
-            {
-                if (loadFailureIgnore)
-                {
-                    getLog().error("Command exited with error code " + rv + ". Ignoring as loadFailureIgnore is true");
-                }
-                else
-                {
-                    throw new MojoExecutionException("Command exited with error code " + rv);
-                }
-            }
-        } catch (IOException e)
-        {
-            throw new MojoExecutionException(e.getLocalizedMessage(), e);
-        }
+        execCqlFile();
     }
-
 }

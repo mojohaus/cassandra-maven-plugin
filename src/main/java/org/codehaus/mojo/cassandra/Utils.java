@@ -287,40 +287,6 @@ public final class Utils
     }
 
     /**
-     * Runs the cassandra-cli load script command.
-     * @param cassandraDir The directory to start the cassandra-cli process in.
-     * @param commandLine  The command line to use to start the cassandra-cli process.
-     * @param environment  The environment to start the cassandra-cli process with.
-     * @param log          The log to send the output to.
-     * @return The exit code of the cassandra-cli process.
-     * @throws MojoExecutionException if something went wrong.
-     */
-    public static int runLoadScript(File cassandraDir, CommandLine commandLine, Map environment, Log log) throws MojoExecutionException {
-        Executor exec = new DefaultExecutor();
-        exec.setWorkingDirectory(cassandraDir);
-        exec.setProcessDestroyer(new ShutdownHookProcessDestroyer());
-
-        LogOutputStream stdout = new MavenLogOutputStream(log);
-        LogOutputStream stderr = new MavenLogOutputStream(log);
-
-        try
-        {
-            log.debug("Executing command line: " + commandLine);
-
-            exec.setStreamHandler(new PumpStreamHandler(stdout, stderr));
-
-            exec.execute(commandLine, environment);
-            return 0;
-        } catch (ExecuteException e)
-        {
-            return e.getExitValue();
-        } catch (IOException e)
-        {
-            throw new MojoExecutionException("Command execution failed.", e);
-        }
-    }
-    
-    /**
      * Call {@link #executeOperation(Cassandra.Client)} on the provided operation
      * @throws MojoExecutionException
      * @throws MojoFailureException
@@ -340,11 +306,8 @@ public final class Utils
             {
                 cassandraClient.set_keyspace(thriftApiOperation.getKeyspace());
             }
-            if ( "3.0.0".equals(thriftApiOperation.getCqlVersion())) 
-            {
-                cassandraClient.set_cql_version("3.0.0");
-            }
-            thriftApiOperation.executeOperation(cassandraClient);            
+            cassandraClient.set_cql_version(thriftApiOperation.getCqlVersion());
+            thriftApiOperation.executeOperation(cassandraClient);
         } catch (ThriftApiExecutionException taee) 
         {
             throw new MojoExecutionException("API Exception calling Apache Cassandra", taee);
