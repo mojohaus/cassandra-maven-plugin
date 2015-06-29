@@ -37,19 +37,19 @@ public class ThriftApiExecutionException extends RuntimeException
     
     private static String deduceExceptionMessage(Throwable t)
     {
-        String msg = "Details: ";
+        StringBuilder msg = new StringBuilder("Details: ");
         if ( t instanceof UnavailableException )
-            msg.concat("You do not have enough nodes up to handle the specified consistency level");
+            msg.append("You do not have enough nodes up to handle the specified consistency level");
         else if ( t instanceof TimedOutException )
-            msg.concat("Request timed out - server load may be too high, or you may be requesting too many rows for a single operation");
+            msg.append("Request timed out - server load may be too high, or you may be requesting too many rows for a single operation");
         else if ( t instanceof InvalidRequestException )
-            msg.concat("The request was not properly formatted " + t.getMessage());
+            msg.append("The request was not properly formatted ").append(((InvalidRequestException) t).getWhy());
         else if ( t instanceof SchemaDisagreementException)
-            msg.concat("Schema versions are out of sync");
+            msg.append("Schema versions are out of sync");
         else if ( t instanceof TException )
-            msg.concat("General Thrift Exception, ensure Apache Cassandra is running and all necessary ports are accessible");
+            msg.append("General Thrift Exception, ensure Apache Cassandra is running and all necessary ports are accessible");
         else
-            msg.concat("n/a");
-        return msg;
+            msg.append("n/a");
+        return msg.toString();
     }
 }
