@@ -77,7 +77,7 @@ public abstract class AbstractCassandraMojo
     /**
      * The directory containing generated classes.
      *
-     * @parameter expression="${project.build.outputDirectory}"
+     * @parameter property="project.build.outputDirectory"
      * @required
      */
     private File classesDirectory;
@@ -85,7 +85,7 @@ public abstract class AbstractCassandraMojo
     /**
      * The directory containing generated test classes.
      *
-     * @parameter expression="${project.build.testOutputDirectory}"
+     * @parameter property="project.build.testOutputDirectory"
      * @required
      */
     private File testClassesDirectory;
@@ -109,7 +109,7 @@ public abstract class AbstractCassandraMojo
     /**
      * Skip the execution.
      *
-     * @parameter expression="${cassandra.skip}" default-value="false"
+     * @parameter property="cassandra.skip" default-value="false"
      */
     protected boolean skip;
 
@@ -151,21 +151,21 @@ public abstract class AbstractCassandraMojo
     /**
      * Port to listen to for the RPC interface.
      *
-     * @parameter expression="${cassandra.rpcPort}" default-value="9160"
+     * @parameter property="cassandra.rpcPort" default-value="9160"
      */
     protected int rpcPort;
 
     /**
      * Port to listen to for the JMX interface.
      *
-     * @parameter expression="${cassandra.jmxPort}" default-value="7199"
+     * @parameter property="cassandra.jmxPort" default-value="7199"
      */
     protected int jmxPort;
 
     /**
      * Port on which the CQL native transport listens for clients.
      *
-     * @parameter expression="${cassandra.nativeTransportPort}" default-value="9042"
+     * @parameter property="cassandra.nativeTransportPort" default-value="9042"
      * 
      * @since 2.0.0-1
      */
@@ -175,7 +175,7 @@ public abstract class AbstractCassandraMojo
      * Enable or disable the native transport server. Currently, only the Thrift 
      * server is started by default because the native transport is considered beta.
      *
-     * @parameter expression="${cassandra.startNativeTransport}" default-value="false"
+     * @parameter property="cassandra.startNativeTransport" default-value="false"
      * 
      * @since 2.0.0-1
      */
@@ -201,35 +201,35 @@ public abstract class AbstractCassandraMojo
     /**
      * Port to listen to for the Storage interface.
      *
-     * @parameter expression="${cassandra.storagePort}" default-value="7000"
+     * @parameter property="cassandra.storagePort" default-value="7000"
      */
     protected int storagePort;
 
     /**
      * Port to listen to for receiving the stop command over
      *
-     * @parameter expression="${cassandra.stopPort}" default-value="8081"
+     * @parameter property="cassandra.stopPort" default-value="8081"
      */
     protected int stopPort;
 
     /**
      * Key to be provided when stopping cassandra
      *
-     * @parameter expression="${cassandra.stopKey}" default-value="cassandra-maven-plugin"
+     * @parameter property="cassandra.stopKey" default-value="cassandra-maven-plugin"
      */
     protected String stopKey;
 
     /**
      * Number of megabytes to limit the cassandra JVM to.
      *
-     * @parameter expression="${cassandra.maxMemory}" default-value="512"
+     * @parameter property="cassandra.maxMemory" default-value="512"
      */
     protected int maxMemory;
 
     /**
      * The keyspace against which individual operations will be executed
      *
-     * @parameter expression="${cassandra.keyspace}"
+     * @parameter property="cassandra.keyspace"
      */
     protected String keyspace;
 

@@ -48,7 +48,7 @@ public class LoadCassandraUnitDataSetMojo
     /**
      * Whether to ignore errors when loading the dataSet.
      *
-     * @parameter expression="${cassandra.cuload.failure.ignore}"
+     * @parameter property="cassandra.cuload.failure.ignore"
      */
     private boolean cuLoadFailureIgnore;
 

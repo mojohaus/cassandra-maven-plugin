@@ -19,7 +19,7 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     /**
      * The one or more comma-delimited ColumnFamilies against to be dropped. 
      * If not specified, the Keyspace will be dropped.
-     * @parameter expression="${cassandra.columnFamilies}"
+     * @parameter property="cassandra.columnFamilies"
      */
     protected String columnFamilies;
 

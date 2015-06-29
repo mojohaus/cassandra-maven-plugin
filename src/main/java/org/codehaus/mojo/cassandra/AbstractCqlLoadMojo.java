@@ -21,7 +21,7 @@ public abstract class AbstractCqlLoadMojo extends AbstractCqlExecMojo
     /**
      * Whether to ignore errors when loading the script.
      *
-     * @parameter expression="${cassandra.load.failure.ignore}"
+     * @parameter property="cassandra.load.failure.ignore"
      */
     private boolean loadFailureIgnore;
 

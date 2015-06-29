@@ -46,14 +46,14 @@ public class DeleteCassandraMojo extends AbstractMojo
     /**
      * Skip the execution.
      *
-     * @parameter expression="${cassandra.skip}" default-value="false"
+     * @parameter property="cassandra.skip" default-value="false"
      */
     private boolean skip;
 
     /**
      * Fail execution in case of error.
      *
-     * @parameter expression="${cassandra.failOnError}" default-value="true"
+     * @parameter property="cassandra.failOnError" default-value="true"
      * @since 2.0.0-1
      */
     protected boolean failOnError;
