@@ -18,12 +18,8 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.cli.CliMain;
-//import org.apache.cassandra.tools.NodeCmd;
-
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.execution.MavenSession;
@@ -411,12 +407,6 @@ public abstract class AbstractCassandraMojo
             getLog().debug( ( cassandraJar.isFile() ? "Updating " : "Creating " ) + cassandraJar );
             createCassandraJar( cassandraJar, CassandraMonitor.class.getName(), cassandraDir );
         }
-        File cassandraCliJar = new File( bin, "cassandra-cli.jar" );
-        if ( Utils.shouldGenerateResource( project, cassandraCliJar ) )
-        {
-            getLog().debug( ( cassandraCliJar.isFile() ? "Updating " : "Creating " ) + cassandraCliJar );
-            createCassandraJar( cassandraCliJar, CliMain.class.getName(), cassandraDir );
-        }
         /*
         File nodetoolJar = new File( bin, "nodetool.jar" );
         if ( Utils.shouldGenerateResource( project, nodetoolJar ) )
@@ -654,36 +644,10 @@ public abstract class AbstractCassandraMojo
     }
 
     /**
-     * Creates the command line to launch the {@code cassandra-cli} utility.
+     * Creates the command line to launch the {@code nodetool} utility.
      *
-     * @param args the command line arguments to pass to the {@code cassandra-cli} utility.
-     * @return the {@link CommandLine} to launch {@code cassandra-cli} with the supplied arguments.
-     * @throws IOException if there are issues creating the cassandra home directory.
-     */
-    protected CommandLine newCliCommandLine( String... args )
-        throws IOException
-    {
-        createCassandraHome();
-        CommandLine commandLine = newJavaCommandLine();
-        commandLine.addArgument( "-jar" );
-        // It seems that java cannot handle quoted jar file names...
-        commandLine.addArgument( new File( new File( cassandraDir, "bin" ), "cassandra-cli.jar" ).getAbsolutePath(),
-                                 false );
-        commandLine.addArgument( "--host" );
-        commandLine.addArgument( rpcAddress );
-        commandLine.addArgument( "--port" );
-        commandLine.addArgument( Integer.toString( rpcPort ) );
-        commandLine.addArgument( "--jmxport" );
-        commandLine.addArgument( Integer.toString( jmxPort ) );
-        commandLine.addArguments( args );
-        return commandLine;
-    }
-
-    /**
-     * Creates the command line to launch the {@code cassandra-cli} utility.
-     *
-     * @param args the command line arguments to pass to the {@code cassandra-cli} utility.
-     * @return the {@link CommandLine} to launch {@code cassandra-cli} with the supplied arguments.
+     * @param args the command line arguments to pass to the {@code nodetool} utility.
+     * @return the {@link CommandLine} to launch {@code nodetool} with the supplied arguments.
      * @throws IOException if there are issues creating the cassandra home directory.
      */
     protected CommandLine newNodetoolCommandLine( String... args )

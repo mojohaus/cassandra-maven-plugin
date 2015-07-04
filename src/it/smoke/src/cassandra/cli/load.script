@@ -1,7 +1,0 @@
-create keyspace TestKeyspace
-    with placement_strategy = 'org.apache.cassandra.locator.SimpleStrategy'
-    and strategy_options = {replication_factor:1};
-
-use TestKeyspace;
-create column family Test with column_type='Standard' and comparator='UTF8Type';
-describe TestKeyspace;

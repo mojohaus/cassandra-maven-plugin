@@ -63,8 +63,8 @@ Developing a web application
 mvn cassandra:start jetty:run
 ---
 
-  If the web application is expecting keyspaces to be defined, we can use a <<<cassandra-cli>>> script to create the
-  keyspaces for us. We create a file called <<<src/cassandra/cli/load.script>>>. By default <<<cassandra:start>>>
+  If the web application is expecting keyspaces to be defined, we can use a CQL script to create the
+  keyspaces for us. We create a file called <<<src/cassandra/cql/load.cql>>>. By default <<<cassandra:start>>>
   will run this script if the cassandra instance has not been created yet. If the automatic detection does not
   work for you, you can invoke <<<cassandra:load>>> manually.
 
