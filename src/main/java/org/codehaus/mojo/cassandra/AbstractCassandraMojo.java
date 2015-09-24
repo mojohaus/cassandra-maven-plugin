@@ -54,7 +54,7 @@ import java.util.jar.Manifest;
  * @author stephenc
  */
 public abstract class AbstractCassandraMojo
-    extends AbstractMojos
+    extends AbstractMojo
 {
     /**
      * The directory to hold cassandra's database.
