@@ -25,7 +25,7 @@ under the License.
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>34</version>
+    <version>38</version>
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
@@ -85,8 +85,8 @@ under the License.
   </prerequisites>
 
   <scm>
-    <connection>scm:git:git@github.com:mojohaus/cassandra-maven-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:mojohaus/cassandra-maven-plugin.git</developerConnection>
+    <connection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/mojohaus/cassandra-maven-plugin.git</developerConnection>
     <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
   </scm>
   <issueManagement>
