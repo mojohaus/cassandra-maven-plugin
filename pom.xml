@@ -105,6 +105,8 @@ under the License.
     <jarPluginVersion>2.4</jarPluginVersion>
     <resourcesPluginVersion>2.6</resourcesPluginVersion>
     <surefirePluginVersion>2.18.1</surefirePluginVersion>
+    <dependencyPluginVersion>2.8</dependencyPluginVersion>
+    <buildHelperPluginVersion>1.9</buildHelperPluginVersion>
   </properties>
 
   <dependencies>
@@ -291,6 +293,18 @@ under the License.
         <artifactId>maven-install-plugin</artifactId>
         <version>${installPluginVersion}</version>
       </plugin>
+      <!-- fake triggering to download plugin for its and cache populated -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>cpu-count</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -322,7 +336,7 @@ under the License.
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.8</version>
+          <version>${dependencyPluginVersion}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -332,7 +346,7 @@ under the License.
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>1.8</version>
+          <version>${buildHelperPluginVersion}</version>
         </plugin>
       </plugins>
     </pluginManagement>
