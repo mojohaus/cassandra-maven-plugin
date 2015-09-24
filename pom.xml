@@ -25,8 +25,7 @@ under the License.
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>32</version>
-    <relativePath />
+    <version>34</version>
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
@@ -35,7 +34,6 @@ under the License.
 
   <name>Mojo's Cassandra Maven Plugin</name>
   <description>The Mojo Projects plugin for Apache Maven to allow launching a local Apache Cassandra instance from a Maven build</description>
-  <url>http://mojo.codehaus.org/cassandra-maven-plugin</url>
   <inceptionYear>2011</inceptionYear>
   <licenses>
     <license>
@@ -79,13 +77,13 @@ under the License.
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/cassandra-maven-plugin</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/cassandra-maven-plugin</url>
+    <connection>scm:git:git@github.com:mojohaus/cassandra-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:mojohaus/cassandra-maven-plugin.git</developerConnection>
+    <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
   </scm>
   <issueManagement>
-    <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MCASSANDRA</url>
+    <system>github</system>
+    <url>https://github.com/mojohaus/cassandra-maven-plugin/issues/</url>
   </issueManagement>
 
   <properties>
