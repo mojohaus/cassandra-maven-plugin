@@ -63,11 +63,11 @@ under the License.
     <plugins>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
+        <version>@cleanPluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>@compilerPluginVersion@</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -75,27 +75,27 @@ under the License.
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.5</version>
+        <version>@deployPluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>@installPluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
+        <version>@jarPluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
+        <version>@resourcesPluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.17</version>
+        <version>@surefirePluginVersion@</version>
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.17</version>
+        <version>@surefirePluginVersion@</version>
         <executions>
           <execution>
             <goals>
