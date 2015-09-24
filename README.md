@@ -1,6 +1,6 @@
 # MojoHaus Cassandra Maven Plugin
 
-This is the [versions-maven-plugin](http://www.mojohaus.org/cassandra-maven-plugin/).
+This is the [cassandra-maven-plugin](http://www.mojohaus.org/cassandra-maven-plugin/).
  
 [![Build Status](https://travis-ci.org/mojohaus/cassandra-maven-plugin.svg?branch=master)](https://travis-ci.org/mojohaus/cassandra-maven-plugin)
 
