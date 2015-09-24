@@ -350,6 +350,11 @@ under the License.
           <artifactId>maven-site-plugin</artifactId>
           <version>3.3</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
