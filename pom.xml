@@ -98,6 +98,7 @@ under the License.
     <mavenVersion>2.2.1</mavenVersion>
     <cassandraVersion>2.1.7</cassandraVersion>
     <slf4jVersion>1.7.2</slf4jVersion>
+    <log4jVersion>2.1</log4jVersion>
     <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
     <cleanPluginVersion>2.5</cleanPluginVersion>
     <compilerPluginVersion>2.3.2</compilerPluginVersion>
@@ -263,6 +264,18 @@ under the License.
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>${commonsLoggingVersion}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4jVersion}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4jVersion}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

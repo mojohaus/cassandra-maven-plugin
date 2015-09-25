@@ -138,12 +138,12 @@ under the License.
           <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.1</version>
+            <version>@log4jVersion@</version>
           </dependency>
           <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.1</version>
+            <version>@log4jVersion@</version>
           </dependency>
         </dependencies>
         <configuration>
