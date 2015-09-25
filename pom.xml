@@ -98,6 +98,7 @@ under the License.
     <mavenVersion>2.2.1</mavenVersion>
     <cassandraVersion>2.1.7</cassandraVersion>
     <slf4jVersion>1.7.2</slf4jVersion>
+    <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
     <cleanPluginVersion>2.5</cleanPluginVersion>
     <compilerPluginVersion>2.3.2</compilerPluginVersion>
     <deployPluginVersion>2.7</deployPluginVersion>
@@ -257,6 +258,12 @@ under the License.
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>${commonsLoggingVersion}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
