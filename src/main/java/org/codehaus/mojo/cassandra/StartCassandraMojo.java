@@ -25,7 +25,9 @@ import org.cassandraunit.dataset.FileDataSet;
 import org.cassandraunit.dataset.ParseException;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Starts a Cassandra instance in the background.
@@ -78,6 +80,13 @@ public class StartCassandraMojo
     private boolean cuLoadAfterFirstStart;
 
     /**
+     * Define an output file for the cassandra logs.
+     *
+     * @parameter expression="${cassandra.outputFile}"
+     */
+    private File outputFile;
+
+    /**
      * {@inheritDoc}
      */
     public void execute()
@@ -95,7 +104,15 @@ public class StartCassandraMojo
                 + cassandraDir.getAbsolutePath() );
         try
         {
-            Utils.startCassandraServer( cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog() );
+            if ( outputFile != null )
+            {
+                OutputStream outputStream = new FileOutputStream( outputFile );
+                Utils.startCassandraServer( cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog(), outputStream, outputStream );
+            }
+            else
+            {
+                Utils.startCassandraServer( cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog() );
+            }
 
             if ( startWaitSeconds >= 0 )
             {
