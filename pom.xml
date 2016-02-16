@@ -86,9 +86,9 @@ under the License.
   </prerequisites>
 
   <scm>
-    <connection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/mojohaus/cassandra-maven-plugin.git</developerConnection>
-    <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
+    <connection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</developerConnection>
+    <url>https://github.com/zalando/cassandra-maven-plugin</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -370,6 +370,58 @@ under the License.
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${buildHelperPluginVersion}</version>
         </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4</version>
+        <configuration>
+            <skip>true</skip>
+        </configuration>
+      </plugin>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+            <groupId>org.eclipse.m2e</groupId>
+            <artifactId>lifecycle-mapping</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+                <lifecycleMappingMetadata>
+                    <pluginExecutions>
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>
+                                    build-helper-maven-plugin
+                                </artifactId>
+                                <versionRange>[1.9,)</versionRange>
+                                <goals>
+                                    <goal>cpu-count</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <ignore></ignore>
+                            </action>
+                        </pluginExecution>
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>
+                                    org.apache.maven.plugins
+                                </groupId>
+                                <artifactId>
+                                    maven-plugin-plugin
+                                </artifactId>
+                                <versionRange>[3.4,)</versionRange>
+                                <goals>
+                                    <goal>helpmojo</goal>
+                                    <goal>descriptor</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <ignore></ignore>
+                            </action>
+                        </pluginExecution>
+                    </pluginExecutions>
+                </lifecycleMappingMetadata>
+            </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
@@ -452,4 +504,16 @@ under the License.
     </profile>
   </profiles>
 
+<distributionManagement>
+    <snapshotRepository>
+        <id>ossrh</id>
+        <name>Sonatype Nexus Snapshots</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+        <id>ossrh</id>
+        <name>Nexus Release Repository</name>
+        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+</distributionManagement>
 </project>
