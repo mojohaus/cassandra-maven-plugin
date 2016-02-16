@@ -30,7 +30,7 @@ under the License.
 
   <groupId>org.zalando</groupId>
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>2.1.7-z1-SNAPSHOT</version>
+  <version>2.1.7-z1</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -89,7 +89,7 @@ under the License.
     <connection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</connection>
     <developerConnection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</developerConnection>
     <url>https://github.com/zalando/cassandra-maven-plugin</url>
-    <tag>HEAD</tag>
+    <tag>cassandra-maven-plugin-2.1.7-z1</tag>
   </scm>
   <issueManagement>
     <system>github</system>
@@ -397,7 +397,7 @@ under the License.
                                 </goals>
                             </pluginExecutionFilter>
                             <action>
-                                <ignore></ignore>
+                                <ignore />
                             </action>
                         </pluginExecution>
                         <pluginExecution>
@@ -415,7 +415,7 @@ under the License.
                                 </goals>
                             </pluginExecutionFilter>
                             <action>
-                                <ignore></ignore>
+                                <ignore />
                             </action>
                         </pluginExecution>
                     </pluginExecutions>
