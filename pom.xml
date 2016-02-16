@@ -28,8 +28,9 @@ under the License.
     <version>38</version>
   </parent>
 
+  <groupId>org.zalando</groupId>
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>2.1.7-2-SNAPSHOT</version>
+  <version>2.1.7-z1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
