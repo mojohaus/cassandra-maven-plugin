@@ -85,9 +85,9 @@ under the License.
   </prerequisites>
 
   <scm>
-    <connection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/mojohaus/cassandra-maven-plugin.git</developerConnection>
-    <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
+    <connection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/zalando/cassandra-maven-plugin.git</developerConnection>
+    <url>https://github.com/zalando/cassandra-maven-plugin</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -369,6 +369,13 @@ under the License.
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${buildHelperPluginVersion}</version>
         </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4</version>
+        <configuration>
+            <skip>true</skip>
+        </configuration>
+      </plugin>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
             <groupId>org.eclipse.m2e</groupId>
@@ -496,4 +503,16 @@ under the License.
     </profile>
   </profiles>
 
+<distributionManagement>
+    <snapshotRepository>
+        <id>ossrh</id>
+        <name>Sonatype Nexus Snapshots</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+        <id>ossrh</id>
+        <name>Nexus Release Repository</name>
+        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+</distributionManagement>
 </project>
