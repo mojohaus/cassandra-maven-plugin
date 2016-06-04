@@ -241,6 +241,14 @@ public abstract class AbstractCassandraMojo
     protected Map<String, String> systemPropertyVariables;
 
     /**
+     * Log level of cassandra process. Logging is performed via log4j2.
+     *
+     * @parameter default-value="ERROR"
+     * @since 3.5
+     */
+    protected String logLevel;
+
+    /**
      * Create a jar with just a manifest containing a Main-Class entry for SurefireBooter and a Class-Path entry for
      * all classpath elements. Copied from surefire (ForkConfiguration#createJar())
      *
@@ -389,17 +397,17 @@ public abstract class AbstractCassandraMojo
             createCassandraYaml( cassandraYaml, data, commitlog, savedCaches, listenAddress, rpcAddress, initialToken,
                                  seeds );
         }
-        File log4jServerProperties = new File( conf, "log4j-server.properties" );
-        if ( Utils.shouldGenerateResource( project, log4jServerProperties ) )
+        File log4jServerConfig = new File( conf, "log4j-server.xml" );
+        if ( Utils.shouldGenerateResource( project, log4jServerConfig ) )
         {
-            getLog().debug( ( log4jServerProperties.isFile() ? "Updating " : "Creating " ) + log4jServerProperties );
-            FileUtils.copyURLToFile( getClass().getResource( "/log4j.properties" ), log4jServerProperties );
+            getLog().debug( ( log4jServerConfig.isFile() ? "Updating " : "Creating " ) + log4jServerConfig );
+            FileUtils.copyURLToFile( getClass().getResource("/log4j2.xml"), log4jServerConfig );
         }
-        File log4jClientProperties = new File( conf, "log4j-client.properties" );
-        if ( Utils.shouldGenerateResource( project, log4jClientProperties ) )
+        File log4jClientConfig = new File( conf, "log4j-client.xml" );
+        if ( Utils.shouldGenerateResource( project, log4jClientConfig ) )
         {
-            getLog().debug( ( log4jClientProperties.isFile() ? "Updating " : "Creating " ) + log4jClientProperties );
-            FileUtils.copyURLToFile( getClass().getResource( "/log4j.properties" ), log4jClientProperties );
+            getLog().debug( ( log4jClientConfig.isFile() ? "Updating " : "Creating " ) + log4jClientConfig );
+            FileUtils.copyURLToFile( getClass().getResource("/log4j2.xml"), log4jClientConfig );
         }
         File cassandraJar = new File( bin, "cassandra.jar" );
         if ( Utils.shouldGenerateResource( project, cassandraJar ) )
@@ -617,9 +625,10 @@ public abstract class AbstractCassandraMojo
             commandLine.addArgument( "-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort );
             commandLine.addArgument( "-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress );
         }
-        commandLine.addArgument( "-Dlog4j.configuration=" + new File( new File( cassandraDir, "conf" ),
-                                                                      "log4j-server.properties" ).toURI().toURL().toString() );
+        commandLine.addArgument( "-Dlog4j.configurationFile=" + new File( new File( cassandraDir, "conf" ),
+                                                                      "log4j-server.xml" ).toURI().toURL().toString() );
         commandLine.addArgument( "-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled );
+        commandLine.addArgument( "-DcassandraLogLevel=" + logLevel );
         if ( jmxRemoteEnabled )
         {
             commandLine.addArgument( "-Dcom.sun.management.jmxremote.port=" + jmxPort );
