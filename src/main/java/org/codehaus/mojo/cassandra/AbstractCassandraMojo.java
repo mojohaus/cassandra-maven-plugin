@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -611,6 +612,10 @@ public abstract class AbstractCassandraMojo
         createCassandraHome( cassandraDir, listenAddress, rpcAddress, initialToken, seeds );
         CommandLine commandLine = newJavaCommandLine();
         commandLine.addArgument( "-Xmx" + maxMemory + "m" );
+        //Only value should be quoted so we have to do it ourselves explicitly and disable additional quotation of whole
+        //argument because it causes errors during launch. Also URLEncode.encode on value seems to work correctly too,
+        //it is done for log4j.configuration during toURL().toString() conversion.
+        commandLine.addArgument( "-Dcassandra.storagedir=" + org.apache.commons.exec.util.StringUtils.quoteArgument(cassandraDir.getAbsolutePath()), false);
         if ( stopKey != null && stopPort > 0 && stopPort < 65536 )
         {
             commandLine.addArgument( "-D" + CassandraMonitor.KEY_PROPERTY_NAME + "=" + stopKey );

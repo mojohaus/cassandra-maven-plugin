@@ -30,7 +30,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      * @parameter expression="${cql.version}"
      * @since 1.2.1-2
      */
-    private String cqlVersion = "2.0.0";
+    private String cqlVersion = "3.4.0";
 
     protected String readFile(File file) throws MojoExecutionException
     {
