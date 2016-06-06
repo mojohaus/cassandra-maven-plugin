@@ -43,7 +43,7 @@ public class SmokeIT
         tr.open();
         try
         {
-            assertThat(client.describe_keyspace("TestKeyspace").getStrategy_options().entrySet(),
+            assertThat(client.describe_keyspace("testkeyspace").getStrategy_options().entrySet(),
                     hasItem((Map.Entry<String, String>)new AbstractMap.SimpleEntry<String,String>("replication_factor","1")));
         } finally
         {

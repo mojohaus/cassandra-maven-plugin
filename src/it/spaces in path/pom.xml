@@ -159,6 +159,7 @@ under the License.
         </dependencies>
         <configuration>
           <loadAfterFirstStart>false</loadAfterFirstStart>
+          <startNativeTransport>true</startNativeTransport>
           <rpcPort>${cassandraPort}</rpcPort>
           <storagePort>${cassandra.storagePort}</storagePort>
           <stopPort>${cassandra.stopPort}</stopPort>

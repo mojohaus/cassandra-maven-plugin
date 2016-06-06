@@ -29,7 +29,7 @@ under the License.
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>2.1.7-2-SNAPSHOT</version>
+  <version>3.5-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -97,8 +97,8 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>2.1.7</cassandraVersion>
-    <slf4jVersion>1.7.2</slf4jVersion>
+    <cassandraVersion>3.5</cassandraVersion>
+    <slf4jVersion>1.7.7</slf4jVersion>
     <log4jVersion>2.1</log4jVersion>
     <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
     <cleanPluginVersion>2.5</cleanPluginVersion>
@@ -139,25 +139,6 @@ under the License.
           <artifactId>logback-classic</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.xerial.snappy</groupId>
-      <artifactId>snappy-java</artifactId>
-      <version>1.0.5</version>
-    </dependency>
-    <!-- Cassandra have not been tracking their transitive dependencies correctly -->
-    <dependency>
-      <artifactId>netty</artifactId>
-      <groupId>org.jboss.netty</groupId>
-      <version>3.2.9.Final</version> <!-- 3.5.9.Final is not available in central -->
-    </dependency>
-    <!-- end of transitive dependency fix-up -->
-    <!-- this is instead of commons-logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>${slf4jVersion}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -380,7 +361,7 @@ under the License.
         <artifactId>slf4j-api</artifactId>
         <version>${slf4jVersion}</version>
       </dependency>
-    </dependencies> 
+    </dependencies>
   </dependencyManagement>
 
   <reporting>

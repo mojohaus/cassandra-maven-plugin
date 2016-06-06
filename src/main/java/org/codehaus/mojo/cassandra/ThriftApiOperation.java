@@ -10,7 +10,7 @@ public abstract class ThriftApiOperation {
   private String keyspace;
   private final String rpcAddress;
   private final int rpcPort;
-  private String cqlVersion = "2.0.0";
+  private String cqlVersion = "3.4.0";
 
   public ThriftApiOperation(String rpcAddress, int rpcPort)
   {
