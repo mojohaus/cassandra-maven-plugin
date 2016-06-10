@@ -21,13 +21,13 @@ public class TruncateCassandraMojo extends AbstractCassandraMojo
 {
 
     /**
-     * @parameter expression="${cassandra.keyspace}"
+     * @parameter property="cassandra.keyspace"
      * @required 
      */
     protected String keyspace;
     
     /**
-     * @parameter expression="${cassandra.columnFamily}"
+     * @parameter property="cassandra.columnFamily"
      * @required 
      */
     protected String columnFamily;

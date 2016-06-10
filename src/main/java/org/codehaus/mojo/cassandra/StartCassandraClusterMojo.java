@@ -51,7 +51,7 @@ public class StartCassandraClusterMojo
     /**
      * When {@code true}, if this is a clean start then the load script will be applied automatically.
      *
-     * @parameter expression="${cassandra.load.after.first.start}" default-value="true"
+     * @parameter property="cassandra.load.after.first.start" default-value="true"
      */
     private boolean loadAfterFirstStart;
 
@@ -66,7 +66,7 @@ public class StartCassandraClusterMojo
     /**
      * Whether to ignore errors when loading the script.
      *
-     * @parameter expression="${cassandra.cu.load.failure.ignore}"
+     * @parameter property="cassandra.cu.load.failure.ignore"
      * @since 1.2.1-2
      */
     private boolean cuLoadFailureIgnore;
@@ -74,7 +74,7 @@ public class StartCassandraClusterMojo
     /**
      * When {@code true}, if this is a clean start then the CassandraUnit dataSet will be applied automatically.
      *
-     * @parameter expression="${cassandra.cu.load.after.first.start}" default-value="true"
+     * @parameter property="cassandra.cu.load.after.first.start" default-value="true"
      * @since 1.2.1-2
      */
     private boolean cuLoadAfterFirstStart;
@@ -82,7 +82,7 @@ public class StartCassandraClusterMojo
     /**
      * The number of nodes in the cluster.
      *
-     * @parameter expression="${cassandra.cluster.size}" default-value="4"
+     * @parameter property="cassandra.cluster.size" default-value="4"
      */
     private int clusterSize;
 

@@ -27,7 +27,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
     /**
      * Version of CQL to use
      *
-     * @parameter expression="${cql.version}"
+     * @parameter property="cql.version"
      * @since 1.2.1-2
      */
     private String cqlVersion = "3.4.0";
