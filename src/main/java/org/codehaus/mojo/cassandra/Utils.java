@@ -148,18 +148,34 @@ public final class Utils
      */
     protected static DefaultExecuteResultHandler startCassandraServer(File cassandraDir, CommandLine commandLine,
                                                                       Map environment, Log log)
-            throws MojoExecutionException
-    {
+            throws MojoExecutionException {
+        LogOutputStream stdout = new MavenLogOutputStream(log);
+        LogOutputStream stderr = new MavenLogOutputStream(log);
 
+        return startCassandraServer(cassandraDir, commandLine, environment, log, stdout, stderr);
+    }
+
+    /**
+     * Starts the Cassandra server.
+     *
+     * @param cassandraDir The directory to start the Server process in.
+     * @param commandLine  The command line to use to start the Server process.
+     * @param environment  The environment to start the Server process with.
+     * @param log          The log to send debugging output to.
+     * @param stdout       The output stream to send cassandra stdout to.
+     * @param stderr       The output stream to send cassandra stderr to.
+     * @return The {@link ExecuteResultHandler} for the started process.
+     * @throws MojoExecutionException if something went wrong.
+     */
+    protected static DefaultExecuteResultHandler startCassandraServer(File cassandraDir, CommandLine commandLine,
+                                                                      Map environment, Log log, OutputStream stdout, OutputStream stderr)
+            throws MojoExecutionException {
         try
         {
             Executor exec = new DefaultExecutor();
             DefaultExecuteResultHandler execHandler = new DefaultExecuteResultHandler();
             exec.setWorkingDirectory(cassandraDir);
             exec.setProcessDestroyer(new ShutdownHookProcessDestroyer());
-
-            LogOutputStream stdout = new MavenLogOutputStream(log);
-            LogOutputStream stderr = new MavenLogOutputStream(log);
 
             log.debug("Executing command line: " + commandLine);
 
@@ -168,9 +184,6 @@ public final class Utils
             exec.execute(commandLine, environment, execHandler);
 
             return execHandler;
-        } catch (ExecuteException e)
-        {
-            throw new MojoExecutionException("Command execution failed.", e);
         } catch (IOException e)
         {
             throw new MojoExecutionException("Command execution failed.", e);
