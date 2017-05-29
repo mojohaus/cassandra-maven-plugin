@@ -21,6 +21,19 @@ under the License.
 
 <project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+		 
+  <custom>
+    <!-- 
+	  the fork me on github link point the the parent project, fix it by repeating the projectId here. 
+	  I suspect/hope there is a smarter way to do this, this is just a quickfix
+	-->
+    <fluidoSkin>
+      <gitHub>
+        <projectId>mojohaus/${this.artifactId}</projectId>
+      </gitHub>
+    </fluidoSkin>
+  </custom>
+  
   <body>
     <menu name="Overview">
       <item name="Introduction" href="index.html"/>
