@@ -35,12 +35,12 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
     private String cqlVersion = "3.4.0";
 
     /**
-     * Charset used when loading CQL files.
+     * Charset used when loading CQL files. If not specified the system default encoding will be used.
      *
-     * @parameter property="cql.encoding" default-value=java.nio.charset.Charset.defaultCharset()
+     * @parameter property="cql.encoding"
      * @since 3.6
      */
-    protected Charset cqlEncoding = Charset.defaultCharset();
+    protected String cqlEncoding = Charset.defaultCharset().name();
 
     protected String readFile(File file) throws MojoExecutionException
     {
