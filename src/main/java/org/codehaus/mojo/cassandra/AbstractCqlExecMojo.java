@@ -2,8 +2,10 @@ package org.codehaus.mojo.cassandra;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,14 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      */
     private String cqlVersion = "3.4.0";
 
+    /**
+     * Charset used when loading CQL files. If not specified the system default encoding will be used.
+     *
+     * @parameter property="cql.encoding"
+     * @since 3.6
+     */
+    protected String cqlEncoding = Charset.defaultCharset().name();
+
     protected String readFile(File file) throws MojoExecutionException
     {
         if (!file.isFile())
@@ -39,11 +49,11 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
             throw new MojoExecutionException("script " + file + " does not exist.");
         }
 
-        FileReader fr = null;
+        InputStreamReader r = null;
         try
         {
-            fr = new FileReader(file);
-            return IOUtil.toString(fr);
+            r = new InputStreamReader(new FileInputStream(file), cqlEncoding);
+            return IOUtil.toString(r);
         } catch (FileNotFoundException e)
         {
             throw new MojoExecutionException("Cql file '" + file + "' was deleted before I could read it", e);
@@ -52,7 +62,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
             throw new MojoExecutionException("Could not parse or load cql file", e);
         } finally
         {
-            IOUtil.close(fr);
+            IOUtil.close(r);
         }
     }
 

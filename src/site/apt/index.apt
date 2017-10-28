@@ -38,7 +38,7 @@ Mojo's Cassandra Maven Plugin
 
   * {{{./start-cluster-mojo.html}cassandra:start-cluster}} Starts up a test cluster of Cassandra in the background bound to the local loopback IP addresses 127.0.0.1, 127.0.0.2, etc.
 
-  * {{{./stop-clustermojo.html}cassandra:stop}} Stops the test cluster of Cassandra that was started using {{{./start-cluster-mojo.html}cassandra:start}}.
+  * {{{./stop-cluster-mojo.html}cassandra:stop-cluster}} Stops the test cluster of Cassandra that was started using {{{./start-cluster-mojo.html}cassandra:start-cluster}}.
 
   * {{{./run-mojo.html}cassandra:run}} Starts up a test instance of Cassandra in the foreground.
 
@@ -50,13 +50,13 @@ Mojo's Cassandra Maven Plugin
 
   * {{{./flush-mojo.html}cassandra:flush}} Runs <<<nodetool flush>>> against the test instance of Cassandra.
 
-  * {{{./comapct-mojo.html}cassandra:compact}} Runs <<<nodetool compact>>> against the test instance of Cassandra.
+  * {{{./comapact-mojo.html}cassandra:compact}} Runs <<<nodetool compact>>> against the test instance of Cassandra.
 
   * {{{./cleanup-mojo.html}cassandra:cleanup}} Runs <<<nodetool cleanup>>> against the test instance of Cassandra.
 
   * {{{./delete-mojo.html}cassandra:delete}} Deletes the the test instance of Cassandra.
   
-  * {{{./cql-mojo.html}cassandra:cql-exec}} Execute a CQL statement (directly or from a file) against the test instance of Cassandra.  
+  * {{{./cql-exec-mojo.html}cassandra:cql-exec}} Execute a CQL statement (directly or from a file) against the test instance of Cassandra.  
 
 * Usage
 

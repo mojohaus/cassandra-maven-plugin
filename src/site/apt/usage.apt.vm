@@ -211,6 +211,42 @@ mvn cassandra:run -Dcassandra.rpcPort=19160 -Dcassandra.jmxPort=17199 -Dcassandr
 </project>
 ---
 
+** Using alternative cassandra version. 
+
+  By default the cassandra version is ${cassandraVersion}, but you can override that by adding cassandra-all as a plugin dependency.
+
+  This may not work for all cassandra versions, but if you do not stray too far from the default version it should work.
+
+  Example:
+
+---
+<project>
+  ...
+  <build>
+    ...
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cassandra-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        ...
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.cassandra</groupId>
+                <artifactId>cassandra-all</artifactId>
+                <version>3.7</version>
+            </dependency>
+        </dependencies>
+      </plugin>
+      ...
+    </plugins>
+    ...
+  </build>
+  ...
+</project>
+---
+
 * Trademarks
 
   Apache, Apache Maven, Apache Cassandra, Maven, Cassandra and the Apache feather logo are trademarks of The Apache Software Foundation.
