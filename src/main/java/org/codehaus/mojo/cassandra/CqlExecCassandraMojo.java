@@ -96,19 +96,28 @@ public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
       getLog().info("-----------------------------------------------");
       for (CqlResult result : results)
       {
-          for (CqlRow row : result.getRows())
-          {
-              getLog().info("Row key: "+keyValidatorVal.getString(row.key));
-              getLog().info("-----------------------------------------------");
-              for (Column column : row.getColumns() )
-              {
-                  getLog().info(" name: "+comparatorVal.getString(column.name));
-                  getLog().info(" value: "+defaultValidatorVal.getString(column.value));
-                  getLog().info("-----------------------------------------------");
-              }
-
+          switch (result.type) {
+              case VOID:
+                  // Void method so nothing to log
+              case INT:
+                  getLog().info("Number result: " + result.getNum());
+              case ROWS:
+                  printRows(result);
           }
       }
   }
+
+    private void printRows(CqlResult result) {
+        for (CqlRow row : result.getRows()) {
+            getLog().info("Row key: " + keyValidatorVal.getString(row.key));
+            getLog().info("-----------------------------------------------");
+            for (Column column : row.getColumns()) {
+                getLog().info(" name: " + comparatorVal.getString(column.name));
+                getLog().info(" value: " + defaultValidatorVal.getString(column.value));
+                getLog().info("-----------------------------------------------");
+            }
+
+        }
+    }
 
 }
