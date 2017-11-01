@@ -99,10 +99,13 @@ public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
           switch (result.type) {
               case VOID:
                   // Void method so nothing to log
+                  break;
               case INT:
                   getLog().info("Number result: " + result.getNum());
+                  break;
               case ROWS:
                   printRows(result);
+                  break;
           }
       }
   }
