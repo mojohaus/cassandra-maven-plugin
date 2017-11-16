@@ -29,7 +29,7 @@ under the License.
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
-  <version>3.6-SNAPSHOT</version>
+  <version>3.6</version>
   <packaging>maven-plugin</packaging>
 
   <name>Mojo's Cassandra Maven Plugin</name>
@@ -89,7 +89,7 @@ under the License.
     <connection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mojohaus/cassandra-maven-plugin.git</developerConnection>
     <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
-    <tag>HEAD</tag>
+    <tag>cassandra-maven-plugin-3.6</tag>
   </scm>
   <issueManagement>
     <system>github</system>
