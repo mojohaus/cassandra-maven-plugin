@@ -95,7 +95,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         private CqlExecOperation(String statements)
         {
             super(rpcAddress, rpcPort);
-            this.statements = statements.split(";");
+            this.statements = statements.split("(?m);\\s*$");
             if (StringUtils.isNotBlank(keyspace))
             {
                 getLog().info("setting keyspace: " + keyspace);
