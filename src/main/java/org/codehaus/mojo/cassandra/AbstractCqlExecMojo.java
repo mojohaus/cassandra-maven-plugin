@@ -112,7 +112,6 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         CqlLexer lexer = new CqlLexer(stream);
         ArrayList<String> statementList = new ArrayList<String>();
         StringBuffer currentStatement = new StringBuffer();
-        boolean inComment;
         // Not the prettiest code i ever wrote, but it gets the job done.
         for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
             if (token.getText().equals(";")) {
@@ -126,6 +125,8 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
                 // TODO: There must be a cassandra util method somewhere that escapes a string for sql
                 currentStatement.append(token.getText().replaceAll("'", "''"));
                 currentStatement.append("'");
+            } else if (token.getType() == CqlLexer.COMMENT) {
+                // skip
             } else {
                 currentStatement.append(token.getText());
             }
@@ -146,6 +147,8 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         {
             super(rpcAddress, rpcPort);
             if (useCqlLexer) {
+                getLog().warn("********************************************************************************");
+                getLog().warn("Using CqlLexer has not been extensively tested");
                 this.statements = splitStatementsUsingCqlLexer(statements);
             } else {
                 this.statements = statements.split(";");
