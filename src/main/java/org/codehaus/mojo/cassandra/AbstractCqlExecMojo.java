@@ -147,7 +147,6 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         {
             super(rpcAddress, rpcPort);
             if (useCqlLexer) {
-                getLog().warn("********************************************************************************");
                 getLog().warn("Using CqlLexer has not been extensively tested");
                 this.statements = splitStatementsUsingCqlLexer(statements);
             } else {
