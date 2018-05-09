@@ -53,7 +53,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      * It is not enabled by default since has not been extensively tested.
      *
      * @parameter default-value=false
-     * @since 3.6
+     * @since 3.7
      */
     protected boolean useCqlLexer = false;
 
