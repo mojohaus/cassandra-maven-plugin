@@ -630,8 +630,9 @@ public abstract class AbstractCassandraMojo
             commandLine.addArgument( "-D" + CassandraMonitor.PORT_PROPERTY_NAME + "=" + stopPort );
             commandLine.addArgument( "-D" + CassandraMonitor.HOST_PROPERTY_NAME + "=" + listenAddress );
         }
-        commandLine.addArgument( "-Dlog4j.configurationFile=" + new File( new File( cassandraDir, "conf" ),
-                                                                      "log4j-server.xml" ).toURI().toURL().toString() );
+        String log4jConfigurationFile = System.getProperty("log4j.configurationFile", new File( new File( cassandraDir, "conf" ),
+                                                                      "log4j-server.xml" ).toURI().toURL().toString());
+        commandLine.addArgument( "-Dlog4j.configurationFile=" + log4jConfigurationFile );
         commandLine.addArgument( "-Dcom.sun.management.jmxremote=" + jmxRemoteEnabled );
         commandLine.addArgument( "-DcassandraLogLevel=" + logLevel );
         if ( jmxRemoteEnabled )
