@@ -105,7 +105,7 @@ under the License.
     <cleanPluginVersion>3.1.0</cleanPluginVersion>
     <compilerPluginVersion>2.3.2</compilerPluginVersion>
     <deployPluginVersion>2.7</deployPluginVersion>
-    <installPluginVersion>2.3.1</installPluginVersion>
+    <installPluginVersion>2.5.2</installPluginVersion>
     <jarPluginVersion>2.4</jarPluginVersion>
     <resourcesPluginVersion>2.6</resourcesPluginVersion>
     <surefirePluginVersion>2.22.2</surefirePluginVersion>
