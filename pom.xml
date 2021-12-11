@@ -102,7 +102,7 @@ under the License.
     <slf4jVersion>1.7.7</slf4jVersion>
     <log4jVersion>2.15.0</log4jVersion>
     <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
-    <cleanPluginVersion>2.5</cleanPluginVersion>
+    <cleanPluginVersion>3.1.0</cleanPluginVersion>
     <compilerPluginVersion>2.3.2</compilerPluginVersion>
     <deployPluginVersion>2.7</deployPluginVersion>
     <installPluginVersion>2.3.1</installPluginVersion>
