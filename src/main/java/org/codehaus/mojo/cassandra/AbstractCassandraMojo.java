@@ -38,7 +38,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -275,12 +274,10 @@ public abstract class AbstractCassandraMojo
         throws IOException
     {
         File conf = new File( cassandraDir, "conf" );
-        FileOutputStream fos = null;
-        JarOutputStream jos = null;
-        try
+        try ( FileOutputStream fos = new FileOutputStream( jarFile );
+              JarOutputStream jos = new JarOutputStream( fos )
+        )
         {
-            fos = new FileOutputStream( jarFile );
-            jos = new JarOutputStream( fos );
             jos.setLevel( JarOutputStream.STORED );
             jos.putNextEntry( new JarEntry( "META-INF/MANIFEST.MF" ) );
 
@@ -338,11 +335,6 @@ public abstract class AbstractCassandraMojo
             man.getMainAttributes().putValue( "Main-Class", mainClass );
 
             man.write( jos );
-        }
-        finally
-        {
-            IOUtil.close( jos );
-            IOUtil.close( fos );
         }
     }
 

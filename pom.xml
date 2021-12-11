@@ -68,6 +68,10 @@ under the License.
         <role>Java Developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>slachiewicz</id>
+      <name>Sylwester Lachiewicz</name>
+    </developer>
   </developers>
   <contributors>
     <contributor>
@@ -98,16 +102,16 @@ under the License.
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
-    <cassandraVersion>3.5</cassandraVersion>
+    <cassandraVersion>3.11.11</cassandraVersion>
     <slf4jVersion>1.7.7</slf4jVersion>
     <log4jVersion>2.15.0</log4jVersion>
-    <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
+    <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <cleanPluginVersion>3.1.0</cleanPluginVersion>
     <compilerPluginVersion>3.8.1</compilerPluginVersion>
     <deployPluginVersion>2.7</deployPluginVersion>
     <installPluginVersion>2.5.2</installPluginVersion>
     <jarPluginVersion>2.4</jarPluginVersion>
-    <resourcesPluginVersion>2.6</resourcesPluginVersion>
+    <resourcesPluginVersion>3.2.0</resourcesPluginVersion>
     <surefirePluginVersion>2.22.2</surefirePluginVersion>
     <dependencyPluginVersion>2.8</dependencyPluginVersion>
     <buildHelperPluginVersion>1.9</buildHelperPluginVersion>
@@ -141,6 +145,11 @@ under the License.
           <artifactId>logback-classic</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cassandra</groupId>
+      <artifactId>cassandra-thrift</artifactId>
+      <version>${cassandraVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -204,7 +213,7 @@ under the License.
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-exec</artifactId>
-      <version>1.1</version>
+      <version>1.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -220,71 +229,29 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
-      <version>1.13</version>
+      <version>1.26</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <version>4.13.2</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
+      <artifactId>mockito-inline</artifactId>
       <version>4.1.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>1.7.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4-rule</artifactId>
-      <version>2.0.9</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-classloading-xstream</artifactId>
-      <version>1.5.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.cassandraunit</groupId>
       <artifactId>cassandra-unit</artifactId>
-      <version>1.0.3.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>4.3.1.0</version>
     </dependency>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>${commonsLoggingVersion}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-      <version>${log4jVersion}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${log4jVersion}</version>
-      <scope>test</scope>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
+      <version>4.13.0</version>
     </dependency>
   </dependencies>
 
@@ -295,8 +262,8 @@ under the License.
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compilerPluginVersion}</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>

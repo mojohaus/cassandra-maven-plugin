@@ -1,10 +1,7 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.thrift.SchemaDisagreementException;
-import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.Cassandra.Client;
-import org.apache.commons.lang.StringUtils;
-import org.apache.thrift.TException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Drop the specified ColumnFamilies or, if no arguments are given, 
@@ -36,7 +33,7 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
 
     protected void parseArguments() throws IllegalArgumentException
     {
-        if (StringUtils.isNotBlank(keyspace)) 
+        if ( StringUtils.isNotBlank( keyspace ) )
         {
             // keyspace is a required parameter but somebody could provide -Dkeyspace=
             // which would cause issues

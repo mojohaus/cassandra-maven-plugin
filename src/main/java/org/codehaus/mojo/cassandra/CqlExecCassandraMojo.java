@@ -1,8 +1,5 @@
 package org.codehaus.mojo.cassandra;
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.cassandra.db.marshal.AbstractType;
 import org.apache.cassandra.db.marshal.TypeParser;
 import org.apache.cassandra.exceptions.ConfigurationException;
@@ -12,6 +9,9 @@ import org.apache.cassandra.thrift.CqlResult;
 import org.apache.cassandra.thrift.CqlRow;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Executes cql statements from maven.
@@ -72,12 +72,10 @@ public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
           keyValidatorVal = TypeParser.parse(keyValidator);
           defaultValidatorVal = TypeParser.parse(defaultValidator);
 
-      } catch (ConfigurationException e)
+      }
+      catch ( ConfigurationException | SyntaxException e )
       {
-          throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
-      } catch (SyntaxException e)
-      {
-        throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
+          throw new MojoExecutionException( "Could not parse comparator value: " + comparator, e );
       }
       if (cqlScript != null && cqlScript.isFile())
       {
