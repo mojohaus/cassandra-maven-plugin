@@ -108,7 +108,7 @@ under the License.
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <cleanPluginVersion>3.1.0</cleanPluginVersion>
     <compilerPluginVersion>3.8.1</compilerPluginVersion>
-    <deployPluginVersion>2.7</deployPluginVersion>
+    <deployPluginVersion>2.8.2</deployPluginVersion>
     <installPluginVersion>2.5.2</installPluginVersion>
     <jarPluginVersion>2.4</jarPluginVersion>
     <resourcesPluginVersion>3.2.0</resourcesPluginVersion>
