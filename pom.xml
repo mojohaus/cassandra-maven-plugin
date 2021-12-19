@@ -113,7 +113,7 @@ under the License.
     <jarPluginVersion>3.2.0</jarPluginVersion>
     <resourcesPluginVersion>3.2.0</resourcesPluginVersion>
     <surefirePluginVersion>2.22.2</surefirePluginVersion>
-    <dependencyPluginVersion>2.8</dependencyPluginVersion>
+    <dependencyPluginVersion>3.2.0</dependencyPluginVersion>
     <buildHelperPluginVersion>3.2.0</buildHelperPluginVersion>
     <mojo.java.target>1.8</mojo.java.target>
   </properties>
