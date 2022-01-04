@@ -262,6 +262,11 @@ public abstract class AbstractCassandraMojo
         createCassandraJar( jarFile, mainClass, cassandraDir );
     }
 
+
+    protected boolean useJdk11Options() {
+        return false;
+    }
+
     /**
      * Create a jar with just a manifest containing a Main-Class entry for SurefireBooter and a Class-Path entry for
      * all classpath elements. Copied from surefire (ForkConfiguration#createJar())
@@ -612,6 +617,33 @@ public abstract class AbstractCassandraMojo
         createCassandraHome( cassandraDir, listenAddress, rpcAddress, initialToken, seeds );
         CommandLine commandLine = newJavaCommandLine();
         commandLine.addArgument( "-Xmx" + maxMemory + "m" );
+
+        if (useJdk11Options())
+        {
+            commandLine.addArgument( "-Djdk.attach.allowAttachSelf=true" );
+            commandLine.addArgument( "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.base/jdk.internal.ref=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.management.rmi/com.sun.jmx.remote.internal.rmi=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.rmi/sun.rmi.server=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-exports=java.sql/java.sql=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.lang.module=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.math=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.module=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/jdk.internal.util.jar=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.io=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.nio=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.base/java.util=ALL-UNNAMED" );
+        }
+
         //Only value should be quoted so we have to do it ourselves explicitly and disable additional quotation of whole
         //argument because it causes errors during launch. Also URLEncode.encode on value seems to work correctly too,
         //it is done for log4j.configuration during toURL().toString() conversion.
