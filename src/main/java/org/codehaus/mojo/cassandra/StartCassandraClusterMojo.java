@@ -89,6 +89,21 @@ public class StartCassandraClusterMojo
     private int clusterSize;
 
     /**
+     * If <code>true</code>, the java options --add-exports and --add-opens will be added to the cassandra start. Which
+     * is needed, if cassandra runs with a Java runtime >= 11
+     *
+     * @parameter property="cassandra.addJdk11Options" default-value="false"
+     * @since 3.7
+     */
+    protected boolean addJdk11Options;
+
+    @Override
+    protected boolean useJdk11Options( )
+    {
+        return addJdk11Options;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void execute()
