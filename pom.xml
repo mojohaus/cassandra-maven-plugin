@@ -110,7 +110,7 @@ under the License.
     <compilerPluginVersion>3.8.1</compilerPluginVersion>
     <deployPluginVersion>2.8.2</deployPluginVersion>
     <installPluginVersion>2.5.2</installPluginVersion>
-    <jarPluginVersion>3.2.1</jarPluginVersion>
+    <jarPluginVersion>3.2.2</jarPluginVersion>
     <resourcesPluginVersion>3.2.0</resourcesPluginVersion>
     <surefirePluginVersion>2.22.2</surefirePluginVersion>
     <dependencyPluginVersion>3.2.0</dependencyPluginVersion>
