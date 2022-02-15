@@ -107,7 +107,7 @@ under the License.
     <log4jVersion>2.15.0</log4jVersion>
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <cleanPluginVersion>3.1.0</cleanPluginVersion>
-    <compilerPluginVersion>3.9.0</compilerPluginVersion>
+    <compilerPluginVersion>3.10.0</compilerPluginVersion>
     <deployPluginVersion>2.8.2</deployPluginVersion>
     <installPluginVersion>2.5.2</installPluginVersion>
     <jarPluginVersion>3.2.2</jarPluginVersion>
