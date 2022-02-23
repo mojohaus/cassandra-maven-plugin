@@ -116,6 +116,7 @@ under the License.
     <dependencyPluginVersion>3.2.0</dependencyPluginVersion>
     <buildHelperPluginVersion>3.3.0</buildHelperPluginVersion>
     <mojo.java.target>1.8</mojo.java.target>
+    <project.build.outputTimestamp>2022-01-18T09:14:02Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
