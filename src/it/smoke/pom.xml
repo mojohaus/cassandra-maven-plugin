@@ -27,10 +27,6 @@ under the License.
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <prerequisites>
-    <maven>2.0</maven>
-  </prerequisites>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -50,6 +46,16 @@ under the License.
           <artifactId>logback-classic</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cassandra</groupId>
+      <artifactId>cassandra-thrift</artifactId>
+      <version>@cassandraVersion@</version>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>@netty-all.version@</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -81,8 +87,8 @@ under the License.
         <artifactId>maven-compiler-plugin</artifactId>
         <version>@compilerPluginVersion@</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>@mojo.java.target@</source>
+          <target>@mojo.java.target@</target>
         </configuration>
       </plugin>
       <plugin>

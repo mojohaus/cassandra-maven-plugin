@@ -103,8 +103,9 @@ under the License.
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
     <cassandraVersion>3.11.12</cassandraVersion>
+    <netty-all.version>4.0.56.Final</netty-all.version>
     <slf4jVersion>1.7.36</slf4jVersion>
-    <log4jVersion>2.15.0</log4jVersion>
+    <log4jVersion>2.17.2</log4jVersion>
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <cleanPluginVersion>3.2.0</cleanPluginVersion>
     <compilerPluginVersion>3.10.1</compilerPluginVersion>
@@ -151,6 +152,11 @@ under the License.
       <groupId>org.apache.cassandra</groupId>
       <artifactId>cassandra-thrift</artifactId>
       <version>${cassandraVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>${netty-all.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
