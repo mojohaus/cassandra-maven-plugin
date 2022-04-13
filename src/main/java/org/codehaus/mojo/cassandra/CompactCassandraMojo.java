@@ -22,6 +22,7 @@ import org.apache.commons.exec.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,9 +31,9 @@ import java.util.Map;
  * Runs {@code nodetool compact} on a Cassandra instance.
  *
  * @author stephenc
- * @goal compact
- * @threadSafe
+ *
  */
+@Mojo(name = "compact", threadSafe = true)
 public class CompactCassandraMojo extends AbstractCassandraMojo
 {
     /**
@@ -47,7 +48,7 @@ public class CompactCassandraMojo extends AbstractCassandraMojo
         }
         try
         {
-            Map environment = createEnvironmentVars();
+            Map<String, String> environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("compact");
 
             Executor exec = new DefaultExecutor();
@@ -66,9 +67,6 @@ public class CompactCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Compact triggered.");
-            } catch (ExecuteException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
             } catch (IOException e)
             {
                 throw new MojoExecutionException("Command execution failed.", e);

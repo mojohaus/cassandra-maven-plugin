@@ -22,6 +22,7 @@ import org.apache.commons.exec.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,9 +31,9 @@ import java.util.Map;
  * Runs {@code nodetool cleanup} on a Cassandra instance.
  *
  * @author stephenc
- * @goal cleanup
- * @threadSafe
+ *
  */
+@Mojo(name = "cleanup", threadSafe = true)
 public class CleanupCassandraMojo extends AbstractCassandraMojo
 {
     /**
@@ -47,7 +48,7 @@ public class CleanupCassandraMojo extends AbstractCassandraMojo
         }
         try
         {
-            Map environment = createEnvironmentVars();
+            Map<String, String> environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("cleanup");
 
             Executor exec = new DefaultExecutor();
@@ -66,9 +67,6 @@ public class CleanupCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Cleanup triggered.");
-            } catch (ExecuteException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
             } catch (IOException e)
             {
                 throw new MojoExecutionException("Command execution failed.", e);

@@ -21,6 +21,8 @@ package org.codehaus.mojo.cassandra;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
@@ -30,32 +32,31 @@ import java.io.IOException;
  * Deletes the Cassandra home directory that we create for running Cassandra.
  *
  * @author stephenc
- * @threadSafe
- * @goal delete
+ *
  */
+@Mojo(name = "delete", threadSafe = true)
 public class DeleteCassandraMojo extends AbstractMojo
 {
     /**
      * The directory to hold cassandra's database.
      *
-     * @parameter default-value="${project.build.directory}/cassandra"
-     * @required
      */
+    @Parameter(defaultValue="${project.build.directory}/cassandra")
     protected File cassandraDir;
 
     /**
      * Skip the execution.
      *
-     * @parameter property="cassandra.skip" default-value="false"
      */
+    @Parameter(property="cassandra.skip", defaultValue="false")
     private boolean skip;
 
     /**
      * Fail execution in case of error.
      *
-     * @parameter property="cassandra.failOnError" default-value="true"
      * @since 2.0.0-1
      */
+    @Parameter(property="cassandra.failOnError", defaultValue="true")
     protected boolean failOnError;
 
     /**

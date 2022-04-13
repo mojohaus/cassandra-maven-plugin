@@ -22,6 +22,7 @@ import org.apache.commons.exec.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,9 +31,8 @@ import java.util.Map;
  * Runs {@code nodetool repair} on a Cassandra instance.
  *
  * @author stephenc
- * @goal repair
- * @threadSafe
  */
+@Mojo(name = "repair", threadSafe = true)
 public class RepairCassandraMojo extends AbstractCassandraMojo
 {
     /**
@@ -47,7 +47,7 @@ public class RepairCassandraMojo extends AbstractCassandraMojo
         }
         try
         {
-            Map environment = createEnvironmentVars();
+            Map<String, String> environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("repair");
 
             Executor exec = new DefaultExecutor();
@@ -66,9 +66,6 @@ public class RepairCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Repair triggered.");
-            } catch (ExecuteException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
             } catch (IOException e)
             {
                 throw new MojoExecutionException("Command execution failed.", e);

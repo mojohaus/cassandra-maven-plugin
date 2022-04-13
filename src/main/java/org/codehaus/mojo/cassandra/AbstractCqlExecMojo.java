@@ -21,6 +21,7 @@ import org.apache.cassandra.thrift.CqlResult;
 import org.apache.cassandra.utils.ByteBufferUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.IOUtil;
 
 /**
@@ -33,17 +34,17 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
     /**
      * Version of CQL to use
      *
-     * @parameter property="cql.version"
      * @since 1.2.1-2
      */
+    @Parameter(property="cql.version", defaultValue = "3.4.0")
     private String cqlVersion = "3.4.0";
 
     /**
      * Charset used when loading CQL files. If not specified the system default encoding will be used.
      *
-     * @parameter property="cql.encoding"
      * @since 3.6
      */
+    @Parameter(property="cql.encoding")
     protected String cqlEncoding = Charset.defaultCharset().name();
 
     /**
@@ -52,9 +53,9 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      *
      * It is not enabled by default since has not been extensively tested.
      *
-     * @parameter default-value=false
      * @since 3.7
      */
+    @Parameter(defaultValue = "false")
     protected boolean useCqlLexer = false;
 
     protected String readFile(File file) throws MojoExecutionException

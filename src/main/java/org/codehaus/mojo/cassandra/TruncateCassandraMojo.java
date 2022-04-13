@@ -1,35 +1,29 @@
 package org.codehaus.mojo.cassandra;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
 import org.apache.cassandra.exceptions.UnavailableException;
 import org.apache.cassandra.service.StorageProxy;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Executes the truncate command against the specified keyspace. 
  * Currently doing so via StorageProxy as a discussion point. 
  *
  * @author zznate
- * @non-goal truncate
- * @threadSafe
  */
+@Mojo(name = "truncate", threadSafe = true)
 public class TruncateCassandraMojo extends AbstractCassandraMojo 
 {
 
-    /**
-     * @parameter property="cassandra.keyspace"
-     * @required 
-     */
+    @Parameter(property = "cassandra.keyspace", required = true)
     protected String keyspace;
     
-    /**
-     * @parameter property="cassandra.columnFamily"
-     * @required 
-     */
+    @Parameter(property="cassandra.columnFamily", required = true)
     protected String columnFamily;
     
     @Override

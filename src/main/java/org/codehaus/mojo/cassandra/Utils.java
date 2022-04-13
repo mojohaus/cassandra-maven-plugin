@@ -287,9 +287,8 @@ public final class Utils
     }
 
     /**
-     * Call {@link #executeOperation(Cassandra.Client)} on the provided operation
+     * Call {@link ThriftApiOperation#executeOperation(Cassandra.Client)} on the provided operation
      * @throws MojoExecutionException
-     * @throws MojoFailureException
      */    
     public static void executeThrift(ThriftApiOperation thriftApiOperation) throws MojoExecutionException
     {

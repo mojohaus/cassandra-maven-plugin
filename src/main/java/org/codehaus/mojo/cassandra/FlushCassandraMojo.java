@@ -18,12 +18,16 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.commons.exec.*;
-
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.Executor;
+import org.apache.commons.exec.LogOutputStream;
+import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -31,9 +35,9 @@ import java.util.Map;
  * Runs {@code nodetool flush} on a Cassandra instance.
  *
  * @author stephenc
- * @goal flush
- * @threadSafe
+ *
  */
+@Mojo(name = "flush", threadSafe = true)
 public class FlushCassandraMojo extends AbstractCassandraMojo
 {
     /**
@@ -67,9 +71,6 @@ public class FlushCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Flush triggered.");
-            } catch (ExecuteException e)
-            {
-                throw new MojoExecutionException("Command execution failed.", e);
             } catch (IOException e)
             {
                 throw new MojoExecutionException("Command execution failed.", e);

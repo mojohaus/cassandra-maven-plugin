@@ -12,47 +12,50 @@ import org.apache.cassandra.thrift.CqlResult;
 import org.apache.cassandra.thrift.CqlRow;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Executes cql statements from maven.
  *
  * @author zznate
- * @goal cql-exec
- * @threadSafe
- * @phase pre-integration-test
+ *
  */
+@Mojo(name = "cql-exec", threadSafe = true, defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
 
   /**
    * The CQL script which will be executed
-   *
-   * @parameter property="cassandra.cql.script" default-value="${basedir}/src/cassandra/cql/exec.cql"
    */
+  @Parameter(property="cassandra.cql.script", defaultValue="${basedir}/src/cassandra/cql/exec.cql")
   protected File cqlScript;
 
   /**
    * The CQL statement to execute singularly
    *
-   * @parameter property="cql.statement"
    */
+  @Parameter(property="cql.statement")
   protected String cqlStatement;
 
   /**
    * Expected type of the column value
-   * @parameter property="cql.defaultValidator"
    */
+  @Parameter(property="cql.defaultValidator")
   protected String defaultValidator = "BytesType";
 
   /**
    * Expected type of the key
-   * @parameter property="cql.keyValidator"
+   *
    */
+  @Parameter(property="cql.keyValidator")
   protected String keyValidator = "BytesType";
 
   /**
    * Expected type of the column name
-   * @parameter property="cql.comparator"
+   *
    */
+  @Parameter(property="cql.comparator")
   protected String comparator = "BytesType";
 
   private AbstractType<?> comparatorVal;
@@ -72,10 +75,7 @@ public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
           keyValidatorVal = TypeParser.parse(keyValidator);
           defaultValidatorVal = TypeParser.parse(defaultValidator);
 
-      } catch (ConfigurationException e)
-      {
-          throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
-      } catch (SyntaxException e)
+      } catch (ConfigurationException | SyntaxException e)
       {
         throw new MojoExecutionException("Could not parse comparator value: " + comparator, e);
       }

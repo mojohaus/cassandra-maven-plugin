@@ -24,6 +24,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.toolchain.Toolchain;
 import org.apache.maven.toolchain.ToolchainManager;
@@ -31,7 +32,6 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,194 +59,175 @@ public abstract class AbstractCassandraMojo
 {
     /**
      * The directory to hold cassandra's database.
-     *
-     * @parameter default-value="${project.build.directory}/cassandra"
-     * @required
      */
+    @Parameter(defaultValue = "${project.build.directory}/cassandra")
     protected File cassandraDir;
 
     /**
      * The enclosing project.
-     *
-     * @parameter default-value="${project}"
-     * @required
-     * @readonly
      */
+    @Parameter(readonly = true)
     protected MavenProject project;
 
     /**
      * The directory containing generated classes.
-     *
-     * @parameter property="project.build.outputDirectory"
-     * @required
      */
+    @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     private File classesDirectory;
 
     /**
      * The directory containing generated test classes.
-     *
-     * @parameter property="project.build.testOutputDirectory"
-     * @required
      */
+    @Parameter(defaultValue = "${project.build.testOutputDirectory}", readonly = true)
     private File testClassesDirectory;
 
     /**
      * Adds the test classpath to cassandra (for example you could use this when you have a custom comparator on your
      * test classpath.
-     *
-     * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean addTestClasspath;
 
     /**
      * Adds the main classpath to cassandra (for example you could use this when you have a custom comparator on your
      * main classpath.
      *
-     * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean addMainClasspath;
 
     /**
      * Skip the execution.
      *
-     * @parameter property="cassandra.skip" default-value="false"
      */
+    @Parameter(property = "cassandra.skip", defaultValue = "false")
     protected boolean skip;
 
-    /**
-     * @parameter default-value="${plugin.artifacts}"
-     * @readonly
-     */
+    @Parameter(defaultValue = "${plugin.artifacts}", readonly = true, required = true)
     private List<Artifact> pluginDependencies;
 
-    /**
-     * @parameter default-value="${plugin.pluginArtifact}"
-     * @readonly
-     */
+    @Parameter(defaultValue = "${plugin.pluginArtifact}", readonly = true, required = true)
     private Artifact pluginArtifact;
 
     /**
      * The current build session instance. This is used for toolchain manager API calls.
      *
-     * @parameter default-value="${session}"
-     * @required
-     * @readonly
      */
+    @Parameter(defaultValue = "${session}", required = true, readonly = true)
     protected MavenSession session;
 
     /**
      * In yaml format any overrides or additional configuration that you want to apply to the server.
      *
-     * @parameter
      */
+    @Parameter
     private String yaml;
 
     /**
      * Address to use for the RPC interface. Do not change this unless you really know what you are doing.
      *
-     * @parameter default-value="127.0.0.1"
      */
+    @Parameter(defaultValue = "127.0.0.1", required = true)
     protected String rpcAddress;
 
     /**
      * Port to listen to for the RPC interface.
      *
-     * @parameter property="cassandra.rpcPort" default-value="9160"
      */
+    @Parameter( property="cassandra.rpcPort", defaultValue="9160")
     protected int rpcPort;
 
     /**
      * Port to listen to for the JMX interface.
      *
-     * @parameter property="cassandra.jmxPort" default-value="7199"
      */
+    @Parameter( property="cassandra.jmxPort", defaultValue="7199")
     protected int jmxPort;
 
     /**
      * Port on which the CQL native transport listens for clients.
      *
-     * @parameter property="cassandra.nativeTransportPort" default-value="9042"
-     * 
      * @since 2.0.0-1
      */
+    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
     protected int nativeTransportPort;
 
     /**
      * Enable or disable the native transport server. Currently, only the Thrift 
      * server is started by default because the native transport is considered beta.
      *
-     * @parameter property="cassandra.startNativeTransport" default-value="false"
-     * 
      * @since 2.0.0-1
      */
+    @Parameter( property="cassandra.startNativeTransport", defaultValue="false")
     protected boolean startNativeTransport;
 
     /**
+     * <p>
      * Address to bind to and tell other Cassandra nodes to connect to. You
      * <strong>must</strong> change this if you want multiple nodes to be able to
      * communicate!
-     * <p/>
+     * </p>
+     * <p>
      * Leaving it blank leaves it up to InetAddress.getLocalHost(). This
      * will always do the Right Thing <em>if</em> the node is properly configured
      * (hostname, name resolution, etc), and the Right Thing is to use the
      * address associated with the hostname (it might not be).
-     * <p/>
+     * </p>
      * Setting this to 0.0.0.0 is always wrong.
      * Do not change this unless you really know what you are doing.
      *
-     * @parameter default-value="127.0.0.1"
      */
+    @Parameter(defaultValue="127.0.0.1")
     protected String listenAddress;
 
     /**
      * Port to listen to for the Storage interface.
      *
-     * @parameter property="cassandra.storagePort" default-value="7000"
      */
+    @Parameter(property="cassandra.storagePort", defaultValue="7000")
     protected int storagePort;
 
     /**
      * Port to listen to for receiving the stop command over
      *
-     * @parameter property="cassandra.stopPort" default-value="8081"
      */
+    @Parameter(property="cassandra.stopPort", defaultValue="8081")
     protected int stopPort;
 
     /**
      * Key to be provided when stopping cassandra
      *
-     * @parameter property="cassandra.stopKey" default-value="cassandra-maven-plugin"
      */
+    @Parameter(property="cassandra.stopKey", defaultValue="cassandra-maven-plugin")
     protected String stopKey;
 
     /**
      * Number of megabytes to limit the cassandra JVM to.
      *
-     * @parameter property="cassandra.maxMemory" default-value="512"
      */
+    @Parameter(property="cassandra.maxMemory", defaultValue="512")
     protected int maxMemory;
 
     /**
      * The keyspace against which individual operations will be executed
      *
-     * @parameter property="cassandra.keyspace"
      */
+    @Parameter(property="cassandra.keyspace")
     protected String keyspace;
 
     /**
      * List of System properties to pass to the JUnit tests.
-     *
-     * @parameter
      * @since 1.2.1-2
      */
+    @Parameter
     protected Map<String, String> systemPropertyVariables;
 
     /**
      * Log level of cassandra process. Logging is performed via log4j2.
      *
-     * @parameter default-value="ERROR"
      * @since 3.5
      */
+    @Parameter(defaultValue="ERROR")
     protected String logLevel;
 
     /**
@@ -583,19 +564,7 @@ public abstract class AbstractCassandraMojo
      */
     protected Map<String, String> createEnvironmentVars()
     {
-        Map<String, String> enviro = new HashMap<String, String>();
-        try
-        {
-            Properties systemEnvVars = CommandLineUtils.getSystemEnvVars();
-            for ( Map.Entry entry : systemEnvVars.entrySet() )
-            {
-                enviro.put( (String) entry.getKey(), (String) entry.getValue() );
-            }
-        }
-        catch ( IOException x )
-        {
-            getLog().error( "Could not assign default system enviroment variables.", x );
-        }
+        Map<String, String> enviro = new HashMap(System.getenv());
         enviro.put( "CASSANDRA_CONF", new File( cassandraDir, "conf" ).getAbsolutePath() );
         return enviro;
     }
