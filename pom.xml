@@ -35,11 +35,11 @@ under the License.
   <name>Mojo's Cassandra Maven Plugin</name>
   <description>The Mojo Projects plugin for Apache Maven to allow launching a local Apache Cassandra instance from a Maven build</description>
   <inceptionYear>2011</inceptionYear>
-  <url>http://www.mojohaus.org/cassandra-maven-plugin/</url>
+  <url>https://www.mojohaus.org/cassandra-maven-plugin/</url>
   <licenses>
     <license>
       <name>Apache License 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -135,11 +135,7 @@ under the License.
         </exclusion>
         <exclusion>
           <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
+          <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -213,6 +209,22 @@ under the License.
       <version>2.0.9</version>
     </dependency>
     <dependency>
+      <groupId>org.cassandraunit</groupId>
+      <artifactId>cassandra-unit-shaded</artifactId>
+      <version>4.3.1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core-shaded</artifactId>
+      <version>4.10.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-plugin-testing-harness</artifactId>
       <version>1.1</version>
@@ -227,7 +239,8 @@ under the License.
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.1</version>
+      <version>4.13.2</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -285,6 +298,11 @@ under the License.
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>${log4jVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>2.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

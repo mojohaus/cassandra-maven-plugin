@@ -38,7 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -371,6 +371,10 @@ public abstract class AbstractCassandraMojo
         File conf = new File( cassandraDir, "conf" );
         File data = new File( cassandraDir, "data" );
         File commitlog = new File( cassandraDir, "commitlog" );
+        File cdcRawDirectory = new File( cassandraDir, "cdcRawDirectory");
+        if (!Files.exists(cdcRawDirectory.toPath())) {
+            Files.createDirectories(cdcRawDirectory.toPath());
+        }
         File savedCaches = new File( cassandraDir, "saved_caches" );
         for ( File dir : Arrays.asList( cassandraDir, bin, conf, data, commitlog, savedCaches ) )
         {
@@ -396,7 +400,7 @@ public abstract class AbstractCassandraMojo
         {
             getLog().debug( ( cassandraYaml.isFile() ? "Updating " : "Creating " ) + cassandraYaml );
             createCassandraYaml( cassandraYaml, data, commitlog, savedCaches, listenAddress, rpcAddress, initialToken,
-                                 seeds );
+                                 seeds, cdcRawDirectory );
         }
         File log4jServerConfig = new File( conf, "log4j-server.xml" );
         if ( Utils.shouldGenerateResource( project, log4jServerConfig ) )
@@ -435,11 +439,11 @@ public abstract class AbstractCassandraMojo
      * @param savedCaches   The saved caches directory.
      * @throws IOException If something went wrong.
      */
-    private void createCassandraYaml( File cassandraYaml, File data, File commitlog, File savedCaches )
+    private void createCassandraYaml( File cassandraYaml, File data, File commitlog, File savedCaches, File cdcRawDirectory )
         throws IOException
     {
         createCassandraYaml( cassandraYaml, data, commitlog, savedCaches, listenAddress, rpcAddress, null,
-                             new String[]{ listenAddress } );
+                             new String[]{ listenAddress }, cdcRawDirectory);
     }
 
     /**
@@ -455,13 +459,15 @@ public abstract class AbstractCassandraMojo
      * @throws IOException If something went wrong.
      */
     private void createCassandraYaml( File cassandraYaml, File data, File commitlog, File savedCaches,
-                                      String listenAddress, String rpcAddress, BigInteger initialToken, String[] seeds )
+                                      String listenAddress, String rpcAddress, BigInteger initialToken, String[] seeds,
+                                      File cdcRawDirectory)
         throws IOException
     {
         String defaults = IOUtil.toString( getClass().getResourceAsStream( "/cassandra.yaml" ) );
         StringBuilder config = new StringBuilder();
         config.append( "data_file_directories:\n" ).append( "    - " ).append( data.getAbsolutePath() ).append( "\n" );
         config.append( "commitlog_directory: " ).append( commitlog ).append( "\n" );
+        config.append( "cdc_raw_directory: " ).append( cdcRawDirectory ).append( "\n" );
         config.append( "saved_caches_directory: " ).append( savedCaches ).append( "\n" );
         config.append( "initial_token: " ).append(
             initialToken == null || "null".equals( initialToken ) ? "" : initialToken.toString() ).append( "\n" );
