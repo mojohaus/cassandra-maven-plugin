@@ -59,15 +59,13 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
 
     protected String readFile(File file) throws MojoExecutionException
     {
-        if (!file.isFile())
+        if (!file.isFile() || !file.exists())
         {
             throw new MojoExecutionException("script " + file + " does not exist.");
         }
 
-        InputStreamReader r = null;
-        try
+        try (InputStreamReader r = new InputStreamReader(new FileInputStream(file), cqlEncoding))
         {
-            r = new InputStreamReader(new FileInputStream(file), cqlEncoding);
             return IOUtil.toString(r);
         } catch (FileNotFoundException e)
         {
@@ -75,15 +73,12 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         } catch (IOException e)
         {
             throw new MojoExecutionException("Could not parse or load cql file", e);
-        } finally
-        {
-            IOUtil.close(r);
         }
     }
 
     protected List<CqlResult> executeCql(final String statements) throws MojoExecutionException
     {
-        final List<CqlResult> results = new ArrayList<CqlResult>();
+        final List<CqlResult> results = new ArrayList<>();
         if (StringUtils.isBlank(statements))
         {
             getLog().warn("No CQL provided. Nothing to do.");
@@ -140,7 +135,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
 
     private class CqlExecOperation extends ThriftApiOperation
     {
-        private final List<CqlResult> results = new ArrayList<CqlResult>();
+        private final List<CqlResult> results = new ArrayList<>();
         private final String[] statements;
 
         private CqlExecOperation(String statements)
