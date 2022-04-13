@@ -354,7 +354,7 @@ under the License.
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <profiles>
     <profile>
       <!-- run integration tests
@@ -395,21 +395,6 @@ under the License.
           </plugin>
         </plugins>
       </build>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <reportSets>
-              <reportSet>
-                <reports>
-                  <report>report</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
   </profiles>
 
