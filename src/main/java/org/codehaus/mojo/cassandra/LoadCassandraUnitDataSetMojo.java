@@ -18,15 +18,13 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import com.datastax.oss.driver.api.core.CqlSession;
+import java.io.File;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.cassandraunit.CQLDataLoader;
+import org.cassandraunit.DataLoader;
+import org.cassandraunit.dataset.FileDataSet;
 import org.cassandraunit.dataset.ParseException;
-import org.cassandraunit.dataset.cql.FileCQLDataSet;
-
-import java.io.File;
-import java.net.InetSocketAddress;
 
 /**
  * Loads a CassandraUnit DataSet into a Cassandra instance.
@@ -82,12 +80,8 @@ public class LoadCassandraUnitDataSetMojo
 
         try
         {
-            CqlSession session = CqlSession.builder()
-                    .withApplicationName( "cassandraUnitCluster" )
-                    .addContactPoint( new InetSocketAddress( rpcAddress, rpcPort ) )
-                    .build();
-            CQLDataLoader dataLoader = new CQLDataLoader( session );
-            dataLoader.load( new FileCQLDataSet( cuDataSet.getAbsolutePath() ) );
+            DataLoader dataLoader = new DataLoader( "cassandraUnitCluster", rpcAddress + ":" + rpcPort );
+            dataLoader.load( new FileDataSet( cuDataSet.getAbsolutePath() ) );
         }
         catch ( ParseException e )
         {

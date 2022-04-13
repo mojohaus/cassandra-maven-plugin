@@ -19,6 +19,7 @@
 package org.codehaus.mojo.cassandra;
 
 import org.apache.commons.exec.LogOutputStream;
+
 import org.apache.maven.plugin.logging.Log;
 
 /**

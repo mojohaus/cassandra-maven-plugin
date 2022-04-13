@@ -18,17 +18,15 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import com.datastax.oss.driver.api.core.CqlSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.cassandraunit.CQLDataLoader;
+import org.cassandraunit.DataLoader;
+import org.cassandraunit.dataset.FileDataSet;
 import org.cassandraunit.dataset.ParseException;
-import org.cassandraunit.dataset.cql.FileCQLDataSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.InetSocketAddress;
 import java.util.Arrays;
 
 /**
@@ -87,21 +85,6 @@ public class StartCassandraClusterMojo
      * @parameter property="cassandra.cluster.size" default-value="4"
      */
     private int clusterSize;
-
-    /**
-     * If <code>true</code>, the java options --add-exports and --add-opens will be added to the cassandra start. Which
-     * is needed, if cassandra runs with a Java runtime >= 11
-     *
-     * @parameter property="cassandra.addJdk11Options" default-value="false"
-     * @since 3.7
-     */
-    protected boolean addJdk11Options;
-
-    @Override
-    protected boolean useJdk11Options( )
-    {
-        return addJdk11Options;
-    }
 
     /**
      * {@inheritDoc}
@@ -183,12 +166,9 @@ public class StartCassandraClusterMojo
                 getLog().info( "Loading CassandraUnit dataSet " + cuDataSet + "..." );
                 try
                 {
-                    CqlSession session = CqlSession.builder()
-                            .withApplicationName( "cassandraUnitCluster" )
-                            .addContactPoint( new InetSocketAddress( rpcAddress, rpcPort ) )
-                            .build();
-                    CQLDataLoader dataLoader = new CQLDataLoader( session );
-                    dataLoader.load( new FileCQLDataSet( cuDataSet.getAbsolutePath() ) );                }
+                    DataLoader dataLoader = new DataLoader( "cassandraUnitCluster", rpcAddress + ":" + rpcPort );
+                    dataLoader.load( new FileDataSet( cuDataSet.getAbsolutePath() ) );
+                }
                 catch ( ParseException e )
                 {
                     if ( cuLoadFailureIgnore )

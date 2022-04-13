@@ -1,8 +1,8 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.maven.plugin.MojoExecutionException;
-
 import java.io.File;
+
+import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Abstract parent class for mojos that load and execute CQL statements from a file.
