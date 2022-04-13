@@ -501,8 +501,7 @@ public abstract class AbstractCassandraMojo
         {
             if ( session != null ) // session is null in tests..
             {
-                ToolchainManager toolchainManager =
-                    (ToolchainManager) session.getContainer().lookup( ToolchainManager.ROLE );
+                ToolchainManager toolchainManager = session.getContainer().lookup( ToolchainManager.class );
 
                 if ( toolchainManager != null )
                 {
