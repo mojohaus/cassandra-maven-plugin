@@ -1,0 +1,3 @@
+# Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
+_extends: .github
+tag-template: casandra-maven-plugin-$NEXT_MINOR_VERSION

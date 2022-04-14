@@ -1,26 +1,25 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.thrift.SchemaDisagreementException;
-import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.Cassandra.Client;
 import org.apache.commons.lang.StringUtils;
-import org.apache.thrift.TException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Drop the specified ColumnFamilies or, if no arguments are given, 
  * the specified Keyspace 
  * 
  * @author zznate
- * @threadSafe
- * @non-goal drop
+ *
  */
+@Mojo(name = "drop", threadSafe = true)
 public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
 
     /**
      * The one or more comma-delimited ColumnFamilies against to be dropped. 
      * If not specified, the Keyspace will be dropped.
-     * @parameter property="cassandra.columnFamilies"
      */
+    @Parameter(property="cassandra.columnFamilies")
     protected String columnFamilies;
 
 
@@ -61,10 +60,10 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
             try {
                 if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
                 {
-                    for (int i = 0; i < columnFamilyList.length; i++) 
+                    for (String s : columnFamilyList)
                     {
-                        client.system_drop_column_family(columnFamilyList[i]);
-                        getLog().info("Dropped column family \"" + columnFamilyList[i] + "\".");
+                        client.system_drop_column_family(s);
+                        getLog().info("Dropped column family \"" + s + "\".");
                     }
                 } 
                 else 

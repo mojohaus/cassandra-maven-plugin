@@ -24,6 +24,8 @@ import java.io.IOException;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.cassandraunit.DataLoader;
 import org.cassandraunit.dataset.FileDataSet;
 import org.cassandraunit.dataset.ParseException;
@@ -32,41 +34,41 @@ import org.cassandraunit.dataset.ParseException;
  * Runs Cassandra in the foreground.
  *
  * @author stephenc
- * @goal run
- * @threadSafe
+ *
  */
+@Mojo(name = "run", threadSafe = true)
 public class RunCassandraMojo
     extends AbstractCqlLoadMojo
 {
     /**
      * When {@code true}, if this is a clean start then the load script will be applied automatically.
      *
-     * @parameter property="cassandra.load.after.first.start" default-value="true"
      */
+    @Parameter(property="cassandra.load.after.first.start", defaultValue="true")
     private boolean loadAfterFirstStart;
 
     /**
      * The CassandraUnit dataSet to load.
      *
-     * @parameter default-value="${basedir}/src/test/resources/dataSet.xml"
      * @since 1.2.1-2
      */
+    @Parameter(defaultValue="${basedir}/src/test/resources/dataSet.xml")
     protected File cuDataSet;
 
     /**
      * Whether to ignore errors when loading the script.
      *
-     * @parameter property="cassandra.cu.load.failure.ignore"
      * @since 1.2.1-2
      */
+    @Parameter(property="cassandra.cu.load.failure.ignore")
     private boolean cuLoadFailureIgnore;
 
     /**
      * When {@code true}, if this is a clean start then the CassandraUnit dataSet will be applied automatically.
      *
-     * @parameter property="cassandra.cu.load.after.first.start" default-value="true"
      * @since 1.2.1-2
      */
+    @Parameter(property="cassandra.cu.load.after.first.start", defaultValue="true")
     private boolean cuLoadAfterFirstStart;
 
     /**

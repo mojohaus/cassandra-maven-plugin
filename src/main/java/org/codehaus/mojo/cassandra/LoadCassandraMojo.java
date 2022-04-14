@@ -20,15 +20,15 @@ package org.codehaus.mojo.cassandra;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Loads a Cassandra CQL script into a Cassandra instance.
  *
  * @author stephenc
- * @goal load
- * @threadSafe
- * @phase pre-integration-test
  */
+@Mojo(name = "load", threadSafe = true, defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class LoadCassandraMojo extends AbstractCqlLoadMojo
 {
     /**

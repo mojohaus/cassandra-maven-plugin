@@ -21,62 +21,60 @@ package org.codehaus.mojo.cassandra;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-
-import java.io.File;
-import java.math.BigInteger;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Stops a background Cassandra instance.
  *
  * @author stephenc
- * @goal stop-cluster
- * @threadSafe
- * @phase post-integration-test
+ *
  */
+@Mojo(name = "stop-cluster", threadSafe = true, defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
 public class StopCassandraClusterMojo extends AbstractMojo
 {
     /**
      * Skip the execution.
      *
-     * @parameter property="cassandra.skip" default-value="false"
      */
+    @Parameter(property="cassandra.skip", defaultValue="false")
     private boolean skip;
 
     /**
      * Port to send stop command over
      *
-     * @parameter property="cassandra.stopPort" default-value="8081"
-     * @required
+     *
      */
+    @Parameter(property="cassandra.stopPort", defaultValue="8081", required = true)
     protected int stopPort;
 
     /**
      * Key to provide when stopping cassandra
      *
-     * @parameter property="cassandra.stopKey" default-value="cassandra-maven-plugin"
-     * @required
      */
+    @Parameter(property="cassandra.stopKey", defaultValue="cassandra-maven-plugin", required = true)
     protected String stopKey;
 
     /**
      * Address to use for the RPC interface. Do not change this unless you really know what you are doing.
      *
-     * @parameter default-value="127.0.0.1"
      */
+    @Parameter(defaultValue="127.0.0.1")
     private String rpcAddress;
 
     /**
      * Port to listen to for the RPC interface.
      *
-     * @parameter property="cassandra.rpcPort" default-value="9160"
      */
+    @Parameter(property="cassandra.rpcPort", defaultValue="9160")
     protected int rpcPort;
 
     /**
      * The number of nodes in the cluster.
      *
-     * @parameter property="cassandra.cluster.size" default-value="4"
      */
+    @Parameter(property="cassandra.cluster.size", defaultValue="4")
     private int clusterSize;
 
     /**

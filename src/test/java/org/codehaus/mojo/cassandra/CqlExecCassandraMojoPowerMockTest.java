@@ -11,7 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -22,11 +21,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.internal.stubbing.answers.DoesNothing.doesNothing;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -126,7 +127,7 @@ public class CqlExecCassandraMojoPowerMockTest {
     }
 
     private ArgumentCaptor<ThriftApiOperation> mockThriftExecution() {
-        return mockThriftExecutionWith(new DoesNothing());
+        return mockThriftExecutionWith(doesNothing());
     }
 
     private ArgumentCaptor<ThriftApiOperation> mockThriftExecutionWith(Answer<Object> answer) {
@@ -143,7 +144,7 @@ public class CqlExecCassandraMojoPowerMockTest {
     private void mockToThrows(Throwable throwable) {
         try {
             mockStatic(IOUtil.class);
-            when(IOUtil.toString(any(FileReader.class))).thenThrow(throwable);
+            when(IOUtil.toString(any(InputStreamReader.class))).thenThrow(throwable);
         } catch (IOException e) {
             fail(e.getMessage());
         }

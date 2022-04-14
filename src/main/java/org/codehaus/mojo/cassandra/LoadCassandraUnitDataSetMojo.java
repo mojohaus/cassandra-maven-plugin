@@ -22,6 +22,9 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.cassandraunit.DataLoader;
 import org.cassandraunit.dataset.FileDataSet;
 import org.cassandraunit.dataset.ParseException;
@@ -30,26 +33,24 @@ import org.cassandraunit.dataset.ParseException;
  * Loads a CassandraUnit DataSet into a Cassandra instance.
  *
  * @author jsevellec
- * @goal cu-load
- * @threadSafe
- * @phase pre-integration-test
  * @since 1.2.1-2
  */
+@Mojo(name = "cu-load", threadSafe = true, defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class LoadCassandraUnitDataSetMojo
     extends AbstractCassandraMojo
 {
     /**
      * The CassandraUnit dataSet to load.
      *
-     * @parameter default-value="${basedir}/src/test/resources/dataSet.xml"
      */
+    @Parameter(defaultValue="${basedir}/src/test/resources/dataSet.xml")
     protected File cuDataSet;
 
     /**
      * Whether to ignore errors when loading the dataSet.
      *
-     * @parameter property="cassandra.cuload.failure.ignore"
      */
+    @Parameter(property="cassandra.cuload.failure.ignore")
     private boolean cuLoadFailureIgnore;
 
     /**

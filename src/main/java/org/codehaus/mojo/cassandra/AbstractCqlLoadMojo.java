@@ -3,6 +3,7 @@ package org.codehaus.mojo.cassandra;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Abstract parent class for mojos that load and execute CQL statements from a file.
@@ -14,15 +15,15 @@ public abstract class AbstractCqlLoadMojo extends AbstractCqlExecMojo
     /**
      * The CQL file to load.
      *
-     * @parameter default-value="${basedir}/src/cassandra/cql/load.cql"
      */
+    @Parameter(defaultValue="${basedir}/src/cassandra/cql/load.cql")
     private File script;
 
     /**
      * Whether to ignore errors when loading the script.
      *
-     * @parameter property="cassandra.load.failure.ignore"
      */
+    @Parameter(property="cassandra.load.failure.ignore")
     private boolean loadFailureIgnore;
 
     protected void execCqlFile() throws MojoExecutionException
