@@ -92,7 +92,6 @@ public class StartCassandraClusterMojo
      * If <code>true</code>, the java options --add-exports and --add-opens will be added to the cassandra start. Which
      * is needed, if cassandra runs with a Java runtime &gt;= 11
      *
-     * @parameter
      * @since 3.7
      */
     @Parameter(property="cassandra.addJdk11Options", defaultValue="false")
