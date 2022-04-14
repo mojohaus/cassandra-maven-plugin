@@ -101,7 +101,7 @@ under the License.
     <cassandraVersion>3.5</cassandraVersion>
     <slf4jVersion>1.7.36</slf4jVersion>
     <log4jVersion>2.17.2</log4jVersion>
-    <commonsLoggingVersion>1.1.1</commonsLoggingVersion>
+    <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <buildHelperPluginVersion>3.3.0</buildHelperPluginVersion>
     <project.build.outputTimestamp>2022-01-18T09:14:02Z</project.build.outputTimestamp>
     <powermock.version>2.0.9</powermock.version>
