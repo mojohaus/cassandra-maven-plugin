@@ -227,7 +227,7 @@ under the License.
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-core-shaded</artifactId>
-      <version>4.10.0</version>
+      <version>4.14.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
