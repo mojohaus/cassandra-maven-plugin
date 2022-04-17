@@ -618,6 +618,7 @@ public abstract class AbstractCassandraMojo
             commandLine.addArgument( "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED" );
             commandLine.addArgument( "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED" );
             commandLine.addArgument( "--add-opens=java.base/java.util=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED" );
         }
 
         //Only value should be quoted so we have to do it ourselves explicitly and disable additional quotation of whole
