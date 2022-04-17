@@ -7,24 +7,23 @@ import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.thrift.TException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThriftApiExecutionExceptionTest {
     @Test
     public void should_not_give_any_details_if_there_is_no_cause() {
-        ThriftApiExecutionException exception = new ThriftApiExecutionException();
-
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. ", exception.getMessage());
-        assertNull(exception.getCause());
+        assertThat(new ThriftApiExecutionException())
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. ")
+                .hasCause(null);
     }
 
     @Test
     public void should_not_give_some_details_if_there_is_a_message() {
         ThriftApiExecutionException exception = new ThriftApiExecutionException("additional message");
 
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. additional message", exception.getMessage());
-        assertNull(exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. additional message")
+        .hasCause(exception.getCause());
     }
 
     @Test
@@ -33,8 +32,9 @@ public class ThriftApiExecutionExceptionTest {
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
 
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: n/a", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: n/a")
+                .hasCause(exception.getCause());
     }
 
     @Test
@@ -43,8 +43,9 @@ public class ThriftApiExecutionExceptionTest {
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
 
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: You do not have enough nodes up to handle the specified consistency level", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: You do not have enough nodes up to handle the specified consistency level")
+                .hasCause(exception.getCause());
     }
 
     @Test
@@ -52,9 +53,9 @@ public class ThriftApiExecutionExceptionTest {
         Throwable cause = new TimedOutException();
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
-
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: Request timed out - server load may be too high, or you may be requesting too many rows for a single operation", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: Request timed out - server load may be too high, or you may be requesting too many rows for a single operation")
+                .hasCause(exception.getCause());
     }
 
     @Test
@@ -62,9 +63,9 @@ public class ThriftApiExecutionExceptionTest {
         Throwable cause = new InvalidRequestException("why");
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
-
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: The request was not properly formatted why", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: The request was not properly formatted why")
+                .hasCause(exception.getCause());
     }
 
     @Test
@@ -72,9 +73,9 @@ public class ThriftApiExecutionExceptionTest {
         Throwable cause = new SchemaDisagreementException();
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
-
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: Schema versions are out of sync", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: Schema versions are out of sync")
+                .hasCause(exception.getCause());
     }
 
     @Test
@@ -82,8 +83,8 @@ public class ThriftApiExecutionExceptionTest {
         Throwable cause = new TException();
 
         ThriftApiExecutionException exception = new ThriftApiExecutionException(cause);
-
-        assertEquals("There was a problem calling Apache Cassandra's Thrift API. Details: General Thrift Exception, ensure Apache Cassandra is running and all necessary ports are accessible", exception.getMessage());
-        assertEquals(cause, exception.getCause());
+        assertThat(exception)
+                .hasMessage("There was a problem calling Apache Cassandra's Thrift API. Details: General Thrift Exception, ensure Apache Cassandra is running and all necessary ports are accessible")
+                .hasCause(exception.getCause());
     }
 }

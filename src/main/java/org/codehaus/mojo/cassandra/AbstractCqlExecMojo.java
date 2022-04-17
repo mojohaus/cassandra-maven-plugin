@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.nio.charset.Charset;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -102,18 +103,18 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      * breaks badly if you have ; in strings or comments.
      * Parsing is done using the CqlLexer class
      */
-    protected static String[] splitStatementsUsingCqlLexer(String statements) {
+    protected static List<String> splitStatementsUsingCqlLexer(String statements) {
         ANTLRStringStream stream = new ANTLRStringStream(statements);
         CqlLexer lexer = new CqlLexer(stream);
-        ArrayList<String> statementList = new ArrayList<String>();
-        StringBuffer currentStatement = new StringBuffer();
+        List<String> statementList = new ArrayList<String>();
+        StringBuilder currentStatement = new StringBuilder();
         // Not the prettiest code i ever wrote, but it gets the job done.
         for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
             if (token.getText().equals(";")) {
                 // when we meet a ; terminate current statement and prepare the next
                 currentStatement.append(";");
                 statementList.add(currentStatement.toString());
-                currentStatement = new StringBuffer();
+                currentStatement = new StringBuilder();
             } else if (token.getType() == CqlLexer.STRING_LITERAL) {
                 // If we meet a string we should quote it and escape any enclosed ' as ''
                 currentStatement.append("'");
@@ -129,14 +130,14 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         if (currentStatement.length() > 0 && currentStatement.toString().trim().length() > 0) {
             statementList.add(currentStatement.toString());
         }
-        return statementList.toArray(new String[statementList.size()]);
+        return statementList;
     }
 
 
     private class CqlExecOperation extends ThriftApiOperation
     {
         private final List<CqlResult> results = new ArrayList<>();
-        private final String[] statements;
+        private final List<String> statements;
 
         private CqlExecOperation(String statements)
         {
@@ -145,7 +146,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
                 getLog().warn("Using CqlLexer has not been extensively tested");
                 this.statements = splitStatementsUsingCqlLexer(statements);
             } else {
-                this.statements = statements.split(";");
+                this.statements = Arrays.asList(statements.split(";"));
             }
             if (StringUtils.isNotBlank(keyspace))
             {
