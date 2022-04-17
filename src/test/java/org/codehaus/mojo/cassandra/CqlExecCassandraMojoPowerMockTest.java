@@ -91,7 +91,7 @@ public class CqlExecCassandraMojoPowerMockTest {
         try {
             cqlExecCassandraMojo.execute();
 
-            assertEquals("3.4.0", operation.getValue().getCqlVersion());
+            assertEquals("3.11.12", operation.getValue().getCqlVersion());
         } catch (MojoExecutionException | MojoFailureException e) {
             fail(e.getMessage());
         }

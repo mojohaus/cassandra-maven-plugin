@@ -445,8 +445,7 @@ public abstract class AbstractCassandraMojo
         StringBuilder config = new StringBuilder();
         config.append( "data_file_directories:\n" ).append( "    - " ).append( data.getAbsolutePath() ).append( "\n" );
         config.append( "commitlog_directory: " ).append( commitlog ).append( "\n" );
-        // TODO restore for cassandra upgrade
-        //config.append( "cdc_raw_directory: " ).append( cdcRawDirectory ).append( "\n" );
+        config.append( "cdc_raw_directory: " ).append( cdcRawDirectory ).append( "\n" );
         config.append( "saved_caches_directory: " ).append( savedCaches ).append( "\n" );
         config.append( "initial_token: " ).append(
             initialToken == null || "null".equals( initialToken ) ? "" : initialToken.toString() ).append( "\n" );
