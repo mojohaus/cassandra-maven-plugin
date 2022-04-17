@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.apache.cassandra.cql3.CqlLexer;
 import org.apache.cassandra.thrift.Cassandra.Client;
@@ -36,8 +35,8 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cql.version", defaultValue = "3.4.0")
-    private String cqlVersion = "3.4.0";
+    @Parameter(property="cql.version", defaultValue = "3.11.12")
+    private String cqlVersion = "3.11.12";
 
     /**
      * Charset used when loading CQL files. If not specified the system default encoding will be used.
