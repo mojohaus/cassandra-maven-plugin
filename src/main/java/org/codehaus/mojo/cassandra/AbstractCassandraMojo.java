@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -261,12 +260,10 @@ public abstract class AbstractCassandraMojo
         throws IOException
     {
         File conf = new File( cassandraDir, "conf" );
-        FileOutputStream fos = null;
-        JarOutputStream jos = null;
-        try
+
+        try (FileOutputStream fos = new FileOutputStream(jarFile);
+             JarOutputStream jos = new JarOutputStream(fos))
         {
-            fos = new FileOutputStream( jarFile );
-            jos = new JarOutputStream( fos );
             jos.setLevel( JarOutputStream.STORED );
             jos.putNextEntry( new JarEntry( "META-INF/MANIFEST.MF" ) );
 
@@ -284,7 +281,7 @@ public abstract class AbstractCassandraMojo
 
             for ( Artifact artifact : this.pluginDependencies )
             {
-                getLog().debug( "Adding plugin dependency artifact: " + ArtifactUtils.versionlessKey( artifact ) +
+                getLog().debug( "Adding plugin dependency artifact: " + ArtifactUtils.versionlessKey(artifact) +
                                     " to the classpath" );
                 // NOTE: if File points to a directory, this entry MUST end in '/'.
                 cp.append( new URL( artifact.getFile().toURI().toASCIIString() ).toExternalForm() );
@@ -323,12 +320,7 @@ public abstract class AbstractCassandraMojo
             man.getMainAttributes().putValue( "Class-Path", cp.toString().trim() );
             man.getMainAttributes().putValue( "Main-Class", mainClass );
 
-            man.write( jos );
-        }
-        finally
-        {
-            IOUtil.close( jos );
-            IOUtil.close( fos );
+            man.write(jos);
         }
     }
 
@@ -626,6 +618,7 @@ public abstract class AbstractCassandraMojo
             commandLine.addArgument( "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED" );
             commandLine.addArgument( "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED" );
             commandLine.addArgument( "--add-opens=java.base/java.util=ALL-UNNAMED" );
+            commandLine.addArgument( "--add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED" );
         }
 
         //Only value should be quoted so we have to do it ourselves explicitly and disable additional quotation of whole
