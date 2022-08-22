@@ -99,7 +99,7 @@ under the License.
   <properties>
     <mavenVersion>3.2.5</mavenVersion>
     <cassandraVersion>3.11.13</cassandraVersion>
-    <slf4jVersion>1.7.36</slf4jVersion>
+    <slf4jVersion>2.0.0</slf4jVersion>
     <log4jVersion>2.18.0</log4jVersion>
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <buildHelperPluginVersion>3.3.0</buildHelperPluginVersion>
