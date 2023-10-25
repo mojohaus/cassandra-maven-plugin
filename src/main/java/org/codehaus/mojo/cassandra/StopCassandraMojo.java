@@ -70,6 +70,9 @@ public class StopCassandraMojo extends AbstractMojo
     @Parameter(property="cassandra.rpcPort", defaultValue="9160")
     protected int rpcPort;
 
+    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
+    protected int nativeTransportPort;
+
     /**
      * Address to bind to and tell other Cassandra nodes to connect to. You
      * <strong>must</strong> change this if you want multiple nodes to be able to
@@ -106,6 +109,6 @@ public class StopCassandraMojo extends AbstractMojo
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
 
-        Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
+        Utils.stopCassandraServerCQLVersion(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
     }
 }

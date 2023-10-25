@@ -139,7 +139,7 @@ public class RunCassandraMojo
             }
             finally
             {
-                Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
+                Utils.stopCassandraServerCQLVersion(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
                 try
                 {
                     execHandler.waitFor();

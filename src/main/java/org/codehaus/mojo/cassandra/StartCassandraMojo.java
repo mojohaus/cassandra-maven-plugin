@@ -120,7 +120,7 @@ public class StartCassandraMojo
                 boolean started = Utils.waitUntilStarted( rpcAddress, rpcPort, startWaitSeconds, getLog() );
                 if ( !started )
                 {
-                    Utils.stopCassandraServer( rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog() );
+                    Utils.stopCassandraServerCQLVersion( rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog() );
                     throw new MojoFailureException( "Cassandra failed to start within " + startWaitSeconds + "s" );
                 }
             }

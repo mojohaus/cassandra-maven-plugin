@@ -70,6 +70,9 @@ public class StopCassandraClusterMojo extends AbstractMojo
     @Parameter(property="cassandra.rpcPort", defaultValue="9160")
     protected int rpcPort;
 
+    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
+    protected int nativeTransportPort;
+
     /**
      * The number of nodes in the cluster.
      *
@@ -102,7 +105,7 @@ public class StopCassandraClusterMojo extends AbstractMojo
             throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be less than 254");
         }
         for (int node = 0; node < clusterSize; node++) {
-            Utils.stopCassandraServer("127.0.0." + (node + 1), rpcPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
+            Utils.stopCassandraServerCQLVersion("127.0.0." + (node + 1), nativeTransportPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
         }
 
     }

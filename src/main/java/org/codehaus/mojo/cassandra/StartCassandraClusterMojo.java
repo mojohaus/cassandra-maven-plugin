@@ -167,7 +167,7 @@ public class StartCassandraClusterMojo
                         Utils.waitUntilStarted( listenAddress[node], rpcPort, startWaitSeconds, getLog() );
                     if ( !started )
                     {
-                        Utils.stopCassandraServer( listenAddress[node], rpcPort, listenAddress[node], stopPort, stopKey,
+                        Utils.stopCassandraServerCQLVersion( listenAddress[node], nativeTransportPort, listenAddress[node], stopPort, stopKey,
                                                    getLog() );
                         throw new MojoFailureException( "Cassandra failed to start within " + startWaitSeconds + "s" );
                     }
