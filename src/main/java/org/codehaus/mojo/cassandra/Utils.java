@@ -18,6 +18,10 @@
  */
 package org.codehaus.mojo.cassandra;
 
+import com.datastax.oss.driver.api.core.AllNodesFailedException;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.DriverTimeoutException;
+import com.datastax.oss.driver.api.core.auth.AuthenticationException;
 import org.apache.cassandra.thrift.Cassandra;
 import org.apache.cassandra.thrift.InvalidRequestException;
 
@@ -42,6 +46,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -132,6 +137,55 @@ public final class Utils
             log.info("Cassandra has stopped.");
         } else
         {
+            log.warn("Gave up waiting for Cassandra to stop.");
+        }
+    }
+
+    /**
+     * Stops the Cassandra service CQL version.
+     *
+     * @param rpcAddress          The rpcAddress to connect to in order to see if Cassandra has stopped.
+     * @param nativeTransportPort The rpcPort to connect on to check if Cassandra has stopped.
+     * @param stopPort            The port to stop on.
+     * @param stopKey             The key to stop with,
+     * @param log                 The log to write to.
+     */
+    static void stopCassandraServerCQLVersion(String rpcAddress, int nativeTransportPort, String stopAddress, int stopPort, String stopKey, Log log) {
+        try {
+            Socket s = new Socket(InetAddress.getByName(stopAddress), stopPort);
+            s.setSoLinger(false, 0);
+
+            OutputStream out = s.getOutputStream();
+            out.write((stopKey + "\r\nstop\r\n").getBytes());
+            out.flush();
+            s.close();
+        } catch (ConnectException e) {
+            log.info("Cassandra not running!");
+            return;
+        } catch (Exception e) {
+            log.error(e);
+            return;
+        }
+        long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(30);
+        boolean stopped = false;
+        while (!stopped && System.currentTimeMillis() < maxWaiting) {
+            try (CqlSession cqlSession = CqlSession.builder()
+                    .addContactPoint(new InetSocketAddress(rpcAddress, nativeTransportPort))
+                    .build()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e1) {
+                    // ignore
+                }
+            } catch (AuthenticationException | AllNodesFailedException | DriverTimeoutException e) {
+                stopped = true;
+            } catch (Exception e) {
+                log.debug(e.getLocalizedMessage(), e);
+            }
+        }
+        if (stopped) {
+            log.info("Cassandra has stopped.");
+        } else {
             log.warn("Gave up waiting for Cassandra to stop.");
         }
     }
