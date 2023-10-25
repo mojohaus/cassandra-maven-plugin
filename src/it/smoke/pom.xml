@@ -44,9 +44,19 @@ under the License.
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.apache.cassandra</groupId>
-      <artifactId>cassandra-thrift</artifactId>
-      <version>@cassandraVersion@</version>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core-shaded</artifactId>
+      <version>@datastax.driver.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-query-builder</artifactId>
+      <version>@datastax.driver.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-mapper-runtime</artifactId>
+      <version>@datastax.driver.version@</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -115,7 +125,7 @@ under the License.
         </executions>
         <configuration>
           <systemPropertyVariables>
-            <rpcPort>${cassandraPort}</rpcPort>
+            <nativeTransportPort>${cassandra.nativeTransportPort}</nativeTransportPort>
             <storagePort>${cassandra.storagePort}</storagePort>
             <stopPort>${cassandra.stopPort}</stopPort>
           </systemPropertyVariables>
@@ -138,7 +148,6 @@ under the License.
             <goals>
               <goal>start</goal>
               <goal>load</goal>
-              <goal>cu-load</goal>
               <goal>stop</goal>
             </goals>
           </execution>
@@ -159,7 +168,7 @@ under the License.
           <loadAfterFirstStart>false</loadAfterFirstStart>
           <cuLoadAfterFirstStart>false</cuLoadAfterFirstStart>
           <startNativeTransport>true</startNativeTransport>
-          <rpcPort>${cassandraPort}</rpcPort>
+          <nativeTransportPort>${cassandra.nativeTransportPort}</nativeTransportPort>
           <storagePort>${cassandra.storagePort}</storagePort>
           <stopPort>${cassandra.stopPort}</stopPort>
         </configuration>
@@ -177,7 +186,7 @@ under the License.
             </goals>
             <configuration>
               <portNames>
-                <portName>cassandraPort</portName>
+                <portName>cassandra.nativeTransportPort</portName>
                 <portName>cassandra.storagePort</portName>
                 <portName>cassandra.stopPort</portName>
               </portNames>

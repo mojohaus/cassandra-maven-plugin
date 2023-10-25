@@ -1,6 +1,6 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.thrift.InvalidRequestException;
+import com.datastax.oss.driver.api.core.DriverExecutionException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -71,48 +71,47 @@ public class CqlExecCassandraMojoPowerMockTest {
 
     @Test
     public void should_use_default_cql_version() throws MojoExecutionException, MojoFailureException {
-        final AtomicReference<ThriftApiOperation> thriftApiOperation = new AtomicReference<>();
+        final AtomicReference<CqlOperation> cqlOperation = new AtomicReference<>();
         try (MockedStatic<Utils> mocked = mockStatic(Utils.class)) {
-            mocked.when(() -> Utils.executeThrift(ArgumentMatchers.any(ThriftApiOperation.class)))
+            mocked.when(() -> Utils.executeCql(ArgumentMatchers.any(CqlOperation.class)))
                     .thenAnswer( a -> {
-                        thriftApiOperation.set(a.getArgument(0));
+                        cqlOperation.set(a.getArgument(0));
                         return doesNothing();
                     });
 
             builder.cqlStatement(CQL_STATEMENT).build().execute();
 
-            assertThat(thriftApiOperation.get().getCqlVersion()).isEqualTo("3.11.12");
+            assertThat(cqlOperation.get().getCqlVersion()).isEqualTo("3.11.12");
         }
     }
 
     @Test
     public void should_use_custom_keyspace() throws MojoExecutionException, MojoFailureException {
-        final AtomicReference<ThriftApiOperation> thriftApiOperation = new AtomicReference<>();
+        final AtomicReference<CqlOperation> cqlOperation = new AtomicReference<>();
         try (MockedStatic<Utils> mocked = mockStatic(Utils.class)) {
-            mocked.when(() -> Utils.executeThrift(ArgumentMatchers.any(ThriftApiOperation.class)))
+            mocked.when(() -> Utils.executeCql(ArgumentMatchers.any(CqlOperation.class)))
                     .thenAnswer(a -> {
-                        thriftApiOperation.set(a.getArgument(0));
+                        cqlOperation.set(a.getArgument(0));
                         return doesNothing();
                     });
 
             builder.keyspace("identifier").cqlStatement(CQL_STATEMENT).build()
                     .execute();
 
-            assertThat(thriftApiOperation.get().getKeyspace()).isEqualTo("identifier");
+            assertThat(cqlOperation.get().getKeyspace()).isEqualTo("identifier");
         }
     }
 
     @Test
     public void should_fail_when_request_fails() {
         try (MockedStatic<Utils> mocked = mockStatic(Utils.class)) {
-            mocked.when(() -> Utils.executeThrift(ArgumentMatchers.any(ThriftApiOperation.class)))
-                    .thenThrow(new ThriftApiExecutionException(new InvalidRequestException("bad statement")));
+            mocked.when(() -> Utils.executeCql(ArgumentMatchers.any(CqlOperation.class)))
+                    .thenThrow(new DriverExecutionException(new Exception("bad statement")));
 
             builder.cqlStatement(CQL_STATEMENT).build().execute();
 
         } catch (MojoExecutionException e) {
-            assertThat(e).hasMessage("There was a problem calling Apache Cassandra's Thrift API. " +
-                    "Details: The request was not properly formatted bad statement");
+            assertThat(e).hasMessage("bad statement");
         } catch (MojoFailureException e) {
             fail(e.getMessage());
         }

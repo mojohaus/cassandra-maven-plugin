@@ -1,9 +1,12 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.cassandra.thrift.Cassandra.Client;
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.dropKeyspace;
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.dropTable;
 
 /**
  * Drop the specified ColumnFamilies or, if no arguments are given, 
@@ -22,13 +25,11 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     @Parameter(property="cassandra.columnFamilies")
     protected String columnFamilies;
 
-
     @Override
-    protected ThriftApiOperation buildOperation() 
-    {
-        DropCfOperation dropCfOp = new DropCfOperation(rpcAddress, rpcPort);
-        dropCfOp.setKeyspace(keyspace);        
-        return dropCfOp;
+    protected CqlOperation buildOperation() {
+        DropTableOperation dropTableOperation = new DropTableOperation(rpcAddress, nativeTransportPort);
+        dropTableOperation.setKeyspace(keyspace);
+        return dropTableOperation;
     }
 
     private String[] columnFamilyList;
@@ -44,38 +45,28 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     
         columnFamilyList = StringUtils.split(columnFamilies, ',');
     }
-        
 
-    class DropCfOperation extends ThriftApiOperation 
-    {
+    class DropTableOperation extends CqlOperation {
 
-        public DropCfOperation(String rpcAddress, int rpcPort)
-        {
-            super(rpcAddress, rpcPort);
+        public DropTableOperation(String rpcAddress, int nativeTransportPort) {
+            super(rpcAddress, nativeTransportPort);
         }
 
         @Override
-        public void executeOperation(Client client) throws ThriftApiExecutionException
-        {
+        public void executeOperation(CqlSession cqlSession) throws CqlExecutionException{
             try {
-                if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
-                {
-                    for (String s : columnFamilyList)
-                    {
-                        client.system_drop_column_family(s);
-                        getLog().info("Dropped column family \"" + s + "\".");
+                if (columnFamilyList != null && columnFamilyList.length > 0) {
+                    for (String s : columnFamilyList) {
+                        dropTable(s).ifExists();
+                        getLog().info("Dropped Table \"" + s + "\".");
                     }
-                } 
-                else 
-                {
-                    client.system_drop_keyspace(keyspace);
+                } else {
+                    dropKeyspace(keyspace).ifExists();
                     getLog().info("Dropped keyspace \"" + keyspace + "\".");
                 }
-            } catch (Exception e) 
-            {
-                throw new ThriftApiExecutionException(e);
+            } catch (Exception e) {
+                throw new CqlExecutionException(e);
             }
         }
     }
-
 }

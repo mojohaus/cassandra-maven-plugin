@@ -3,13 +3,11 @@ package org.codehaus.mojo.cassandra;
 import java.io.File;
 import java.util.List;
 
+import com.datastax.oss.driver.api.core.cql.Row;
 import org.apache.cassandra.db.marshal.AbstractType;
 import org.apache.cassandra.db.marshal.TypeParser;
 import org.apache.cassandra.exceptions.ConfigurationException;
 import org.apache.cassandra.exceptions.SyntaxException;
-import org.apache.cassandra.thrift.Column;
-import org.apache.cassandra.thrift.CqlResult;
-import org.apache.cassandra.thrift.CqlRow;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -90,37 +88,17 @@ public class CqlExecCassandraMojo extends AbstractCqlExecMojo {
   /*
    * Encapsulate print of CqlResult. Uses specified configuration options to format results
    */
-  private void printResults(List<CqlResult> results)
-  {
+  private void printResults(List<Row> results) {
       // TODO fix ghetto formatting
       getLog().info("-----------------------------------------------");
-      for (CqlResult result : results)
-      {
-          switch (result.type) {
-              case VOID:
-                  // Void method so nothing to log
-                  break;
-              case INT:
-                  getLog().info("Number result: " + result.getNum());
-                  break;
-              case ROWS:
-                  printRows(result);
-                  break;
-          }
+      for (Row result : results) {
+          printRow(result);
       }
   }
 
-    private void printRows(CqlResult result) {
-        for (CqlRow row : result.getRows()) {
-            getLog().info("Row key: " + keyValidatorVal.getString(row.key));
-            getLog().info("-----------------------------------------------");
-            for (Column column : row.getColumns()) {
-                getLog().info(" name: " + comparatorVal.getString(column.name));
-                getLog().info(" value: " + defaultValidatorVal.getString(column.value));
-                getLog().info("-----------------------------------------------");
-            }
-
-        }
-    }
-
+  private void printRow(Row row) {
+      getLog().info("-----------------------------------------------");
+      getLog().info(row.getFormattedContents());
+      getLog().info("-----------------------------------------------");
+  }
 }
