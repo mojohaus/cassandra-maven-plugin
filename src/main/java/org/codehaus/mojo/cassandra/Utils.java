@@ -20,6 +20,7 @@ package org.codehaus.mojo.cassandra;
 
 import com.datastax.oss.driver.api.core.AllNodesFailedException;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.DriverException;
 import com.datastax.oss.driver.api.core.DriverTimeoutException;
 import org.apache.cassandra.thrift.Cassandra;
 
@@ -176,7 +177,7 @@ public final class Utils
                 }
             } catch (AllNodesFailedException | DriverTimeoutException e) {
                 stopped = true;
-            } catch (Exception e) {
+            } catch (DriverException e) {
                 log.debug(e.getLocalizedMessage(), e);
             }
         }
@@ -359,15 +360,13 @@ public final class Utils
                 } catch (Exception e) {
                     throw new MojoExecutionException(e.getLocalizedMessage(), e);
                 }
-            } catch (MojoExecutionException e) {
-                throw e;
             } catch (AllNodesFailedException | DriverTimeoutException e) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e1) {
                     // ignore
                 }
-            } catch (Exception e) {
+            } catch (DriverException e) {
                 log.debug(e.getLocalizedMessage(), e);
             }
         }
