@@ -164,7 +164,7 @@ public class StartCassandraClusterMojo
                 {
                     getLog().info( "Waiting for Cassandra Node " + ( node + 1 ) + " to start..." );
                     boolean started =
-                        Utils.waitUntilStarted( listenAddress[node], rpcPort, startWaitSeconds, getLog() );
+                        Utils.waitUntilStartedCQLVersion( listenAddress[node], nativeTransportPort, startWaitSeconds, getLog() );
                     if ( !started )
                     {
                         Utils.stopCassandraServerCQLVersion( listenAddress[node], nativeTransportPort, listenAddress[node], stopPort, stopKey,

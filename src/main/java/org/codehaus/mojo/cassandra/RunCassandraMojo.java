@@ -94,7 +94,7 @@ public class RunCassandraMojo
             try
             {
                 getLog().info( "Waiting for Cassandra to start..." );
-                Utils.waitUntilStarted( rpcAddress, rpcPort, 0, getLog() );
+                Utils.waitUntilStartedCQLVersion( rpcAddress, nativeTransportPort, 0, getLog() );
 
                 if ( isClean && loadAfterFirstStart)
                 {

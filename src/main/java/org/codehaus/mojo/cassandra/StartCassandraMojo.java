@@ -117,7 +117,7 @@ public class StartCassandraMojo
             if ( startWaitSeconds >= 0 )
             {
                 getLog().info( "Waiting for Cassandra to start..." );
-                boolean started = Utils.waitUntilStarted( rpcAddress, rpcPort, startWaitSeconds, getLog() );
+                boolean started = Utils.waitUntilStartedCQLVersion( rpcAddress, nativeTransportPort, startWaitSeconds, getLog() );
                 if ( !started )
                 {
                     Utils.stopCassandraServerCQLVersion( rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog() );
