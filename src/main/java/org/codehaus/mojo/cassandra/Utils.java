@@ -177,7 +177,7 @@ public final class Utils
                 } catch (InterruptedException e1) {
                     // ignore
                 }
-            } catch (AuthenticationException | AllNodesFailedException | DriverTimeoutException e) {
+            } catch (AllNodesFailedException | DriverTimeoutException e) {
                 stopped = true;
             } catch (Exception e) {
                 log.debug(e.getLocalizedMessage(), e);
