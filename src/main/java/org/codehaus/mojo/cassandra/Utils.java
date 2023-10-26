@@ -142,7 +142,7 @@ public final class Utils
      * Stops the Cassandra service CQL version.
      *
      * @param rpcAddress          The rpcAddress to connect to in order to see if Cassandra has stopped.
-     * @param nativeTransportPort The rpcPort to connect on to check if Cassandra has stopped.
+     * @param nativeTransportPort The nativeTransportPort to connect on to check if Cassandra has stopped.
      * @param stopPort            The port to stop on.
      * @param stopKey             The key to stop with,
      * @param log                 The log to write to.
@@ -332,6 +332,43 @@ public final class Utils
                 {
                     tr.close();
                 }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Waits until the Cassandra server at the specified RPC address and native transport port has started accepting connections.
+     *
+     * @param rpcAddress            The RPC address to connect to.
+     * @param nativeTransportPort   The native transport port to connect on.
+     * @param startWaitSeconds      The maximum number of seconds to wait.
+     * @param log                   the {@link Log} to log to.
+     * @return {@code true} if Cassandra is started.
+     * @throws MojoExecutionException if something went wrong.
+     */
+    static boolean waitUntilStartedCQLVersion(String rpcAddress, int nativeTransportPort, int startWaitSeconds, Log log) throws MojoExecutionException {
+        long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(startWaitSeconds);
+        while (startWaitSeconds == 0 || System.currentTimeMillis() < maxWaiting) {
+            try (CqlSession cqlSession = CqlSession.builder()
+                    .addContactPoint(new InetSocketAddress(rpcAddress, nativeTransportPort))
+                    .build()) {
+                try {
+                    log.info("Cassandra cluster \"" + cqlSession.getMetadata().getClusterName() + "\" started.");
+                    return true;
+                } catch (Exception e) {
+                    throw new MojoExecutionException(e.getLocalizedMessage(), e);
+                }
+            } catch (MojoExecutionException e) {
+                throw e;
+            } catch (AllNodesFailedException | DriverTimeoutException e) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e1) {
+                    // ignore
+                }
+            } catch (Exception e) {
+                log.debug(e.getLocalizedMessage(), e);
             }
         }
         return false;
