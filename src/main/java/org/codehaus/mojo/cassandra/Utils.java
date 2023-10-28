@@ -169,6 +169,7 @@ public final class Utils
         while (!stopped && System.currentTimeMillis() < maxWaiting) {
             try (CqlSession cqlSession = CqlSession.builder()
                     .addContactPoint(new InetSocketAddress(rpcAddress, nativeTransportPort))
+                    .withLocalDatacenter("datacenter1")
                     .build()) {
                 try {
                     Thread.sleep(500);
@@ -353,6 +354,7 @@ public final class Utils
         while (startWaitSeconds == 0 || System.currentTimeMillis() < maxWaiting) {
             try (CqlSession cqlSession = CqlSession.builder()
                     .addContactPoint(new InetSocketAddress(rpcAddress, nativeTransportPort))
+                    .withLocalDatacenter("datacenter1")
                     .build()) {
                 try {
                     log.info("Cassandra cluster \"" + cqlSession.getMetadata().getClusterName() + "\" started.");
