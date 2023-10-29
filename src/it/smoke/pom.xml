@@ -53,13 +53,11 @@ under the License.
       <artifactId>java-driver-core-shaded</artifactId>
       <version>@datastax.driver.version@</version>
     </dependency>
-
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-query-builder</artifactId>
       <version>@datastax.driver.version@</version>
     </dependency>
-
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-mapper-runtime</artifactId>

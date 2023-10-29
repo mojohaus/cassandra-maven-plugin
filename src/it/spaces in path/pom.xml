@@ -49,6 +49,21 @@ under the License.
       <version>@cassandraVersion@</version>
     </dependency>
     <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core-shaded</artifactId>
+      <version>@datastax.driver.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-query-builder</artifactId>
+      <version>@datastax.driver.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-mapper-runtime</artifactId>
+      <version>@datastax.driver.version@</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.1</version>

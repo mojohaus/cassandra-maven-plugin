@@ -56,7 +56,7 @@ public class SmokeIT
     @Test
     public void connectToKeyspace_Cql() throws Exception{
         try (CqlSession cqlSession = CqlSession.builder()
-                .addContactPoint(new InetSocketAddress("localhost", Integer.getInteger( "nativeTransportPort", 9042)))
+                .addContactPoint(new InetSocketAddress("localhost", Integer.getInteger("nativeTransportPort", 9042)))
                 .withLocalDatacenter("datacenter1")
                 .build()) {
             assertThat(cqlSession.getMetadata().getKeyspace("testkeyspace").get().getReplication().entrySet(),
