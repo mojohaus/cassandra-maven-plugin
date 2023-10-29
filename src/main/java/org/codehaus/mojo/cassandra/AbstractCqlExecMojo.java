@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ColumnDefinitions;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.Token;
 import org.apache.cassandra.cql3.CqlLexer;
@@ -77,23 +81,16 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         }
     }
 
-    protected List<CqlResult> executeCql(final String statements) throws MojoExecutionException
-    {
-        final List<CqlResult> results = new ArrayList<>();
-        if (StringUtils.isBlank(statements))
-        {
+    protected List<Row> executeCql(final String statements) throws MojoExecutionException {
+        final List<Row> results = new ArrayList<>();
+        if (StringUtils.isBlank(statements)) {
             getLog().warn("No CQL provided. Nothing to do.");
-        } else
-        {
-            try
-            {
-                CqlExecOperation operation = new CqlExecOperation(statements);
-                Utils.executeThrift(operation);
-                results.addAll(operation.results);
-            } catch (ThriftApiExecutionException taee)
-            {
-                throw new MojoExecutionException(taee.getMessage(), taee);
-            }
+        } else {
+
+            CqlStatementOperation cqlStatementOperation = new CqlStatementOperation(statements);
+            Utils.executeCql(cqlStatementOperation);
+            results.addAll(cqlStatementOperation.results);
+
         }
         return results;
     }
@@ -192,4 +189,38 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         }
     }
 
+    private class CqlStatementOperation extends CqlOperation {
+
+        private final List<Row> results = new ArrayList<>();
+        private final List<String> statements;
+
+        private CqlStatementOperation(String statements) {
+            super(rpcAddress, nativeTransportPort);
+            if (useCqlLexer) {
+                getLog().warn("Using CqlLexer has not been extensively tested");
+                this.statements = splitStatementsUsingCqlLexer(statements);
+            } else {
+                this.statements = Arrays.asList(statements.split(";"));
+            }
+            if (StringUtils.isNotBlank(keyspace)) {
+                getLog().info("setting keyspace: " + keyspace);
+                setKeyspace(keyspace);
+            }
+        }
+
+        @Override
+        void executeOperation(CqlSession cqlSession) {
+            for (String statement : statements)
+            {
+                if (StringUtils.isNotBlank(statement))
+                {
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("Executing cql statement: " + statement);
+                    }
+                    ResultSet resultSet = cqlSession.execute(statement);
+                    results.addAll(resultSet.all());
+                }
+            }
+        }
+    }
 }
