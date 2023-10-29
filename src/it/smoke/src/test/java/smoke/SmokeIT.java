@@ -27,6 +27,7 @@ import org.apache.thrift.transport.TTransport;
 import com.datastax.oss.driver.api.core.CqlSession;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
 import java.util.AbstractMap;
 import java.util.Map;
 
