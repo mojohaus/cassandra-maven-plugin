@@ -20,6 +20,7 @@ package org.codehaus.mojo.cassandra;
 
 import com.datastax.oss.driver.api.core.AllNodesFailedException;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.DriverException;
 import com.datastax.oss.driver.api.core.DriverTimeoutException;
 import org.apache.cassandra.thrift.Cassandra;
@@ -419,5 +420,25 @@ public final class Utils
             }
         }
 
+    }
+
+    /**
+     * Call {@link CqlOperation#executeOperation(CqlSession)} on the provided operation
+     * @throws MojoExecutionException
+     */
+    public static void executeCql(CqlOperation cqlOperation) throws MojoExecutionException {
+        CqlSessionBuilder cqlSessionBuilder =  CqlSession.builder()
+                .addContactPoint(new InetSocketAddress(cqlOperation.getRpcAddress(), cqlOperation.getNativeTransportPort()))
+                .withLocalDatacenter("datacenter1");
+        if ( StringUtils.isNotBlank(cqlOperation.getKeyspace())) {
+            cqlSessionBuilder.withKeyspace(cqlOperation.getKeyspace());
+        }
+        try (CqlSession cqlSession = cqlSessionBuilder.build()) {
+            cqlOperation.executeOperation(cqlSession);
+        } catch (DriverException e) {
+            throw new MojoExecutionException("API Exception calling Apache Cassandra", e);
+        } catch (Exception e) {
+            throw new MojoExecutionException("Something went wrong cleaning up", e);
+        }
     }
 }
