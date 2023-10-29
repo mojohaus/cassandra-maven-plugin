@@ -1,5 +1,8 @@
 package org.codehaus.mojo.cassandra;
 
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.DriverException;
+
 public abstract class CqlOperation {
 
     private String keyspace;
@@ -12,7 +15,7 @@ public abstract class CqlOperation {
         this.nativeTransportPort = nativeTransportPort;
     }
 
-    abstract void executeOperation() throws ThriftApiExecutionException;
+    abstract void executeOperation(CqlSession cqlSession) throws DriverException;
 
     public String getKeyspace() {
         return keyspace;
