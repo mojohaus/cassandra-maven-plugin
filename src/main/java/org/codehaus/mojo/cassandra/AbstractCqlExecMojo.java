@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.DriverException;
+import com.datastax.oss.driver.api.core.DriverExecutionException;
 import com.datastax.oss.driver.api.core.cql.ColumnDefinitions;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
@@ -86,11 +88,13 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         if (StringUtils.isBlank(statements)) {
             getLog().warn("No CQL provided. Nothing to do.");
         } else {
-
-            CqlStatementOperation cqlStatementOperation = new CqlStatementOperation(statements);
-            Utils.executeCql(cqlStatementOperation);
-            results.addAll(cqlStatementOperation.results);
-
+            try {
+                CqlStatementOperation cqlStatementOperation = new CqlStatementOperation(statements);
+                Utils.executeCql(cqlStatementOperation);
+                results.addAll(cqlStatementOperation.results);
+            } catch (DriverExecutionException e) {
+                throw new MojoExecutionException(e.getCause().getMessage(), e);
+            }
         }
         return results;
     }
@@ -206,6 +210,8 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
                 getLog().info("setting keyspace: " + keyspace);
                 setKeyspace(keyspace);
             }
+            getLog().info("setting cqlversion: " + cqlVersion);
+            setCqlVersion(cqlVersion);
         }
 
         @Override
