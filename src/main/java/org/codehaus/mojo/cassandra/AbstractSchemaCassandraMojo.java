@@ -42,7 +42,6 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
         {
             throw new MojoExecutionException(iae.getMessage());
         }
-        Utils.executeThrift(buildOperation());
         Utils.executeCql(cqlBuildOperation());
     }
 }
