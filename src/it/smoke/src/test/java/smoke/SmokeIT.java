@@ -24,6 +24,7 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.junit.Test;
 
 import java.util.AbstractMap;
@@ -48,6 +49,17 @@ public class SmokeIT
         } finally
         {
             tr.close();
+        }
+    }
+
+    @Test
+    public void connectToKeyspace_Cql() throws Exception{
+        try (CqlSession cqlSession = CqlSession.builder()
+                .addContactPoint(new InetSocketAddress("localhost", Integer.getInteger( "rpcPort", 9042)))
+                .withLocalDatacenter("datacenter1")
+                .build()) {
+            assertThat(cqlSession.getMetadata().getKeyspace("testkeyspace").get().getReplication().entrySet(),
+                    hasItem((Map.Entry<String, String>)new AbstractMap.SimpleEntry<String,String>("replication_factor","1")));
         }
     }
 }
