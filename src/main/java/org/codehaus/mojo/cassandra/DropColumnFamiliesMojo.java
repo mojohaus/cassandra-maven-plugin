@@ -1,9 +1,13 @@
 package org.codehaus.mojo.cassandra;
 
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.apache.cassandra.thrift.Cassandra.Client;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.dropKeyspace;
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.dropTable;
 
 /**
  * Drop the specified ColumnFamilies or, if no arguments are given, 
@@ -24,11 +28,18 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
 
 
     @Override
-    protected ThriftApiOperation buildOperation() 
+    protected ThriftApiOperation buildOperation()
     {
         DropCfOperation dropCfOp = new DropCfOperation(rpcAddress, rpcPort);
-        dropCfOp.setKeyspace(keyspace);        
+        dropCfOp.setKeyspace(keyspace);
         return dropCfOp;
+    }
+
+    @Override
+    protected CqlOperation cqlBuildOperation() {
+        DropTableCqlOperation dropTableCqlOperation = new DropTableCqlOperation(rpcAddress, nativeTransportPort);
+        dropTableCqlOperation.setKeyspace(keyspace);
+        return dropTableCqlOperation;
     }
 
     private String[] columnFamilyList;
@@ -78,4 +89,23 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
         }
     }
 
+    class DropTableCqlOperation extends CqlOperation {
+
+        public DropTableCqlOperation(String rpcAddress, int nativeTransportPort) {
+            super(rpcAddress, nativeTransportPort);
+        }
+
+        @Override
+        void executeOperation(CqlSession cqlSession) {
+            if (columnFamilyList != null && columnFamilyList.length > 0) {
+                for (String s : columnFamilyList) {
+                    dropTable(s).ifExists();
+                    getLog().info("Dropped Table \"" + s + "\".");
+                }
+            } else {
+                dropKeyspace(keyspace).ifExists();
+                getLog().info("Dropped keyspace \"" + keyspace + "\".");
+            }
+        }
+    }
 }
