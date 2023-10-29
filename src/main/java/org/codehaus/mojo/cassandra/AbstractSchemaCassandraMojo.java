@@ -24,8 +24,10 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
                
     
     protected abstract void parseArguments() throws IllegalArgumentException;
-    
-    protected abstract ThriftApiOperation buildOperation(); 
+
+    protected abstract ThriftApiOperation buildOperation();
+
+    protected abstract CqlOperation cqlBuildOperation();
     
     /**
      * Parses the arguments then calls 
@@ -41,8 +43,6 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
             throw new MojoExecutionException(iae.getMessage());
         }
         Utils.executeThrift(buildOperation());
+        Utils.executeCql(cqlBuildOperation());
     }
-    
-
-
 }
