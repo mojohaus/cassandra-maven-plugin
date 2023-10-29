@@ -102,7 +102,7 @@ under the License.
     <slf4jVersion>1.7.36</slf4jVersion>
     <log4jVersion>2.20.0</log4jVersion>
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
-    <driver.version>4.17.0</driver.version>
+    <datastax.driver.version>4.17.0</datastax.driver.version>
     <buildHelperPluginVersion>3.3.0</buildHelperPluginVersion>
     <project.build.outputTimestamp>2022-04-17T09:02:12Z</project.build.outputTimestamp>
   </properties>
@@ -204,19 +204,19 @@ under the License.
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-core-shaded</artifactId>
-      <version>${driver.version}</version>
+      <version>${datastax.driver.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-query-builder</artifactId>
-      <version>${driver.version}</version>
+      <version>${datastax.driver.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-mapper-runtime</artifactId>
-      <version>${driver.version}</version>
+      <version>${datastax.driver.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugin-testing</groupId>
