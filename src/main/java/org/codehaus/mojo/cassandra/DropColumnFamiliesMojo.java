@@ -1,7 +1,6 @@
 package org.codehaus.mojo.cassandra;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import org.apache.cassandra.thrift.Cassandra.Client;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -26,15 +25,6 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     @Parameter(property="cassandra.columnFamilies")
     protected String columnFamilies;
 
-
-    @Override
-    protected ThriftApiOperation buildOperation()
-    {
-        DropCfOperation dropCfOp = new DropCfOperation(rpcAddress, rpcPort);
-        dropCfOp.setKeyspace(keyspace);
-        return dropCfOp;
-    }
-
     @Override
     protected CqlOperation cqlBuildOperation() {
         DropTableCqlOperation dropTableCqlOperation = new DropTableCqlOperation(rpcAddress, nativeTransportPort);
@@ -54,39 +44,6 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
         }
     
         columnFamilyList = StringUtils.split(columnFamilies, ',');
-    }
-        
-
-    class DropCfOperation extends ThriftApiOperation 
-    {
-
-        public DropCfOperation(String rpcAddress, int rpcPort)
-        {
-            super(rpcAddress, rpcPort);
-        }
-
-        @Override
-        public void executeOperation(Client client) throws ThriftApiExecutionException
-        {
-            try {
-                if ( columnFamilyList != null && columnFamilyList.length > 0 ) 
-                {
-                    for (String s : columnFamilyList)
-                    {
-                        client.system_drop_column_family(s);
-                        getLog().info("Dropped column family \"" + s + "\".");
-                    }
-                } 
-                else 
-                {
-                    client.system_drop_keyspace(keyspace);
-                    getLog().info("Dropped keyspace \"" + keyspace + "\".");
-                }
-            } catch (Exception e) 
-            {
-                throw new ThriftApiExecutionException(e);
-            }
-        }
     }
 
     class DropTableCqlOperation extends CqlOperation {

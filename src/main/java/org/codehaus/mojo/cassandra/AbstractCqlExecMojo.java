@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +17,6 @@ import com.datastax.oss.driver.api.core.cql.Row;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.Token;
 import org.apache.cassandra.cql3.CqlLexer;
-import org.apache.cassandra.thrift.Cassandra.Client;
-import org.apache.cassandra.thrift.Compression;
-import org.apache.cassandra.thrift.ConsistencyLevel;
-import org.apache.cassandra.thrift.CqlResult;
-import org.apache.cassandra.utils.ByteBufferUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -130,65 +124,6 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
             statementList.add(currentStatement.toString());
         }
         return statementList;
-    }
-
-
-    private class CqlExecOperation extends ThriftApiOperation
-    {
-        private final List<CqlResult> results = new ArrayList<>();
-        private final List<String> statements;
-
-        private CqlExecOperation(String statements)
-        {
-            super(rpcAddress, rpcPort);
-            if (useCqlLexer) {
-                getLog().warn("Using CqlLexer has not been extensively tested");
-                this.statements = splitStatementsUsingCqlLexer(statements);
-            } else {
-                this.statements = Arrays.asList(statements.split(";"));
-            }
-            if (StringUtils.isNotBlank(keyspace))
-            {
-                getLog().info("setting keyspace: " + keyspace);
-                setKeyspace(keyspace);
-            }
-            getLog().info("setting cqlversion: " + cqlVersion);
-            setCqlVersion(cqlVersion);
-        }
-
-        @Override
-        void executeOperation(Client client) throws ThriftApiExecutionException
-        {
-            for (String statement : statements)
-            {
-                if (StringUtils.isNotBlank(statement))
-                {
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug("Executing cql statement: " + statement);
-                    }
-                    results.add(executeStatement(client, statement));
-                }
-            }
-        }
-
-        private CqlResult executeStatement(Client client, String statement) throws ThriftApiExecutionException
-        {
-            ByteBuffer buf = ByteBufferUtil.bytes(statement);
-            try
-            {
-                if (cqlVersion.charAt(0) >= '3')
-                {
-                    return client.execute_cql3_query(buf, Compression.NONE, ConsistencyLevel.ONE);
-                } else
-                {
-                    return client.execute_cql_query(buf, Compression.NONE);
-                }
-            } catch (Exception e)
-            {
-                getLog().debug(statement);
-                throw new ThriftApiExecutionException(e);
-            }
-        }
     }
 
     private class CqlStatementOperation extends CqlOperation {

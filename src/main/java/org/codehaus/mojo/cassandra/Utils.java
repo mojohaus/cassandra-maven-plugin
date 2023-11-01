@@ -23,20 +23,12 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.DriverException;
 import com.datastax.oss.driver.api.core.DriverTimeoutException;
-import org.apache.cassandra.thrift.Cassandra;
 
 import org.apache.commons.exec.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 import org.codehaus.plexus.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -63,81 +55,6 @@ public final class Utils
     private Utils()
     {
         throw new IllegalAccessError("Utility class");
-    }
-
-    /**
-     * Stops the Cassandra service.
-     *
-     * @param rpcAddress The rpcAddress to connect to in order to see if Cassandra has stopped.
-     * @param rpcPort    The rpcPort to connect on to check if Cassandra has stopped.
-     * @param stopPort   The port to stop on.
-     * @param stopKey    The key to stop with,
-     * @param log        The log to write to.
-     */
-    static void stopCassandraServer(String rpcAddress, int rpcPort, String stopAddress, int stopPort, String stopKey, Log log)
-    {
-        try
-        {
-            Socket s = new Socket(InetAddress.getByName(stopAddress), stopPort);
-            s.setSoLinger(false, 0);
-
-            OutputStream out = s.getOutputStream();
-            out.write((stopKey + "\r\nstop\r\n").getBytes());
-            out.flush();
-            s.close();
-        } catch (ConnectException e)
-        {
-            log.info("Cassandra not running!");
-            return;
-        } catch (Exception e)
-        {
-            log.error(e);
-            return;
-        }
-        log.info("Waiting for Cassandra to stop...");
-        long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(30);
-        boolean stopped = false;
-        while (!stopped && System.currentTimeMillis() < maxWaiting)
-        {
-            TTransport tr = new TFramedTransport(new TSocket(rpcAddress, rpcPort));
-            try
-            {
-                TProtocol proto = new TBinaryProtocol(tr);
-                Cassandra.Client client = new Cassandra.Client(proto);
-                try
-                {
-                    tr.open();
-                } catch (TTransportException e)
-                {
-                    if (e.getCause() instanceof ConnectException)
-                    {
-                        stopped = true;
-                        continue;
-                    }
-                    log.debug(e.getLocalizedMessage(), e);
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e1)
-                    {
-                        // ignore
-                    }
-                }
-            } finally
-            {
-                if (tr.isOpen())
-                {
-                    tr.close();
-                }
-            }
-        }
-        if (stopped)
-        {
-            log.info("Cassandra has stopped.");
-        } else
-        {
-            log.warn("Gave up waiting for Cassandra to stop.");
-        }
     }
 
     /**
@@ -283,64 +200,6 @@ public final class Utils
     }
 
     /**
-     * Waits until the Cassandra server at the specified RPC address and port has started accepting connections.
-     *
-     * @param rpcAddress       The RPC address to connect to.
-     * @param rpcPort          The RPC port to connect on.
-     * @param startWaitSeconds The maximum number of seconds to wait.
-     * @param log              the {@link Log} to log to.
-     * @return {@code true} if Cassandra is started.
-     * @throws MojoExecutionException if something went wrong.
-     */
-    static boolean waitUntilStarted(String rpcAddress, int rpcPort, int startWaitSeconds, Log log)
-            throws MojoExecutionException
-    {
-        long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(startWaitSeconds);
-        while (startWaitSeconds == 0 || System.currentTimeMillis() < maxWaiting)
-        {
-            TTransport tr = new TFramedTransport(new TSocket(rpcAddress, rpcPort));
-            try
-            {
-                TProtocol proto = new TBinaryProtocol(tr);
-                Cassandra.Client client = new Cassandra.Client(proto);
-                try
-                {
-                    tr.open();
-                } catch (TTransportException e)
-                {
-                    if (!(e.getCause() instanceof ConnectException))
-                    {
-                        log.debug(e.getLocalizedMessage(), e);
-                    }
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e1)
-                    {
-                        // ignore
-                    }
-                    continue;
-                }
-                try
-                {
-                    log.info("Cassandra cluster \"" + client.describe_cluster_name() + "\" started.");
-                    return true;
-                } catch (TException e)
-                {
-                    throw new MojoExecutionException(e.getLocalizedMessage(), e);
-                }
-            } finally
-            {
-                if (tr.isOpen())
-                {
-                    tr.close();
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Waits until the Cassandra server at the specified RPC address and native transport port has started accepting connections.
      *
      * @param rpcAddress            The RPC address to connect to.
@@ -374,52 +233,6 @@ public final class Utils
             }
         }
         return false;
-    }
-
-    /**
-     * Call {@link ThriftApiOperation#executeOperation(Cassandra.Client)} on the provided operation
-     * @throws MojoExecutionException
-     */    
-    public static void executeThrift(ThriftApiOperation thriftApiOperation) throws MojoExecutionException
-    {
-        TSocket socket = new TSocket(thriftApiOperation.getRpcAddress(), thriftApiOperation.getRpcPort());
-        TTransport transport = new TFramedTransport(socket);
-
-        TBinaryProtocol binaryProtocol = new TBinaryProtocol(transport, true, true);
-        Cassandra.Client cassandraClient = new Cassandra.Client(binaryProtocol);
-
-        try 
-        {
-            transport.open();
-            if ( StringUtils.isNotBlank(thriftApiOperation.getKeyspace()) ) 
-            {
-                cassandraClient.set_keyspace(thriftApiOperation.getKeyspace());
-            }
-            cassandraClient.set_cql_version(thriftApiOperation.getCqlVersion());
-            thriftApiOperation.executeOperation(cassandraClient);
-        } catch (ThriftApiExecutionException taee) 
-        {
-            throw new MojoExecutionException("API Exception calling Apache Cassandra", taee);
-        } catch (Exception ex) 
-        {
-            throw new MojoExecutionException("General exception from Thrift", ex);
-        }
-        
-        finally 
-        {
-            if ( transport != null && transport.isOpen() )
-            {
-                try 
-                {
-                    transport.flush();
-                    transport.close();
-                } catch (Exception e) 
-                { 
-                    throw new MojoExecutionException("Something went wrong cleaning up", e);
-                }
-            }
-        }
-
     }
 
     /**

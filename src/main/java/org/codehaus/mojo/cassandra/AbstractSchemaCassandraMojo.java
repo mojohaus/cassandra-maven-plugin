@@ -5,7 +5,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Some general operations and contract for Mojo implementations that will interact
- * with the system_* API methods. Manages the Thrift connection and delegates to 
+ * with the system_* API methods. Manages the Cql connection and delegates to
  * executeOperation on the implementation. Implementations must still implement
  * the execute method of the parent Mojo.
  * 
@@ -15,8 +15,6 @@ public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo 
                
     
     protected abstract void parseArguments() throws IllegalArgumentException;
-
-    protected abstract ThriftApiOperation buildOperation();
 
     protected abstract CqlOperation cqlBuildOperation();
     

@@ -15,7 +15,7 @@ public abstract class CqlOperation {
         this.nativeTransportPort = nativeTransportPort;
     }
 
-    abstract void executeOperation(CqlSession cqlSession) throws DriverException;
+    abstract void executeOperation(CqlSession cqlSession) throws CqlExecutionException;
 
     public String getKeyspace() {
         return keyspace;
