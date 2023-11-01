@@ -44,6 +44,11 @@ under the License.
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.apache.cassandra</groupId>
+      <artifactId>cassandra-thrift</artifactId>
+      <version>@cassandraVersion@</version>
+    </dependency>
+    <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-core-shaded</artifactId>
       <version>@datastax.driver.version@</version>
