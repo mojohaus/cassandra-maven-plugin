@@ -213,16 +213,19 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         }
 
         @Override
-        void executeOperation(CqlSession cqlSession) {
-            for (String statement : statements)
-            {
-                if (StringUtils.isNotBlank(statement))
-                {
+        void executeOperation(CqlSession cqlSession) throws CqlExecutionException {
+            for (String statement : statements) {
+                if (StringUtils.isNotBlank(statement)) {
                     if (getLog().isDebugEnabled()) {
                         getLog().debug("Executing cql statement: " + statement);
                     }
-                    ResultSet resultSet = cqlSession.execute(statement);
-                    results.addAll(resultSet.all());
+                    try {
+                        ResultSet resultSet = cqlSession.execute(statement);
+                        results.addAll(resultSet.all());
+                    } catch (Exception e) {
+                        getLog().debug(statement);
+                        throw new CqlExecutionException(e);
+                    }
                 }
             }
         }

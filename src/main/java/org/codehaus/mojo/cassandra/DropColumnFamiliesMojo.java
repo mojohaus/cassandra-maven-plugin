@@ -96,15 +96,19 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
         }
 
         @Override
-        void executeOperation(CqlSession cqlSession) {
-            if (columnFamilyList != null && columnFamilyList.length > 0) {
-                for (String s : columnFamilyList) {
-                    dropTable(s).ifExists();
-                    getLog().info("Dropped Table \"" + s + "\".");
+        void executeOperation(CqlSession cqlSession) throws CqlExecutionException{
+            try {
+                if (columnFamilyList != null && columnFamilyList.length > 0) {
+                    for (String s : columnFamilyList) {
+                        dropTable(s).ifExists();
+                        getLog().info("Dropped Table \"" + s + "\".");
+                    }
+                } else {
+                    dropKeyspace(keyspace).ifExists();
+                    getLog().info("Dropped keyspace \"" + keyspace + "\".");
                 }
-            } else {
-                dropKeyspace(keyspace).ifExists();
-                getLog().info("Dropped keyspace \"" + keyspace + "\".");
+            } catch (Exception e) {
+                throw new CqlExecutionException(e);
             }
         }
     }

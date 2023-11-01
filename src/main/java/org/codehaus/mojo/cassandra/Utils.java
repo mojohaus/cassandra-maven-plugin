@@ -427,15 +427,15 @@ public final class Utils
      * @throws MojoExecutionException
      */
     public static void executeCql(CqlOperation cqlOperation) throws MojoExecutionException {
-        CqlSessionBuilder cqlSessionBuilder =  CqlSession.builder()
+        CqlSessionBuilder cqlSessionBuilder = CqlSession.builder()
                 .addContactPoint(new InetSocketAddress(cqlOperation.getRpcAddress(), cqlOperation.getNativeTransportPort()))
                 .withLocalDatacenter("datacenter1");
-        if ( StringUtils.isNotBlank(cqlOperation.getKeyspace())) {
+        if (StringUtils.isNotBlank(cqlOperation.getKeyspace())) {
             cqlSessionBuilder.withKeyspace(cqlOperation.getKeyspace());
         }
         try (CqlSession cqlSession = cqlSessionBuilder.build()) {
             cqlOperation.executeOperation(cqlSession);
-        } catch (DriverException e) {
+        } catch (CqlExecutionException e) {
             throw new MojoExecutionException("API Exception calling Apache Cassandra", e);
         } catch (Exception e) {
             throw new MojoExecutionException("Something went wrong cleaning up", e);
