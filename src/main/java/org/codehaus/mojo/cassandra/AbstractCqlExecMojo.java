@@ -81,9 +81,9 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
             getLog().warn("No CQL provided. Nothing to do.");
         } else {
             try {
-                CqlStatementOperation cqlStatementOperation = new CqlStatementOperation(statements);
-                Utils.executeCql(cqlStatementOperation);
-                results.addAll(cqlStatementOperation.results);
+                CqlExecOperation cqlExecOperation = new CqlExecOperation(statements);
+                Utils.executeCql(cqlExecOperation);
+                results.addAll(cqlExecOperation.results);
             } catch (DriverExecutionException e) {
                 throw new MojoExecutionException(e.getCause().getMessage(), e);
             }
@@ -126,12 +126,12 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
         return statementList;
     }
 
-    private class CqlStatementOperation extends CqlOperation {
+    private class CqlExecOperation extends CqlOperation {
 
         private final List<Row> results = new ArrayList<>();
         private final List<String> statements;
 
-        private CqlStatementOperation(String statements) {
+        private CqlExecOperation(String statements) {
             super(rpcAddress, nativeTransportPort);
             if (useCqlLexer) {
                 getLog().warn("Using CqlLexer has not been extensively tested");

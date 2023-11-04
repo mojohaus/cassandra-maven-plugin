@@ -164,10 +164,10 @@ public class StartCassandraClusterMojo
                 {
                     getLog().info( "Waiting for Cassandra Node " + ( node + 1 ) + " to start..." );
                     boolean started =
-                        Utils.waitUntilStartedCQLVersion( listenAddress[node], nativeTransportPort, startWaitSeconds, getLog() );
+                        Utils.waitUntilStarted( listenAddress[node], nativeTransportPort, startWaitSeconds, getLog() );
                     if ( !started )
                     {
-                        Utils.stopCassandraServerCQLVersion( listenAddress[node], nativeTransportPort, listenAddress[node], stopPort, stopKey,
+                        Utils.stopCassandraServer( listenAddress[node], nativeTransportPort, listenAddress[node], stopPort, stopKey,
                                                    getLog() );
                         throw new MojoFailureException( "Cassandra failed to start within " + startWaitSeconds + "s" );
                     }

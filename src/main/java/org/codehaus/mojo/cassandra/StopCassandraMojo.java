@@ -109,6 +109,6 @@ public class StopCassandraMojo extends AbstractMojo
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
 
-        Utils.stopCassandraServerCQLVersion(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
+        Utils.stopCassandraServer(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
     }
 }

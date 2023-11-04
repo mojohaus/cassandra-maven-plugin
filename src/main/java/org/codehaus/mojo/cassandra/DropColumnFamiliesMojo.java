@@ -26,10 +26,10 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
     protected String columnFamilies;
 
     @Override
-    protected CqlOperation cqlBuildOperation() {
-        DropTableCqlOperation dropTableCqlOperation = new DropTableCqlOperation(rpcAddress, nativeTransportPort);
-        dropTableCqlOperation.setKeyspace(keyspace);
-        return dropTableCqlOperation;
+    protected CqlOperation buildOperation() {
+        DropTableOperation dropTableOperation = new DropTableOperation(rpcAddress, nativeTransportPort);
+        dropTableOperation.setKeyspace(keyspace);
+        return dropTableOperation;
     }
 
     private String[] columnFamilyList;
@@ -46,14 +46,14 @@ public class DropColumnFamiliesMojo extends AbstractSchemaCassandraMojo {
         columnFamilyList = StringUtils.split(columnFamilies, ',');
     }
 
-    class DropTableCqlOperation extends CqlOperation {
+    class DropTableOperation extends CqlOperation {
 
-        public DropTableCqlOperation(String rpcAddress, int nativeTransportPort) {
+        public DropTableOperation(String rpcAddress, int nativeTransportPort) {
             super(rpcAddress, nativeTransportPort);
         }
 
         @Override
-        void executeOperation(CqlSession cqlSession) throws CqlExecutionException{
+        public void executeOperation(CqlSession cqlSession) throws CqlExecutionException{
             try {
                 if (columnFamilyList != null && columnFamilyList.length > 0) {
                     for (String s : columnFamilyList) {

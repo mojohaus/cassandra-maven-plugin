@@ -29,7 +29,6 @@ public abstract class CqlOperation {
         return rpcAddress;
     }
 
-
     public int getNativeTransportPort() {
         return nativeTransportPort;
     }

@@ -105,7 +105,7 @@ public class StopCassandraClusterMojo extends AbstractMojo
             throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be less than 254");
         }
         for (int node = 0; node < clusterSize; node++) {
-            Utils.stopCassandraServerCQLVersion("127.0.0." + (node + 1), nativeTransportPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
+            Utils.stopCassandraServer("127.0.0." + (node + 1), nativeTransportPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
         }
 
     }

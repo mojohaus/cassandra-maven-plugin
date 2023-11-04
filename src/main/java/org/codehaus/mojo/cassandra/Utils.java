@@ -66,7 +66,7 @@ public final class Utils
      * @param stopKey             The key to stop with,
      * @param log                 The log to write to.
      */
-    static void stopCassandraServerCQLVersion(String rpcAddress, int nativeTransportPort, String stopAddress, int stopPort, String stopKey, Log log) {
+    static void stopCassandraServer(String rpcAddress, int nativeTransportPort, String stopAddress, int stopPort, String stopKey, Log log) {
         try {
             Socket s = new Socket(InetAddress.getByName(stopAddress), stopPort);
             s.setSoLinger(false, 0);
@@ -209,7 +209,7 @@ public final class Utils
      * @return {@code true} if Cassandra is started.
      * @throws MojoExecutionException if something went wrong.
      */
-    static boolean waitUntilStartedCQLVersion(String rpcAddress, int nativeTransportPort, int startWaitSeconds, Log log) throws MojoExecutionException {
+    static boolean waitUntilStarted(String rpcAddress, int nativeTransportPort, int startWaitSeconds, Log log) throws MojoExecutionException {
         long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(startWaitSeconds);
         while (startWaitSeconds == 0 || System.currentTimeMillis() < maxWaiting) {
             try (CqlSession cqlSession = CqlSession.builder()
