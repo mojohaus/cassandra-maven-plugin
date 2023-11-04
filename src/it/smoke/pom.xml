@@ -148,7 +148,6 @@ under the License.
             <goals>
               <goal>start</goal>
               <goal>load</goal>
-              <goal>cu-load</goal>
               <goal>stop</goal>
             </goals>
           </execution>

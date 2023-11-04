@@ -43,8 +43,6 @@ Mojo's Cassandra Maven Plugin
   * {{{./run-mojo.html}cassandra:run}} Starts up a test instance of Cassandra in the foreground.
 
   * {{{./load-mojo.html}cassandra:load}} Runs a CQL script against the test instance of Cassandra.
-  
-  * {{{./cu-load-mojo.html}cassandra:cu-load}} Load a CassandraUnit dataSet against the test instance of Cassandra.
 
   * {{{./repair-mojo.html}cassandra:repair}} Runs <<<nodetool repair>>> against the test instance of Cassandra.
 
