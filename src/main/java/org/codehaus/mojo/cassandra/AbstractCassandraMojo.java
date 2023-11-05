@@ -150,7 +150,7 @@ public abstract class AbstractCassandraMojo
      *
      * @since 2.0.0-1
      */
-    @Parameter( property="cassandra.startNativeTransport", defaultValue="false")
+    @Parameter( property="cassandra.startNativeTransport", defaultValue="true")
     protected boolean startNativeTransport;
 
     /**
