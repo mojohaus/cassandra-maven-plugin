@@ -64,12 +64,9 @@ public class StopCassandraClusterMojo extends AbstractMojo
     private String rpcAddress;
 
     /**
-     * Port to listen to for the RPC interface.
+     * port for the CQL native transport to listen for clients on.
      *
      */
-    @Parameter(property="cassandra.rpcPort", defaultValue="9160")
-    protected int rpcPort;
-
     @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
     protected int nativeTransportPort;
 

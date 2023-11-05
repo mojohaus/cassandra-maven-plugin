@@ -125,7 +125,7 @@ under the License.
         </executions>
         <configuration>
           <systemPropertyVariables>
-            <rpcPort>${cassandraPort}</rpcPort>
+            <nativeTransportPort>${cassandra.nativeTransportPort}</nativeTransportPort>
             <storagePort>${cassandra.storagePort}</storagePort>
             <stopPort>${cassandra.stopPort}</stopPort>
           </systemPropertyVariables>
@@ -167,7 +167,7 @@ under the License.
         <configuration>
           <loadAfterFirstStart>false</loadAfterFirstStart>
           <startNativeTransport>true</startNativeTransport>
-          <rpcPort>${cassandraPort}</rpcPort>
+          <nativeTransportPort>${cassandra.nativeTransportPort}</nativeTransportPort>
           <storagePort>${cassandra.storagePort}</storagePort>
           <stopPort>${cassandra.stopPort}</stopPort>
         </configuration>
@@ -185,7 +185,7 @@ under the License.
             </goals>
             <configuration>
               <portNames>
-                <portName>cassandraPort</portName>
+                <portName>cassandra.nativeTransportPort</portName>
                 <portName>cassandra.storagePort</portName>
                 <portName>cassandra.stopPort</portName>
               </portNames>

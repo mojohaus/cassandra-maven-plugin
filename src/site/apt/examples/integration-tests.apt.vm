@@ -113,7 +113,7 @@ Integration tests
             <phase>process-test-resources</phase>
             <configuration>
               <portNames>
-                <portName>cassandra.rpcPort</portName>
+                <portName>cassandra.nativeTransportPort</portName>
                 <portName>cassandra.jmxPort</portName>
                 <portName>cassandra.storagePort</portName>
               </portNames>
