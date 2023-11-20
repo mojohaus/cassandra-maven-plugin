@@ -100,7 +100,7 @@ under the License.
     <mavenVersion>3.5.4</mavenVersion>
     <cassandraVersion>3.11.16</cassandraVersion>
     <slf4jVersion>1.7.36</slf4jVersion>
-    <log4jVersion>2.21.1</log4jVersion>
+    <log4jVersion>2.22.0</log4jVersion>
     <commonsLoggingVersion>1.2</commonsLoggingVersion>
     <buildHelperPluginVersion>3.3.0</buildHelperPluginVersion>
     <project.build.outputTimestamp>2022-04-17T09:02:12Z</project.build.outputTimestamp>
