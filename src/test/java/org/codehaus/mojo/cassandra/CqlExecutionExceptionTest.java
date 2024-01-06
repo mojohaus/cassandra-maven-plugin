@@ -1,5 +1,8 @@
 package org.codehaus.mojo.cassandra;
 
+import java.util.List;
+import java.util.Map;
+
 import com.datastax.oss.driver.api.core.AllNodesFailedException;
 import com.datastax.oss.driver.api.core.DriverExecutionException;
 import com.datastax.oss.driver.api.core.DriverTimeoutException;
@@ -7,11 +10,7 @@ import com.datastax.oss.driver.api.core.InvalidKeyspaceException;
 import com.datastax.oss.driver.api.core.UnsupportedProtocolVersionException;
 import com.datastax.oss.driver.api.core.metadata.Node;
 import com.datastax.oss.driver.api.core.servererrors.ServerError;
-
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +28,7 @@ public class CqlExecutionExceptionTest {
 
         assertThat(exception)
                 .hasMessage("There was a problem calling Apache Cassandra's Cql API. additional message")
-        .hasCause(null);
+                .hasCause(null);
     }
 
     @Test
@@ -45,12 +44,13 @@ public class CqlExecutionExceptionTest {
 
     @Test
     public void should_give_details_if_cause_is_all_nodes_failed_exception() {
-        Throwable cause = AllNodesFailedException.fromErrors((List<Map.Entry<Node, Throwable>>)null);
+        Throwable cause = AllNodesFailedException.fromErrors((List<Map.Entry<Node, Throwable>>) null);
 
         CqlExecutionException exception = new CqlExecutionException(cause);
 
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: AllNodesFailedException, the query failed on all the coordinators it was tried on. {}")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: AllNodesFailedException, the query failed on all the coordinators it was tried on. {}")
                 .hasCause(cause);
     }
 
@@ -59,7 +59,8 @@ public class CqlExecutionExceptionTest {
         Throwable cause = new ServerError(null, "Server Error");
         CqlExecutionException exception = new CqlExecutionException(cause);
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: CoordinatorException, got a server-side error thrown by the coordinator node in response to the query. null")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: CoordinatorException, got a server-side error thrown by the coordinator node in response to the query. null")
                 .hasCause(cause);
     }
 
@@ -69,7 +70,8 @@ public class CqlExecutionExceptionTest {
 
         CqlExecutionException exception = new CqlExecutionException(cause);
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: DriverExecutionException, Query failed due to an underlying checked Exception")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: DriverExecutionException, Query failed due to an underlying checked Exception")
                 .hasCause(cause);
     }
 
@@ -79,7 +81,8 @@ public class CqlExecutionExceptionTest {
 
         CqlExecutionException exception = new CqlExecutionException(cause);
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: DriverTimeoutException, Query timed out")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: DriverTimeoutException, Query timed out")
                 .hasCause(cause);
     }
 
@@ -89,7 +92,8 @@ public class CqlExecutionExceptionTest {
 
         CqlExecutionException exception = new CqlExecutionException(cause);
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: InvalidKeyspaceException, Provided Keyspace is invalid")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: InvalidKeyspaceException, Provided Keyspace is invalid")
                 .hasCause(cause);
     }
 
@@ -99,7 +103,8 @@ public class CqlExecutionExceptionTest {
 
         CqlExecutionException exception = new CqlExecutionException(cause);
         assertThat(exception)
-                .hasMessage("There was a problem calling Apache Cassandra's Cql API. Details: Datastax Driver Exception: null")
+                .hasMessage(
+                        "There was a problem calling Apache Cassandra's Cql API. Details: Datastax Driver Exception: null")
                 .hasCause(cause);
     }
 }

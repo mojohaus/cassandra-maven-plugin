@@ -1,10 +1,10 @@
 package org.codehaus.mojo.cassandra;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,14 +27,13 @@ import org.codehaus.plexus.util.IOUtil;
  *
  * @author sparhomenko
  */
-public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
-{
+public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo {
     /**
      * Version of CQL to use
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cql.version", defaultValue = "3.11.12")
+    @Parameter(property = "cql.version", defaultValue = "3.11.12")
     private String cqlVersion = "3.11.12";
 
     /**
@@ -42,7 +41,7 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
      *
      * @since 3.6
      */
-    @Parameter(property="cql.encoding")
+    @Parameter(property = "cql.encoding")
     protected String cqlEncoding = Charset.defaultCharset().name();
 
     /**
@@ -56,21 +55,16 @@ public abstract class AbstractCqlExecMojo extends AbstractCassandraMojo
     @Parameter(defaultValue = "false")
     protected boolean useCqlLexer = false;
 
-    protected String readFile(File file) throws MojoExecutionException
-    {
-        if (!file.isFile() || !file.exists())
-        {
+    protected String readFile(File file) throws MojoExecutionException {
+        if (!file.isFile() || !file.exists()) {
             throw new MojoExecutionException("script " + file + " does not exist.");
         }
 
-        try (InputStreamReader r = new InputStreamReader(new FileInputStream(file), cqlEncoding))
-        {
+        try (InputStreamReader r = new InputStreamReader(new FileInputStream(file), cqlEncoding)) {
             return IOUtil.toString(r);
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             throw new MojoExecutionException("Cql file '" + file + "' was deleted before I could read it", e);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new MojoExecutionException("Could not parse or load cql file", e);
         }
     }

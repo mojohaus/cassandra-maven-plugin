@@ -18,15 +18,15 @@
  */
 package org.codehaus.mojo.cassandra;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Deletes the Cassandra home directory that we create for running Cassandra.
@@ -35,20 +35,19 @@ import java.io.IOException;
  *
  */
 @Mojo(name = "delete", threadSafe = true)
-public class DeleteCassandraMojo extends AbstractMojo
-{
+public class DeleteCassandraMojo extends AbstractMojo {
     /**
      * The directory to hold cassandra's database.
      *
      */
-    @Parameter(defaultValue="${project.build.directory}/cassandra")
+    @Parameter(defaultValue = "${project.build.directory}/cassandra")
     protected File cassandraDir;
 
     /**
      * Skip the execution.
      *
      */
-    @Parameter(property="cassandra.skip", defaultValue="false")
+    @Parameter(property = "cassandra.skip", defaultValue = "false")
     private boolean skip;
 
     /**
@@ -56,27 +55,22 @@ public class DeleteCassandraMojo extends AbstractMojo
      *
      * @since 2.0.0-1
      */
-    @Parameter(property="cassandra.failOnError", defaultValue="true")
+    @Parameter(property = "cassandra.failOnError", defaultValue = "true")
     protected boolean failOnError;
 
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        try
-        {
+        try {
             getLog().info("Deleting " + cassandraDir.getAbsolutePath());
             FileUtils.deleteDirectory(cassandraDir);
-        } catch (IOException e)
-        {
-            if (failOnError)
-            {
+        } catch (IOException e) {
+            if (failOnError) {
                 throw new MojoFailureException(e.getLocalizedMessage(), e);
             }
             getLog().warn("Failed to delete " + cassandraDir.getAbsolutePath(), e);

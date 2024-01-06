@@ -10,38 +10,31 @@ import org.apache.maven.plugins.annotations.Parameter;
  *
  * @author sparhomenko
  */
-public abstract class AbstractCqlLoadMojo extends AbstractCqlExecMojo
-{
+public abstract class AbstractCqlLoadMojo extends AbstractCqlExecMojo {
     /**
      * The CQL file to load.
      *
      */
-    @Parameter(defaultValue="${basedir}/src/cassandra/cql/load.cql")
+    @Parameter(defaultValue = "${basedir}/src/cassandra/cql/load.cql")
     private File script;
 
     /**
      * Whether to ignore errors when loading the script.
      *
      */
-    @Parameter(property="cassandra.load.failure.ignore")
+    @Parameter(property = "cassandra.load.failure.ignore")
     private boolean loadFailureIgnore;
 
-    protected void execCqlFile() throws MojoExecutionException
-    {
-        if (script != null)
-        {
+    protected void execCqlFile() throws MojoExecutionException {
+        if (script != null) {
             getLog().info("Running " + script + "...");
-            try
-            {
+            try {
                 executeCql(readFile(script));
                 getLog().info("Finished " + script + ".");
-            } catch (MojoExecutionException e)
-            {
-                if (loadFailureIgnore)
-                {
+            } catch (MojoExecutionException e) {
+                if (loadFailureIgnore) {
                     getLog().error("Script execution failed with " + e.getMessage() + ". Ignoring.");
-                } else
-                {
+                } else {
                     throw e;
                 }
             }

@@ -32,13 +32,12 @@ import org.apache.maven.plugins.annotations.Parameter;
  *
  */
 @Mojo(name = "stop", threadSafe = true, defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
-public class StopCassandraMojo extends AbstractMojo
-{
+public class StopCassandraMojo extends AbstractMojo {
     /**
      * Skip the execution.
      *
      */
-    @Parameter(property="cassandra.skip", defaultValue="false")
+    @Parameter(property = "cassandra.skip", defaultValue = "false")
     private boolean skip;
 
     /**
@@ -46,28 +45,28 @@ public class StopCassandraMojo extends AbstractMojo
      *
      *
      */
-    @Parameter(property="cassandra.stopPort", defaultValue="8081", required = true)
+    @Parameter(property = "cassandra.stopPort", defaultValue = "8081", required = true)
     protected int stopPort;
 
     /**
      * Key to provide when stopping cassandra
      *
      */
-    @Parameter(property="cassandra.stopKey", defaultValue="cassandra-maven-plugin", required = true)
+    @Parameter(property = "cassandra.stopKey", defaultValue = "cassandra-maven-plugin", required = true)
     protected String stopKey;
 
     /**
      * Address to use for the RPC interface. Do not change this unless you really know what you are doing.
      *
      */
-    @Parameter(defaultValue="127.0.0.1")
+    @Parameter(defaultValue = "127.0.0.1")
     private String rpcAddress;
 
     /**
      * port for the CQL native transport to listen for clients on.
      *
      */
-    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
+    @Parameter(property = "cassandra.nativeTransportPort", defaultValue = "9042")
     protected int nativeTransportPort;
 
     /**
@@ -90,19 +89,15 @@ public class StopCassandraMojo extends AbstractMojo
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        if (stopPort <= 0)
-        {
+        if (stopPort <= 0) {
             throw new MojoExecutionException("Please specify a valid port");
         }
-        if (stopKey == null)
-        {
+        if (stopKey == null) {
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
 

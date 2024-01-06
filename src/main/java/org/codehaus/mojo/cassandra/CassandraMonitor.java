@@ -18,9 +18,6 @@
  */
 package org.codehaus.mojo.cassandra;
 
-
-import org.apache.cassandra.service.CassandraDaemon;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -28,13 +25,14 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.cassandra.service.CassandraDaemon;
+
 /**
  * A Monitor for controlling the Cassandra process.
  *
  * @author stephenc
  */
-public class CassandraMonitor extends Thread
-{
+public class CassandraMonitor extends Thread {
     public static final String HOST_PROPERTY_NAME = "STOP.HOST";
 
     public static final String PORT_PROPERTY_NAME = "STOP.PORT";
@@ -52,8 +50,7 @@ public class CassandraMonitor extends Thread
      * @param key  the key to require.
      * @throws IOException if something goes wrong.
      */
-    public CassandraMonitor(String address, int port, String key) throws IOException
-    {
+    public CassandraMonitor(String address, int port, String key) throws IOException {
         this.key = key;
         serverSocket = new ServerSocket(port, 1, InetAddress.getByName(address));
         serverSocket.setReuseAddress(true);
@@ -62,63 +59,46 @@ public class CassandraMonitor extends Thread
     /**
      * {@inheritDoc}
      */
-    public void run()
-    {
-        while (serverSocket != null)
-        {
+    public void run() {
+        while (serverSocket != null) {
             Socket socket = null;
-            try
-            {
+            try {
                 socket = serverSocket.accept();
                 socket.setSoLinger(false, 0);
                 LineNumberReader lin = new LineNumberReader(new InputStreamReader(socket.getInputStream()));
                 String key = lin.readLine();
-                if (this.key.equals(key))
-                {
+                if (this.key.equals(key)) {
                     String cmd = lin.readLine();
-                    if ("stop".equals(cmd))
-                    {
-                        try
-                        {
+                    if ("stop".equals(cmd)) {
+                        try {
                             socket.close();
-                        } catch (IOException e)
-                        {
+                        } catch (IOException e) {
                             // ignore
                         }
-                        try
-                        {
+                        try {
                             socket.close();
-                        } catch (IOException e)
-                        {
+                        } catch (IOException e) {
                             // ignore
                         }
-                        try
-                        {
+                        try {
                             serverSocket.close();
-                        } catch (IOException e)
-                        {
+                        } catch (IOException e) {
                             // ignore
                         }
                         serverSocket = null;
                         System.out.println("Killing Cassandra");
                         System.exit(0);
-                    } else
-                    {
+                    } else {
                         System.out.println("Unsupported monitor operation.");
                     }
                 }
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
-            } finally
-            {
-                if (socket != null)
-                {
-                    try
-                    {
+            } finally {
+                if (socket != null) {
+                    try {
                         socket.close();
-                    } catch (IOException e)
-                    {
+                    } catch (IOException e) {
                         // ignore
                     }
                 }
@@ -133,13 +113,11 @@ public class CassandraMonitor extends Thread
      * @param args the command line arguments.
      * @throws IOException if something goes wrong.
      */
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         String host = System.getProperty(HOST_PROPERTY_NAME, "127.0.0.1");
         String property = System.getProperty(PORT_PROPERTY_NAME);
         String key = System.getProperty(KEY_PROPERTY_NAME);
-        if (property != null && key != null)
-        {
+        if (property != null && key != null) {
             int port = Integer.parseInt(property);
             CassandraMonitor monitor = new CassandraMonitor(host, port, key);
             monitor.setDaemon(true);

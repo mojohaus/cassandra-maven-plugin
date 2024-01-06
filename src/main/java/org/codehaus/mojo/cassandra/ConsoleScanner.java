@@ -25,90 +25,68 @@ import java.io.IOException;
  *
  * @author stephenc
  */
-public class ConsoleScanner extends Thread
-{
+public class ConsoleScanner extends Thread {
     private final Object lock = new Object();
 
     private boolean finished = false;
 
-    public ConsoleScanner()
-    {
+    public ConsoleScanner() {
         setName("Console scanner");
         setDaemon(true);
     }
 
     @Override
-    public void run()
-    {
-        try
-        {
-            while (!isFinished())
-            {
+    public void run() {
+        try {
+            while (!isFinished()) {
                 checkSystemInput();
                 getSomeSleep();
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             // ignore
-        } finally
-        {
+        } finally {
             finish();
         }
     }
 
-    public boolean isFinished()
-    {
-        synchronized (lock)
-        {
+    public boolean isFinished() {
+        synchronized (lock) {
             return finished;
         }
     }
 
-    private void getSomeSleep()
-    {
-        try
-        {
+    private void getSomeSleep() {
+        try {
             Thread.sleep(500);
-        } catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             // ignore
         }
     }
 
-    private void checkSystemInput() throws IOException
-    {
-        while (System.in.available() > 0)
-        {
+    private void checkSystemInput() throws IOException {
+        while (System.in.available() > 0) {
             int input = System.in.read();
-            if (input >= 0)
-            {
+            if (input >= 0) {
                 char c = (char) input;
-                if (c == '\n')
-                {
+                if (c == '\n') {
                     finish();
                 }
-            } else
-            {
+            } else {
                 finish();
             }
         }
     }
 
-    public void finish()
-    {
-        synchronized (lock)
-        {
+    public void finish() {
+        synchronized (lock) {
             finished = true;
             lock.notifyAll();
         }
     }
 
-    public void waitForFinished() throws InterruptedException
-    {
-        synchronized (lock)
-        {
-            while (!finished)
-            {
+    public void waitForFinished() throws InterruptedException {
+        synchronized (lock) {
+            while (!finished) {
                 lock.wait();
             }
         }

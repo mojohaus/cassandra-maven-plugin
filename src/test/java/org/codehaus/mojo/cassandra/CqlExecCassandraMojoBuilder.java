@@ -1,8 +1,8 @@
 package org.codehaus.mojo.cassandra;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.File;
+
+import org.apache.maven.plugin.logging.Log;
 
 class CqlExecCassandraMojoBuilder {
     private final CqlExecCassandraMojo cqlExecCassandraMojo;

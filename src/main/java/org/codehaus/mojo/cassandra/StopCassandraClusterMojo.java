@@ -32,13 +32,12 @@ import org.apache.maven.plugins.annotations.Parameter;
  *
  */
 @Mojo(name = "stop-cluster", threadSafe = true, defaultPhase = LifecyclePhase.POST_INTEGRATION_TEST)
-public class StopCassandraClusterMojo extends AbstractMojo
-{
+public class StopCassandraClusterMojo extends AbstractMojo {
     /**
      * Skip the execution.
      *
      */
-    @Parameter(property="cassandra.skip", defaultValue="false")
+    @Parameter(property = "cassandra.skip", defaultValue = "false")
     private boolean skip;
 
     /**
@@ -46,64 +45,62 @@ public class StopCassandraClusterMojo extends AbstractMojo
      *
      *
      */
-    @Parameter(property="cassandra.stopPort", defaultValue="8081", required = true)
+    @Parameter(property = "cassandra.stopPort", defaultValue = "8081", required = true)
     protected int stopPort;
 
     /**
      * Key to provide when stopping cassandra
      *
      */
-    @Parameter(property="cassandra.stopKey", defaultValue="cassandra-maven-plugin", required = true)
+    @Parameter(property = "cassandra.stopKey", defaultValue = "cassandra-maven-plugin", required = true)
     protected String stopKey;
 
     /**
      * Address to use for the RPC interface. Do not change this unless you really know what you are doing.
      *
      */
-    @Parameter(defaultValue="127.0.0.1")
+    @Parameter(defaultValue = "127.0.0.1")
     private String rpcAddress;
 
     /**
      * port for the CQL native transport to listen for clients on.
      *
      */
-    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
+    @Parameter(property = "cassandra.nativeTransportPort", defaultValue = "9042")
     protected int nativeTransportPort;
 
     /**
      * The number of nodes in the cluster.
      *
      */
-    @Parameter(property="cassandra.cluster.size", defaultValue="4")
+    @Parameter(property = "cassandra.cluster.size", defaultValue = "4")
     private int clusterSize;
 
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        if (stopPort <= 0)
-        {
+        if (stopPort <= 0) {
             throw new MojoExecutionException("Please specify a valid port");
         }
-        if (stopKey == null)
-        {
+        if (stopKey == null) {
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
         if (clusterSize < 1) {
-            throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be at least 1");
+            throw new MojoExecutionException(
+                    "Invalid cluster size of " + clusterSize + " specified. Must be at least 1");
         }
         if (clusterSize > 254) {
-            throw new MojoExecutionException("Invalid cluster size of " + clusterSize + " specified. Must be less than 254");
+            throw new MojoExecutionException(
+                    "Invalid cluster size of " + clusterSize + " specified. Must be less than 254");
         }
         for (int node = 0; node < clusterSize; node++) {
-            Utils.stopCassandraServer("127.0.0." + (node + 1), nativeTransportPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
+            Utils.stopCassandraServer(
+                    "127.0.0." + (node + 1), nativeTransportPort, "127.0.0." + (node + 1), stopPort, stopKey, getLog());
         }
-
     }
 }

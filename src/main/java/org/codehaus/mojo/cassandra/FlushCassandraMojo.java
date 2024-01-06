@@ -18,6 +18,9 @@
  */
 package org.codehaus.mojo.cassandra;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
@@ -28,9 +31,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * Runs {@code nodetool flush} on a Cassandra instance.
  *
@@ -38,20 +38,16 @@ import java.util.Map;
  *
  */
 @Mojo(name = "flush", threadSafe = true)
-public class FlushCassandraMojo extends AbstractCassandraMojo
-{
+public class FlushCassandraMojo extends AbstractCassandraMojo {
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        try
-        {
+        try {
             Map environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("flush");
 
@@ -62,8 +58,7 @@ public class FlushCassandraMojo extends AbstractCassandraMojo
             LogOutputStream stdout = new MavenLogOutputStream(getLog());
             LogOutputStream stderr = new MavenLogOutputStream(getLog());
 
-            try
-            {
+            try {
                 getLog().debug("Executing command line: " + commandLine);
 
                 exec.setStreamHandler(new PumpStreamHandler(stdout, stderr, System.in));
@@ -71,12 +66,10 @@ public class FlushCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Flush triggered.");
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new MojoExecutionException("Command execution failed.", e);
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }

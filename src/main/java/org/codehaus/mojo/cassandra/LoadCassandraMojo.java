@@ -29,15 +29,12 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @author stephenc
  */
 @Mojo(name = "load", threadSafe = true, defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
-public class LoadCassandraMojo extends AbstractCqlLoadMojo
-{
+public class LoadCassandraMojo extends AbstractCqlLoadMojo {
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }

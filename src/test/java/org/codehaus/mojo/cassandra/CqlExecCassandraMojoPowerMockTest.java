@@ -1,5 +1,12 @@
 package org.codehaus.mojo.cassandra;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.datastax.oss.driver.api.core.DriverExecutionException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -10,13 +17,6 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.util.concurrent.atomic.AtomicReference;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
@@ -24,7 +24,8 @@ import static org.mockito.internal.stubbing.answers.DoesNothing.doesNothing;
 
 public class CqlExecCassandraMojoPowerMockTest {
 
-    private final static String CQL_STATEMENT = "CREATE KEYSPACE identifier WITH replication = {'class': 'SimpleStrategy'}";
+    private static final String CQL_STATEMENT =
+            "CREATE KEYSPACE identifier WITH replication = {'class': 'SimpleStrategy'}";
 
     private CqlExecCassandraMojoBuilder builder;
 
@@ -39,8 +40,7 @@ public class CqlExecCassandraMojoPowerMockTest {
             mocked.when(() -> IOUtil.toString(ArgumentMatchers.any(InputStreamReader.class)))
                     .thenThrow(new FileNotFoundException());
 
-            builder.cqlScript(file("emptyfile.cql")).build()
-                    .execute();
+            builder.cqlScript(file("emptyfile.cql")).build().execute();
 
             fail();
         } catch (MojoExecutionException e) {
@@ -54,7 +54,8 @@ public class CqlExecCassandraMojoPowerMockTest {
 
     @Test
     public void should_fail_if_io_error_occurs_when_reading_cql_script() {
-        CqlExecCassandraMojo cqlExecCassandraMojo = builder.cqlScript(file("emptyfile.cql")).build();
+        CqlExecCassandraMojo cqlExecCassandraMojo =
+                builder.cqlScript(file("emptyfile.cql")).build();
         try (MockedStatic<IOUtil> mocked = mockStatic(IOUtil.class)) {
             mocked.when(() -> IOUtil.toString(ArgumentMatchers.any(InputStreamReader.class)))
                     .thenThrow(new IOException());
@@ -74,7 +75,7 @@ public class CqlExecCassandraMojoPowerMockTest {
         final AtomicReference<CqlOperation> cqlOperation = new AtomicReference<>();
         try (MockedStatic<Utils> mocked = mockStatic(Utils.class)) {
             mocked.when(() -> Utils.executeCql(ArgumentMatchers.any(CqlOperation.class)))
-                    .thenAnswer( a -> {
+                    .thenAnswer(a -> {
                         cqlOperation.set(a.getArgument(0));
                         return doesNothing();
                     });
@@ -95,8 +96,7 @@ public class CqlExecCassandraMojoPowerMockTest {
                         return doesNothing();
                     });
 
-            builder.keyspace("identifier").cqlStatement(CQL_STATEMENT).build()
-                    .execute();
+            builder.keyspace("identifier").cqlStatement(CQL_STATEMENT).build().execute();
 
             assertThat(cqlOperation.get().getKeyspace()).isEqualTo("identifier");
         }
