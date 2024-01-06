@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.codehaus.mojo.cassandra"},{"l":"org.codehaus.mojo.cassandra_maven_plugin"}];updateSearchResults();
