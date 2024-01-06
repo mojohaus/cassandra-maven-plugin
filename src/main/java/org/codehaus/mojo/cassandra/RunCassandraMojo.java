@@ -33,14 +33,12 @@ import org.apache.maven.plugins.annotations.Parameter;
  *
  */
 @Mojo(name = "run", threadSafe = true)
-public class RunCassandraMojo
-    extends AbstractCqlLoadMojo
-{
+public class RunCassandraMojo extends AbstractCqlLoadMojo {
     /**
      * When {@code true}, if this is a clean start then the load script will be applied automatically.
      *
      */
-    @Parameter(property="cassandra.load.after.first.start", defaultValue="true")
+    @Parameter(property = "cassandra.load.after.first.start", defaultValue = "true")
     private boolean loadAfterFirstStart;
 
     /**
@@ -48,7 +46,7 @@ public class RunCassandraMojo
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cassandra.cu.load.failure.ignore")
+    @Parameter(property = "cassandra.cu.load.failure.ignore")
     private boolean cuLoadFailureIgnore;
 
     /**
@@ -56,69 +54,51 @@ public class RunCassandraMojo
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cassandra.cu.load.after.first.start", defaultValue="true")
+    @Parameter(property = "cassandra.cu.load.after.first.start", defaultValue = "true")
     private boolean cuLoadAfterFirstStart;
 
     /**
      * {@inheritDoc}
      */
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        if ( skip )
-        {
-            getLog().info( "Skipping cassandra: cassandra.skip==true" );
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
+            getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
         long timeStamp = System.currentTimeMillis();
         boolean isClean = !cassandraDir.isDirectory();
-        getLog().debug(
-            ( isClean ? "First start of Cassandra instance in " : "Re-using existing Cassandra instance in " )
-                + cassandraDir.getAbsolutePath() );
-        try
-        {
-            DefaultExecuteResultHandler execHandler =
-                Utils.startCassandraServer( cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog() );
-            try
-            {
-                getLog().info( "Waiting for Cassandra to start..." );
-                Utils.waitUntilStarted( rpcAddress, nativeTransportPort, 0, getLog() );
+        getLog().debug((isClean ? "First start of Cassandra instance in " : "Re-using existing Cassandra instance in ")
+                + cassandraDir.getAbsolutePath());
+        try {
+            DefaultExecuteResultHandler execHandler = Utils.startCassandraServer(
+                    cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog());
+            try {
+                getLog().info("Waiting for Cassandra to start...");
+                Utils.waitUntilStarted(rpcAddress, nativeTransportPort, 0, getLog());
 
-                if ( isClean && loadAfterFirstStart)
-                {
+                if (isClean && loadAfterFirstStart) {
                     execCqlFile();
                 }
 
-                getLog().info(
-                    "Cassandra started in " + ( ( System.currentTimeMillis() - timeStamp ) / 100L ) / 10.0 + "s" );
+                getLog().info("Cassandra started in " + ((System.currentTimeMillis() - timeStamp) / 100L) / 10.0 + "s");
                 ConsoleScanner consoleScanner = new ConsoleScanner();
                 consoleScanner.start();
-                getLog().info( "Hit ENTER on the console to stop Cassandra and continue the build." );
-                try
-                {
+                getLog().info("Hit ENTER on the console to stop Cassandra and continue the build.");
+                try {
                     consoleScanner.waitForFinished();
-                }
-                catch ( InterruptedException e )
-                {
+                } catch (InterruptedException e) {
                     // ignore
                 }
-            }
-            finally
-            {
+            } finally {
                 Utils.stopCassandraServer(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
-                try
-                {
+                try {
                     execHandler.waitFor();
-                }
-                catch ( InterruptedException e )
-                {
+                } catch (InterruptedException e) {
                     // ignore
                 }
             }
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( e.getLocalizedMessage(), e );
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }
 }

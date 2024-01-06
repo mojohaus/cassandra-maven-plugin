@@ -18,20 +18,6 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import com.datastax.oss.driver.api.core.AllNodesFailedException;
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.datastax.oss.driver.api.core.DriverException;
-import com.datastax.oss.driver.api.core.DriverTimeoutException;
-
-import org.apache.commons.exec.*;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.StringUtils;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,18 +28,28 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.datastax.oss.driver.api.core.AllNodesFailedException;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.DriverException;
+import com.datastax.oss.driver.api.core.DriverTimeoutException;
+import org.apache.commons.exec.*;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.StringUtils;
+import org.yaml.snakeyaml.Yaml;
+
 /**
  * Utility classes for interacting with Cassandra.
  *
  * @author stephenc
  */
-public final class Utils
-{
+public final class Utils {
     /**
      * Do not instantiate.
      */
-    private Utils()
-    {
+    private Utils() {
         throw new IllegalAccessError("Utility class");
     }
 
@@ -66,7 +62,8 @@ public final class Utils
      * @param stopKey             The key to stop with,
      * @param log                 The log to write to.
      */
-    static void stopCassandraServer(String rpcAddress, int nativeTransportPort, String stopAddress, int stopPort, String stopKey, Log log) {
+    static void stopCassandraServer(
+            String rpcAddress, int nativeTransportPort, String stopAddress, int stopPort, String stopKey, Log log) {
         try {
             Socket s = new Socket(InetAddress.getByName(stopAddress), stopPort);
             s.setSoLinger(false, 0);
@@ -117,13 +114,10 @@ public final class Utils
      * @return The {@link ExecuteResultHandler} for the started process.
      * @throws MojoExecutionException if something went wrong.
      */
-    protected static DefaultExecuteResultHandler startCassandraServer(File cassandraDir, CommandLine commandLine,
-                                                                      Map environment, Log log)
-            throws MojoExecutionException
-    {
+    protected static DefaultExecuteResultHandler startCassandraServer(
+            File cassandraDir, CommandLine commandLine, Map environment, Log log) throws MojoExecutionException {
 
-        try
-        {
+        try {
             Executor exec = new DefaultExecutor();
             DefaultExecuteResultHandler execHandler = new DefaultExecuteResultHandler();
             exec.setWorkingDirectory(cassandraDir);
@@ -139,11 +133,9 @@ public final class Utils
             exec.execute(commandLine, environment, execHandler);
 
             return execHandler;
-        } catch (ExecuteException e)
-        {
+        } catch (ExecuteException e) {
             throw new MojoExecutionException("Command execution failed.", e);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new MojoExecutionException("Command execution failed.", e);
         }
     }
@@ -155,16 +147,13 @@ public final class Utils
      * @param resource the resource to query.
      * @return {@code true} if the resource is not a file, does not exist or is older than the project file.
      */
-    static boolean shouldGenerateResource(MavenProject project, File resource)
-    {
-        if (!resource.isFile())
-        {
+    static boolean shouldGenerateResource(MavenProject project, File resource) {
+        if (!resource.isFile()) {
             return true;
         }
         long resourceLM = resource.lastModified();
         long projectLM = project.getFile().lastModified();
-        if (Long.signum(resourceLM) == Long.signum(projectLM))
-        {
+        if (Long.signum(resourceLM) == Long.signum(projectLM)) {
             // the two dates are in the same epoch or else the universe is lasting a really long time.
             return resourceLM < projectLM;
         }
@@ -179,21 +168,17 @@ public final class Utils
      * @param glossYaml the Yaml to overide the base with.
      * @return the resulting Yaml.
      */
-    public static String merge(String baseYaml, String glossYaml)
-    {
-        if (StringUtils.isBlank(glossYaml))
-        {
+    public static String merge(String baseYaml, String glossYaml) {
+        if (StringUtils.isBlank(glossYaml)) {
             return baseYaml;
         }
-        if (StringUtils.isBlank(baseYaml))
-        {
+        if (StringUtils.isBlank(baseYaml)) {
             return glossYaml;
         }
         Yaml yaml = new Yaml();
         Map<String, Object> baseMap = (Map<String, Object>) yaml.load(baseYaml);
         Map<String, Object> glossMap = (Map<String, Object>) yaml.load(glossYaml);
-        for (Map.Entry<String, Object> glossEntry : glossMap.entrySet())
-        {
+        for (Map.Entry<String, Object> glossEntry : glossMap.entrySet()) {
             baseMap.put(glossEntry.getKey(), glossEntry.getValue());
         }
         return yaml.dump(baseMap);
@@ -209,7 +194,8 @@ public final class Utils
      * @return {@code true} if Cassandra is started.
      * @throws MojoExecutionException if something went wrong.
      */
-    static boolean waitUntilStarted(String rpcAddress, int nativeTransportPort, int startWaitSeconds, Log log) throws MojoExecutionException {
+    static boolean waitUntilStarted(String rpcAddress, int nativeTransportPort, int startWaitSeconds, Log log)
+            throws MojoExecutionException {
         long maxWaiting = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(startWaitSeconds);
         while (startWaitSeconds == 0 || System.currentTimeMillis() < maxWaiting) {
             try (CqlSession cqlSession = CqlSession.builder()
@@ -241,7 +227,8 @@ public final class Utils
      */
     public static void executeCql(CqlOperation cqlOperation) throws MojoExecutionException {
         CqlSessionBuilder cqlSessionBuilder = CqlSession.builder()
-                .addContactPoint(new InetSocketAddress(cqlOperation.getRpcAddress(), cqlOperation.getNativeTransportPort()))
+                .addContactPoint(
+                        new InetSocketAddress(cqlOperation.getRpcAddress(), cqlOperation.getNativeTransportPort()))
                 .withLocalDatacenter("datacenter1");
         if (StringUtils.isNotBlank(cqlOperation.getKeyspace())) {
             cqlSessionBuilder.withKeyspace(cqlOperation.getKeyspace());

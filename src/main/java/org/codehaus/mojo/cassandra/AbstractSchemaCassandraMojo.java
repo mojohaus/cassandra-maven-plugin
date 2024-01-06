@@ -8,27 +8,23 @@ import org.apache.maven.plugin.MojoFailureException;
  * with the system_* API methods. Manages the Cql connection and delegates to
  * executeOperation on the implementation. Implementations must still implement
  * the execute method of the parent Mojo.
- * 
+ *
  * @author zznate
  */
 public abstract class AbstractSchemaCassandraMojo extends AbstractCassandraMojo {
-               
-    
+
     protected abstract void parseArguments() throws IllegalArgumentException;
 
     protected abstract CqlOperation buildOperation();
-    
+
     /**
-     * Parses the arguments then calls 
+     * Parses the arguments then calls
      */
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException 
-    {
-        try 
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        try {
             parseArguments();
-        } catch (IllegalArgumentException iae) 
-        {
+        } catch (IllegalArgumentException iae) {
             throw new MojoExecutionException(iae.getMessage());
         }
         Utils.executeCql(buildOperation());

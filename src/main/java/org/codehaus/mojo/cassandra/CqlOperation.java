@@ -1,7 +1,6 @@
 package org.codehaus.mojo.cassandra;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.DriverException;
 
 public abstract class CqlOperation {
 

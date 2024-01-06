@@ -19,7 +19,6 @@
 package org.codehaus.mojo.cassandra;
 
 import org.apache.commons.exec.LogOutputStream;
-
 import org.apache.maven.plugin.logging.Log;
 
 /**
@@ -27,8 +26,7 @@ import org.apache.maven.plugin.logging.Log;
  *
  * @author stephenc
  */
-class MavenLogOutputStream extends LogOutputStream
-{
+class MavenLogOutputStream extends LogOutputStream {
     private final Log outputLog;
 
     /**
@@ -36,16 +34,14 @@ class MavenLogOutputStream extends LogOutputStream
      *
      * @param outputLog the {@link Log} to send output.
      */
-    public MavenLogOutputStream(Log outputLog)
-    {
+    public MavenLogOutputStream(Log outputLog) {
         this.outputLog = outputLog;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected void processLine(String line, int level)
-    {
+    protected void processLine(String line, int level) {
         outputLog.info(line);
     }
 }

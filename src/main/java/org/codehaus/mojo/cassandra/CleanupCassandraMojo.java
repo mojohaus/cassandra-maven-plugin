@@ -18,14 +18,13 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.commons.exec.*;
+import java.io.IOException;
+import java.util.Map;
 
+import org.apache.commons.exec.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Runs {@code nodetool cleanup} on a Cassandra instance.
@@ -34,20 +33,16 @@ import java.util.Map;
  *
  */
 @Mojo(name = "cleanup", threadSafe = true)
-public class CleanupCassandraMojo extends AbstractCassandraMojo
-{
+public class CleanupCassandraMojo extends AbstractCassandraMojo {
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        try
-        {
+        try {
             Map<String, String> environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("cleanup");
 
@@ -58,8 +53,7 @@ public class CleanupCassandraMojo extends AbstractCassandraMojo
             LogOutputStream stdout = new MavenLogOutputStream(getLog());
             LogOutputStream stderr = new MavenLogOutputStream(getLog());
 
-            try
-            {
+            try {
                 getLog().debug("Executing command line: " + commandLine);
 
                 exec.setStreamHandler(new PumpStreamHandler(stdout, stderr, System.in));
@@ -67,12 +61,10 @@ public class CleanupCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Cleanup triggered.");
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new MojoExecutionException("Command execution failed.", e);
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -18,7 +17,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -34,8 +32,8 @@ under the License.
 
   <name>Mojo's Cassandra Maven Plugin</name>
   <description>The Mojo Projects plugin for Apache Maven to allow launching a local Apache Cassandra instance from a Maven build</description>
-  <inceptionYear>2011</inceptionYear>
   <url>https://www.mojohaus.org/cassandra-maven-plugin/</url>
+  <inceptionYear>2011</inceptionYear>
   <licenses>
     <license>
       <name>Apache License 2</name>
@@ -88,8 +86,8 @@ under the License.
   <scm>
     <connection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</connection>
     <developerConnection>scm:git:https://github.com/mojohaus/cassandra-maven-plugin.git</developerConnection>
-    <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
     <tag>HEAD</tag>
+    <url>https://github.com/mojohaus/cassandra-maven-plugin</url>
   </scm>
   <issueManagement>
     <system>github</system>
@@ -105,6 +103,16 @@ under the License.
     <buildHelperPluginVersion>3.5.0</buildHelperPluginVersion>
     <project.build.outputTimestamp>2023-12-31T19:39:02Z</project.build.outputTimestamp>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -211,6 +219,12 @@ under the License.
       <artifactId>maven-plugin-testing-harness</artifactId>
       <version>3.3.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>plexus-container-default</artifactId>
+          <groupId>org.codehaus.plexus</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -278,32 +292,6 @@ under the License.
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- fake triggering to download plugin for its and cache populated -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>cpu-count</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -335,17 +323,33 @@ under the License.
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- fake triggering to download plugin for its and cache populated -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>cpu-count</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4jVersion}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <profiles>
     <profile>
@@ -400,8 +404,7 @@ under the License.
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-surefire-plugin</artifactId>
               <configuration>
-                <argLine>
-                  -Djdk.attach.allowAttachSelf=true
+                <argLine>-Djdk.attach.allowAttachSelf=true
                   --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED
                   --add-exports=java.base/jdk.internal.ref=ALL-UNNAMED
                   --add-exports=java.base/sun.nio.ch=ALL-UNNAMED
@@ -423,8 +426,7 @@ under the License.
                   --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
                   --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
                   --add-opens=java.base/java.util=ALL-UNNAMED
-                  --add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED
-                </argLine>
+                  --add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED</argLine>
               </configuration>
             </plugin>
           </plugins>

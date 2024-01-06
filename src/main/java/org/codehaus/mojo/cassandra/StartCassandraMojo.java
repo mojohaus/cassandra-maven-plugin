@@ -18,13 +18,13 @@
  */
 package org.codehaus.mojo.cassandra;
 
+import java.io.IOException;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import java.io.IOException;
 
 /**
  * Starts a Cassandra instance in the background.
@@ -33,22 +33,20 @@ import java.io.IOException;
  *
  */
 @Mojo(name = "start", threadSafe = true, defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
-public class StartCassandraMojo
-    extends AbstractCqlLoadMojo
-{
+public class StartCassandraMojo extends AbstractCqlLoadMojo {
     /**
      * How long to wait for Cassandra to be started before finishing the goal. A value of 0 will wait indefinitely. A
      * value of -1 will not wait at all.
      *
      */
-    @Parameter( defaultValue="180")
+    @Parameter(defaultValue = "180")
     protected int startWaitSeconds;
 
     /**
      * When {@code true}, if this is a clean start then the load script will be applied automatically.
      *
      */
-    @Parameter(property="cassandra.load.after.first.start", defaultValue="true")
+    @Parameter(property = "cassandra.load.after.first.start", defaultValue = "true")
     private boolean loadAfterFirstStart;
 
     /**
@@ -56,7 +54,7 @@ public class StartCassandraMojo
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cassandra.cu.load.failure.ignore")
+    @Parameter(property = "cassandra.cu.load.failure.ignore")
     private boolean cuLoadFailureIgnore;
 
     /**
@@ -64,7 +62,7 @@ public class StartCassandraMojo
      *
      * @since 1.2.1-2
      */
-    @Parameter(property="cassandra.cu.load.after.first.start", defaultValue="true")
+    @Parameter(property = "cassandra.cu.load.after.first.start", defaultValue = "true")
     private boolean cuLoadAfterFirstStart;
 
     /**
@@ -73,56 +71,45 @@ public class StartCassandraMojo
      *
      * @since 3.7
      */
-    @Parameter ( property="cassandra.addJdk11Options", defaultValue="false")
+    @Parameter(property = "cassandra.addJdk11Options", defaultValue = "false")
     protected boolean addJdk11Options;
 
     @Override
-    protected boolean useJdk11Options( )
-    {
+    protected boolean useJdk11Options() {
         return addJdk11Options;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        if ( skip )
-        {
-            getLog().info( "Skipping cassandra: cassandra.skip==true" );
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
+            getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
         long timeStamp = System.currentTimeMillis();
         boolean isClean = !cassandraDir.isDirectory();
-        getLog().debug(
-            ( isClean ? "First start of Cassandra instance in " : "Re-using existing Cassandra instance in " )
-                + cassandraDir.getAbsolutePath() );
-        try
-        {
-            Utils.startCassandraServer( cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog() );
+        getLog().debug((isClean ? "First start of Cassandra instance in " : "Re-using existing Cassandra instance in ")
+                + cassandraDir.getAbsolutePath());
+        try {
+            Utils.startCassandraServer(cassandraDir, newServiceCommandLine(), createEnvironmentVars(), getLog());
 
-            if ( startWaitSeconds >= 0 )
-            {
-                getLog().info( "Waiting for Cassandra to start..." );
-                boolean started = Utils.waitUntilStarted( rpcAddress, nativeTransportPort, startWaitSeconds, getLog() );
-                if ( !started )
-                {
-                    Utils.stopCassandraServer( rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog() );
-                    throw new MojoFailureException( "Cassandra failed to start within " + startWaitSeconds + "s" );
+            if (startWaitSeconds >= 0) {
+                getLog().info("Waiting for Cassandra to start...");
+                boolean started = Utils.waitUntilStarted(rpcAddress, nativeTransportPort, startWaitSeconds, getLog());
+                if (!started) {
+                    Utils.stopCassandraServer(
+                            rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
+                    throw new MojoFailureException("Cassandra failed to start within " + startWaitSeconds + "s");
                 }
             }
-            if ( isClean && loadAfterFirstStart)
-            {
+            if (isClean && loadAfterFirstStart) {
                 execCqlFile();
             }
 
-            getLog().info(
-                "Cassandra started in " + ( ( System.currentTimeMillis() - timeStamp ) / 100L ) / 10.0 + "s" );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( e.getLocalizedMessage(), e );
+            getLog().info("Cassandra started in " + ((System.currentTimeMillis() - timeStamp) / 100L) / 10.0 + "s");
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }
 }

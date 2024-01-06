@@ -18,14 +18,13 @@
  */
 package org.codehaus.mojo.cassandra;
 
-import org.apache.commons.exec.*;
+import java.io.IOException;
+import java.util.Map;
 
+import org.apache.commons.exec.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Runs {@code nodetool repair} on a Cassandra instance.
@@ -33,20 +32,16 @@ import java.util.Map;
  * @author stephenc
  */
 @Mojo(name = "repair", threadSafe = true)
-public class RepairCassandraMojo extends AbstractCassandraMojo
-{
+public class RepairCassandraMojo extends AbstractCassandraMojo {
     /**
      * {@inheritDoc}
      */
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (skip)
-        {
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
             getLog().info("Skipping cassandra: cassandra.skip==true");
             return;
         }
-        try
-        {
+        try {
             Map<String, String> environment = createEnvironmentVars();
             CommandLine commandLine = newNodetoolCommandLine("repair");
 
@@ -57,8 +52,7 @@ public class RepairCassandraMojo extends AbstractCassandraMojo
             LogOutputStream stdout = new MavenLogOutputStream(getLog());
             LogOutputStream stderr = new MavenLogOutputStream(getLog());
 
-            try
-            {
+            try {
                 getLog().debug("Executing command line: " + commandLine);
 
                 exec.setStreamHandler(new PumpStreamHandler(stdout, stderr, System.in));
@@ -66,12 +60,10 @@ public class RepairCassandraMojo extends AbstractCassandraMojo
                 exec.execute(commandLine, environment);
 
                 getLog().info("Repair triggered.");
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 throw new MojoExecutionException("Command execution failed.", e);
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new MojoExecutionException(e.getLocalizedMessage(), e);
         }
     }
