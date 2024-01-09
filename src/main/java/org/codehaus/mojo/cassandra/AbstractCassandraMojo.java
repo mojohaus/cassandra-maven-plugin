@@ -130,13 +130,6 @@ public abstract class AbstractCassandraMojo
     protected String rpcAddress;
 
     /**
-     * Port to listen to for the RPC interface.
-     *
-     */
-    @Parameter( property="cassandra.rpcPort", defaultValue="9160")
-    protected int rpcPort;
-
-    /**
      * Port to listen to for the JMX interface.
      *
      */
@@ -157,7 +150,7 @@ public abstract class AbstractCassandraMojo
      *
      * @since 2.0.0-1
      */
-    @Parameter( property="cassandra.startNativeTransport", defaultValue="false")
+    @Parameter( property="cassandra.startNativeTransport", defaultValue="true")
     protected boolean startNativeTransport;
 
     /**
@@ -452,7 +445,6 @@ public abstract class AbstractCassandraMojo
         config.append( "listen_address: " ).append( listenAddress ).append( "\n" );
         config.append( "storage_port: " ).append( storagePort ).append( "\n" );
         config.append( "rpc_address: " ).append( rpcAddress ).append( "\n" );
-        config.append( "rpc_port: " ).append( rpcPort ).append( "\n" );
         config.append( "native_transport_port: " ).append( nativeTransportPort ).append( "\n" );
         config.append( "start_native_transport: " ).append( startNativeTransport ).append( "\n" );
         if ( seeds != null )

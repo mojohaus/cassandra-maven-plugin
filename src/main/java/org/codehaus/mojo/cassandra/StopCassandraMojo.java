@@ -64,11 +64,11 @@ public class StopCassandraMojo extends AbstractMojo
     private String rpcAddress;
 
     /**
-     * Port to listen to for the RPC interface.
+     * port for the CQL native transport to listen for clients on.
      *
      */
-    @Parameter(property="cassandra.rpcPort", defaultValue="9160")
-    protected int rpcPort;
+    @Parameter(property="cassandra.nativeTransportPort", defaultValue="9042")
+    protected int nativeTransportPort;
 
     /**
      * Address to bind to and tell other Cassandra nodes to connect to. You
@@ -106,6 +106,6 @@ public class StopCassandraMojo extends AbstractMojo
             throw new MojoExecutionException("Please specify a valid stopKey");
         }
 
-        Utils.stopCassandraServer(rpcAddress, rpcPort, listenAddress, stopPort, stopKey, getLog());
+        Utils.stopCassandraServer(rpcAddress, nativeTransportPort, listenAddress, stopPort, stopKey, getLog());
     }
 }

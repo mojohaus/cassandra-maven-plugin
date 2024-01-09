@@ -18,14 +18,10 @@
  */
 package smoke;
 
-import org.apache.cassandra.thrift.Cassandra;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
 import java.util.AbstractMap;
 import java.util.Map;
 
@@ -35,19 +31,13 @@ import static org.junit.matchers.JUnitMatchers.*;
 public class SmokeIT
 {
     @Test
-    public void connectToKeyspace() throws Exception
-    {
-        TTransport tr = new TFramedTransport(new TSocket("localhost", Integer.getInteger( "rpcPort", 9160 )));
-        TProtocol proto = new TBinaryProtocol(tr);
-        Cassandra.Client client = new Cassandra.Client(proto);
-        tr.open();
-        try
-        {
-            assertThat(client.describe_keyspace("testkeyspace").getStrategy_options().entrySet(),
+    public void connectToKeyspace_Cql() throws Exception{
+        try (CqlSession cqlSession = CqlSession.builder()
+                .addContactPoint(new InetSocketAddress("localhost", Integer.getInteger("nativeTransportPort", 9042)))
+                .withLocalDatacenter("datacenter1")
+                .build()) {
+            assertThat(cqlSession.getMetadata().getKeyspace("testkeyspace").get().getReplication().entrySet(),
                     hasItem((Map.Entry<String, String>)new AbstractMap.SimpleEntry<String,String>("replication_factor","1")));
-        } finally
-        {
-            tr.close();
         }
     }
 }
