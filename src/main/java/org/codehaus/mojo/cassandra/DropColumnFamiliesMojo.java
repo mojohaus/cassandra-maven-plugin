@@ -1,7 +1,7 @@
 package org.codehaus.mojo.cassandra;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
