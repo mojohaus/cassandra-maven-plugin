@@ -28,4 +28,4 @@ jobs:
     with:
       jdk-matrix: '["8", "11"]'
       os-matrix: '["ubuntu-latest"]'
-      ff-jdk: '8'
+      ff-jdk: '11'
