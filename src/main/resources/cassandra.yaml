@@ -204,8 +204,8 @@ partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 # directories are specified, Cassandra will spread data evenly across 
 # them by partitioning the token ranges.
 # If not set, the default directory is $CASSANDRA_HOME/data/data.
-# data_file_directories:
-#     - /var/lib/cassandra/data
+data_file_directories:
+    - /var/lib/cassandra/data
 
 # Directory were Cassandra should store the data of the local system keyspaces.
 # By default Cassandra will store the data of the local system keyspaces in the first of the data directories specified
@@ -217,7 +217,7 @@ partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 # commit log.  when running on magnetic HDD, this should be a
 # separate spindle than the data directories.
 # If not set, the default directory is $CASSANDRA_HOME/data/commitlog.
-# commitlog_directory: /var/lib/cassandra/commitlog
+commitlog_directory: /var/lib/cassandra/commitlog
 
 # Enable / disable CDC functionality on a per-node basis. This modifies the logic used
 # for write path allocation rejection (standard: never reject. cdc: reject Mutation
