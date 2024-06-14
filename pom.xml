@@ -23,7 +23,7 @@ under the License.
   <parent>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>mojo-parent</artifactId>
-    <version>78</version>
+    <version>84</version>
   </parent>
 
   <artifactId>cassandra-maven-plugin</artifactId>
@@ -220,8 +220,8 @@ under the License.
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>plexus-container-default</artifactId>
           <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
