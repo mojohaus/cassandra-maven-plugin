@@ -95,7 +95,7 @@ under the License.
   </issueManagement>
 
   <properties>
-    <cassandraVersion>4.1.6</cassandraVersion>
+    <cassandraVersion>5.0.0</cassandraVersion>
     <slf4jVersion>1.7.36</slf4jVersion>
     <log4jVersion>2.23.1</log4jVersion>
     <commonsLoggingVersion>1.3.4</commonsLoggingVersion>
